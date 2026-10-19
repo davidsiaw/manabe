@@ -1,0 +1,62 @@
+id: spawn-join
+title: "Spawning and Joining"
+type: code
+language: zig
+run: local
+body: |
+  std.Thread.spawn starts a thread, running a function with arguments
+  given as a tuple:
+
+      const thread = try std.Thread.spawn(.{}, work, .{ io, &result });
+
+  The first argument holds options, such as the stack size. spawn returns
+  at once, while the thread runs. join waits for it to finish:
+
+      thread.join();
+
+  The program below counts the primes below 1,000,000, a quarter of the
+  range in each of four threads, each with a result of its own. The
+  threads are not spawned yet, so every count is 0.
+
+  Programs in the browser run on a single thread, so this one runs on your
+  computer. Save it as primes.zig, and run zig run primes.zig.
+question: Spawn a thread for each quarter, and join them all before adding up. Run it and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  fn isPrime(n: u32) bool {
+      if (n < 2) return false;
+      var d: u32 = 2;
+      while (d * d <= n) : (d += 1) {
+          if (n % d == 0) return false;
+      }
+      return true;
+  }
+
+  fn countPrimes(result: *u32, start: u32, end: u32) void {
+      var count: u32 = 0;
+      var n = start;
+      while (n < end) : (n += 1) {
+          if (isPrime(n)) count += 1;
+      }
+      result.* = count;
+  }
+
+  pub fn main() !void {
+      var counts = [_]u32{ 0, 0, 0, 0 };
+      var threads: [4]std.Thread = undefined;
+      _ = .{ &threads, &counts };
+
+      var total: u32 = 0;
+      for (counts) |count| total += count;
+      std.debug.print("{any}\n{d} primes below 1000000\n", .{ counts, total });
+  }
+expected_output: |
+  { 22044, 19494, 18700, 18260 }
+  78498 primes below 1000000
+explanation: |
+  A loop that spawns each thread with a pointer to its own count, and a
+  second loop that joins them. Each thread writes only its own count, so
+  they never touch the same memory, and no locking is needed. Without the
+  joins, main would add up the counts before the threads were done. The
+  first quarter has the most primes: they thin out as numbers grow.

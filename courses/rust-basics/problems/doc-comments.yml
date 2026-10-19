@@ -1,0 +1,36 @@
+id: doc-comments
+title: Documentation Comments
+type: multiple_choice
+body: |
+  Comments with three slashes, ///, are documentation comments: they
+  document the item that follows, in Markdown, and cargo doc turns them
+  into HTML, the same kind of documentation as the standard library's
+  (cargo doc --open opens it in a browser).
+
+    /// Adds one to the number given.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let answer = my_crate::add_one(5);
+    /// assert_eq!(6, answer);
+    /// ```
+    pub fn add_one(x: i32) -> i32 {
+
+  Besides Examples, the usual sections are Panics, the situations in which
+  the function panics; Errors, for a function that returns a Result, the
+  kinds of error and why; and Safety, for an unsafe function, chapter 20.
+question: Which documents a function, so that it appears in cargo doc?
+choices:
+  - id: a
+    text: /// on the lines just above it
+    correct: true
+  - id: b
+    text: // inside its body
+  - id: c
+    text: /* */ after it
+  - id: d
+    text: A README.md next to the file
+explanation: |
+  Ordinary // comments are for people reading the code; /// comments are
+  for people using it.

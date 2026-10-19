@@ -1,0 +1,38 @@
+id: join-handles
+title: Waiting with join
+type: code
+language: rust
+run: local
+body: |
+  thread::spawn returns a JoinHandle. Its join method blocks, waits, until
+  the thread finishes, and returns what the closure returned, in a Result:
+  Err if the thread panicked.
+
+    let handle = thread::spawn(|| 2 + 2);
+    let four = handle.join().unwrap();
+
+  The program below adds up a big range, in four threads, each with a
+  quarter of it. Copy the program into src/main.rs in your hello project and run it: main adds up nothing, as it never collects the
+  threads' results.
+question: Keep the handles in a vector, join them all, and add up what they return. Run it and paste what it printed.
+starter_code: |
+  use std::thread;
+
+  fn main() {
+      for i in 0..4u64 {
+          thread::spawn(move || {
+              let start = i * 250_000;
+              (start..start + 250_000).sum::<u64>()
+          });
+      }
+
+      let total: u64 = 0;
+      println!("sum of 0..1000000 = {total}");
+  }
+expected_output: |
+  sum of 0..1000000 = 499999500000
+explanation: |
+  Push each JoinHandle into a vector, then join them, and sum the results:
+  here with an iterator chain. move gives each closure its own copy of i.
+  Each thread returns its result instead of writing to shared memory, so
+  nothing needs locking.

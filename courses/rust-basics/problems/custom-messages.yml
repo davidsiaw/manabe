@@ -1,0 +1,30 @@
+id: custom-messages
+title: Custom Failure Messages
+type: multiple_choice
+body: |
+  The assert macros take an optional message, with format! placeholders,
+  shown when the check fails:
+
+    let result = greeting("Carol");
+    assert!(
+        result.contains("Carol"),
+        "Greeting did not contain name, value was `{result}`"
+    );
+
+  Without it, the failure only says which assertion failed. With it, the
+  failure also shows what the value actually was, which is often what you
+  need to find the bug.
+question: greeting("Carol") returns "Hello!". What does the failure show?
+choices:
+  - id: a
+    text: "assertion failed, then: Greeting did not contain name, value was `Hello!`"
+    correct: true
+  - id: b
+    text: "Only: assertion failed: result.contains(\"Carol\")"
+  - id: c
+    text: left and right
+  - id: d
+    text: "Nothing: messages only show for passing tests"
+explanation: |
+  Everything after the condition goes to format!, so the message can show
+  any values that help explain the failure.

@@ -1,0 +1,35 @@
+id: workspaces
+title: Workspaces
+type: multiple_choice
+body: |
+  A project that grows can be split into several packages that are
+  developed together: a workspace. Its top Cargo.toml lists them:
+
+    [workspace]
+    resolver = "3"
+    members = ["adder", "add_one"]
+
+  Each member is a package of its own, with its own Cargo.toml, and they
+  share one Cargo.lock and one target folder. A member uses another as a
+  path dependency, in its Cargo.toml:
+
+    [dependencies]
+    add_one = { path = "../add_one" }
+
+  cargo run -p adder runs the adder package, and cargo test runs every
+  member's tests.
+question: Why do workspace members share one Cargo.lock?
+choices:
+  - id: a
+    text: So that they all use the same versions of their dependencies
+    correct: true
+  - id: b
+    text: So that only one of them can be built at a time
+  - id: c
+    text: Cargo.lock lists the members
+  - id: d
+    text: "They do not: each has its own"
+explanation: |
+  If two members depend on rand, they get the same version, and the
+  members always work with each other. The shared target folder means each
+  dependency is compiled once.

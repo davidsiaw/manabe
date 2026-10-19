@@ -1,0 +1,36 @@
+id: splat-reduce
+title: "@splat and @reduce"
+type: code
+language: zig
+body: |
+  @splat makes a vector with the same value in every element, its length
+  and type taken from where it goes:
+
+      const twos: @Vector(4, u32) = @splat(2);
+
+  so v * twos doubles every element; v * @as(@Vector(4, u32), @splat(2))
+  says the same where there is no type to go on.
+
+  @reduce goes the other way, combining a vector's elements into one value
+  with an operator: @reduce(.Add, v) adds them all up, and .Mul, .Min,
+  .Max, .And and .Or work too.
+question: Work out the dot product of the two vectors, the sum of their elements multiplied pairwise, and the largest element after scaling by 3.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const a: @Vector(4, u32) = .{ 4, 12, 37, 9 };
+      const b: @Vector(4, u32) = .{ 10, 22, 5, 12 };
+
+      const dot: u32 = 0;
+      const largest: u32 = 0;
+      _ = .{ a, b };
+      std.debug.print("dot {d}, largest scaled {d}\n", .{ dot, largest });
+  }
+expected_output: |
+  dot 597, largest scaled 111
+explanation: |
+  @reduce(.Add, a * b), and @reduce(.Max, a * threes) with a splat of 3s.
+  a * b multiplies the four pairs at once; @reduce then adds the four
+  products. Dot products like this are at the heart of graphics and
+  machine learning.

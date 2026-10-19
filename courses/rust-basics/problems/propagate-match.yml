@@ -1,0 +1,46 @@
+id: propagate-match
+title: Passing Errors On
+type: code
+language: rust
+run: local
+body: |
+  A function that fails often cannot know what the right reaction is. It
+  is better to return the error and let the caller decide: propagating the
+  error.
+
+    fn parse_age(text: &str) -> Result<u8, ParseIntError> {
+        let age: u8 = match text.parse() {
+            Ok(age) => age,
+            Err(e) => return Err(e),     // give the error to the caller
+        };
+        Ok(age)
+    }
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: "Write parse_point: it parses text such as \"3,4\" into a pair of numbers, and returns the error of whichever part fails. Use match, as above. Run it and paste what it printed."
+starter_code: |
+  use std::num::ParseIntError;
+
+  // "3,4" becomes (3, 4). split_once(',') splits text at its first comma.
+  fn parse_point(text: &str) -> Result<(i32, i32), ParseIntError> {
+      let (x_text, y_text) = text.split_once(',').unwrap_or((text, ""));
+      todo!()
+  }
+
+  fn main() {
+      for text in ["3,4", "10,-2", "3,four", "7"] {
+          match parse_point(text) {
+              Ok((x, y)) => println!("{text}: x {x}, y {y}"),
+              Err(e) => println!("{text}: {e}"),
+          }
+      }
+  }
+expected_output: |
+  3,4: x 3, y 4
+  10,-2: x 10, y -2
+  3,four: invalid digit found in string
+  7: cannot parse integer from empty string
+explanation: |
+  Two matches, each returning the Err early, and Ok((x, y)) at the end.
+  That is a lot of repetition for a common pattern; the next problem
+  shortens it to one character.

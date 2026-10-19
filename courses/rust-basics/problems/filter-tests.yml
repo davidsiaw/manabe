@@ -1,0 +1,30 @@
+id: filter-tests
+title: Running Some of the Tests
+type: multiple_choice
+body: |
+  A large test suite can take a while. cargo test with a name runs only the
+  tests whose names contain it:
+
+    cargo test one_hundred       // the test called one_hundred
+    cargo test add               // every test with add in its name
+
+  The summary counts the others as filtered out. The module is part of the
+  name, so cargo test tests:: runs everything in a module called tests.
+
+  A slow test can be marked #[ignore], and is then skipped unless asked
+  for: cargo test -- --ignored runs only the ignored tests, and cargo test
+  -- --include-ignored runs them all.
+question: The tests are add_two_and_two, add_three_and_two and one_hundred. What does cargo test add run?
+choices:
+  - id: a
+    text: add_two_and_two and add_three_and_two; one_hundred is filtered out
+    correct: true
+  - id: b
+    text: Only a test called exactly add
+  - id: c
+    text: All three
+  - id: d
+    text: "None: the name must match in full"
+explanation: |
+  The filter matches anywhere in the name. The summary would say "2 passed;
+  0 failed; 0 ignored; 0 measured; 1 filtered out".

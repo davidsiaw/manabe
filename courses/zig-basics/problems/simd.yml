@@ -1,0 +1,29 @@
+id: simd
+title: "SIMD"
+type: multiple_choice
+body: |
+  The last chapter is about doing arithmetic on many values at once.
+  Modern processors have SIMD instructions, single instruction, multiple
+  data: one instruction adds, say, eight pairs of numbers, in the time it
+  takes to add one pair. Code that does the same thing to a lot of numbers,
+  such as image filters, audio, or physics, can run several times faster.
+
+  Zig gives access to them through vectors: a fixed number of values of
+  one type, which arithmetic works on all at once, element by element.
+  The compiler uses SIMD instructions where the target has them, and
+  plain instructions where it does not, as in this course's browser
+  compiler.
+question: What does a SIMD instruction do?
+choices:
+  - id: a
+    text: "Applies one operation to several values at once"
+    correct: true
+  - id: b
+    text: "Runs several different instructions on one value"
+  - id: c
+    text: "Runs a function on several threads"
+  - id: d
+    text: "Splits a program into smaller programs"
+explanation: |
+  It is parallelism inside a single thread and core, and combines with the
+  last chapter's threads: each thread can use SIMD too.

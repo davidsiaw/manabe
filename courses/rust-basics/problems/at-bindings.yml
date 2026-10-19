@@ -1,0 +1,41 @@
+id: at-bindings
+title: "@ Bindings"
+type: code
+language: rust
+run: local
+body: |
+  @ binds a value to a variable while also testing it against a pattern:
+
+    match msg {
+        Message::Hello { id: id @ 3..=7 } => println!("Found an id in range: {id}"),
+        Message::Hello { id: 10..=12 } => println!("Found an id in another range"),
+        Message::Hello { id } => println!("Found some other id: {id}"),
+    }
+
+  The first arm checks that id is from 3 to 7, and keeps the value. The
+  second can check its range, but has no variable to use.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write describe_age with @ bindings, so that each arm can print the age. Run it and paste what it printed.
+starter_code: |
+  fn describe_age(age: u32) -> String {
+      todo!()
+  }
+
+  fn main() {
+      for age in [0, 4, 15, 30, 70, 101] {
+          println!("{}", describe_age(age));
+      }
+  }
+expected_output: |
+  a newborn
+  a child of 4
+  a teenager of 15
+  an adult of 30
+  an adult of 70
+  a centenarian of 101
+explanation: |
+  n @ 1..=12 and so on; the last arm binds whatever is left. Here age
+  itself could be printed instead of n, but inside a struct or an enum,
+  as in the book's example, @ is the only way to both test and keep the
+  value.

@@ -1,0 +1,31 @@
+id: never-type
+title: The Never Type
+type: multiple_choice
+body: |
+  ! is the never type: the type of expressions that never produce a value,
+  because they leave: return, break, continue, panic!, and an endless loop.
+
+    let guess: u32 = match guess.trim().parse() {
+        Ok(num) => num,
+        Err(_) => continue,
+    };
+
+  A match's arms must have the same type. continue has type !, and ! can
+  become any type, so the match's type is u32.
+
+  Functions that never return are written fn bar() -> !, and are called
+  diverging functions.
+question: Why can the Err arm above be continue, when the Ok arm is a u32?
+choices:
+  - id: a
+    text: continue has type !, which coerces to any type
+    correct: true
+  - id: b
+    text: continue returns 0
+  - id: c
+    text: Match arms can have different types
+  - id: d
+    text: continue is not an expression
+explanation: |
+  The same is why unwrap can be written with a panic! in its None arm, and
+  why let...else's else must diverge: its type must be !.

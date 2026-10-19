@@ -1,0 +1,25 @@
+id: args-unicode
+title: Arguments and Unicode
+type: multiple_choice
+body: |
+  std::env::args panics if an argument is not valid Unicode: a String
+  must be valid UTF-8. A program that must accept any argument, such as a
+  file name in an unusual encoding, uses std::env::args_os instead, which
+  gives OsString values, the operating system's own kind of string.
+
+  minigrep uses args, for simplicity.
+question: What is args[0]?
+choices:
+  - id: a
+    text: The name of the program, as it was run
+    correct: true
+  - id: b
+    text: The first argument after --
+  - id: c
+    text: Always the word minigrep
+  - id: d
+    text: The current folder
+explanation: |
+  Often a path such as target/debug/minigrep. Programs use it to name
+  themselves in messages, or to behave differently depending on the name
+  they were run under.

@@ -1,0 +1,41 @@
+id: generic-struct
+title: Generic Structs
+type: code
+language: rust
+run: local
+body: |
+  Structs can be generic too: the type parameter goes after the struct's
+  name, and the fields use it.
+
+    struct Point<T> {
+        x: T,
+        y: T,
+    }
+
+  Point<i32> has two i32 fields, and Point<f64> two f64s. With one type
+  parameter, both fields have the same type, whatever it is. For fields of
+  different types, use two type parameters: Point<T, U>.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0308]: mismatched types
+question: Make Point generic over two types, one for x and one for y. Run it and paste what it printed.
+starter_code: |
+  struct Point<T> {
+      x: T,
+      y: T,
+  }
+
+  fn main() {
+      let integer = Point { x: 5, y: 10 };
+      let float = Point { x: 1.0, y: 4.5 };
+      let mixed = Point { x: 5, y: 4.5 };
+
+      println!("({}, {}) ({}, {}) ({}, {})", integer.x, integer.y, float.x, float.y, mixed.x, mixed.y);
+  }
+expected_output: |
+  (5, 10) (1, 4.5) (5, 4.5)
+explanation: |
+  struct Point<T, U> { x: T, y: U }. integer is now a Point<i32, i32>
+  and mixed a Point<i32, f64>. 1.0 prints as 1 with {}. Many type parameters are allowed, but if a
+  struct needs a lot of them, it may be better split up.

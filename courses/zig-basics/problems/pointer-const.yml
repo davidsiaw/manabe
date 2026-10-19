@@ -1,0 +1,31 @@
+id: pointer-const
+title: "Constant Pointers"
+type: multiple_choice
+body: |
+  There are two separate things that can be constant: the value a pointer
+  points to, and the pointer itself.
+
+  - *const T or *T, in the pointer's type, says whether the value can be
+    changed through the pointer.
+  - const or var, where the pointer is declared, says whether the pointer
+    can be changed to point somewhere else.
+
+      const a: u8 = 1;
+      const b: u8 = 2;
+      var p = &a;        // p is a var, of type *const u8
+      p = &b;            // fine: p now points to b
+      p.* = 3;           // error: b is a constant
+question: "var number: u8 = 5; const pointer = &number; What can the program do with pointer?"
+choices:
+  - id: a
+    text: "Change number through it, but not make it point elsewhere"
+    correct: true
+  - id: b
+    text: "Make it point elsewhere, but not change number through it"
+  - id: c
+    text: "Both"
+  - id: d
+    text: "Neither"
+explanation: |
+  number is a var, so pointer is a *u8 and pointer.* = 6 works. pointer
+  itself is a const, so pointer = &other does not.

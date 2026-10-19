@@ -1,0 +1,75 @@
+id: trait-objects
+title: Trait Objects
+type: code
+language: rust
+run: local
+body: |
+  A GUI library draws a screen of components: buttons, text fields, and
+  others that users of the library write themselves. The screen needs a
+  list of things that can be drawn, of different types.
+
+  A trait object, dyn Draw, is a value of some type that implements Draw,
+  behind a pointer, such as a Box:
+
+    pub struct Screen {
+        pub components: Vec<Box<dyn Draw>>,
+    }
+
+  Any type that implements Draw can go in the list, and the screen calls
+  draw on each without knowing what they are.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0277]: the trait bound `SelectBox: Draw` is not satisfied
+question: Implement Draw for SelectBox, drawing it as in the output below. Run it and paste what it printed.
+starter_code: |
+  pub trait Draw {
+      fn draw(&self);
+  }
+
+  pub struct Screen {
+      pub components: Vec<Box<dyn Draw>>,
+  }
+
+  impl Screen {
+      pub fn run(&self) {
+          for component in self.components.iter() {
+              component.draw();
+          }
+      }
+  }
+
+  pub struct Button {
+      pub width: u32,
+      pub label: String,
+  }
+
+  impl Draw for Button {
+      fn draw(&self) {
+          println!("[ {} ] ({} wide)", self.label, self.width);
+      }
+  }
+
+  struct SelectBox {
+      options: Vec<String>,
+  }
+
+  fn main() {
+      let screen = Screen {
+          components: vec![
+              Box::new(SelectBox {
+                  options: vec![String::from("Yes"), String::from("Maybe"), String::from("No")],
+              }),
+              Box::new(Button { width: 50, label: String::from("OK") }),
+          ],
+      };
+
+      screen.run();
+  }
+expected_output: |
+  < Yes | Maybe | No >
+  [ OK ] (50 wide)
+explanation: |
+  impl Draw for SelectBox, joining the options. The library's Screen never
+  changed: it works with types written after it, as long as they implement
+  Draw. That is the polymorphism inheritance gives in other languages.

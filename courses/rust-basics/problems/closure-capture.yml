@@ -1,0 +1,40 @@
+id: closure-capture
+title: Capturing by Reference
+type: code
+language: rust
+run: local
+body: |
+  A closure captures each variable in the least demanding way its body
+  allows: by immutable reference if it only reads it, by mutable reference
+  if it changes it, and by value if it needs to own it.
+
+  The borrowing rules then apply as for any reference: from where a closure
+  that captures mutably is defined to where it is last called, nothing else
+  can use the variable.
+
+    let mut borrows_mutably = || list.push(7);
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0502]: cannot borrow `list` as immutable because it is also borrowed as mutable
+question: Move the println! that is in the way, so that the program compiles and prints as below. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut list = vec![1, 2, 3];
+      println!("Before defining closure: {list:?}");
+
+      let mut borrows_mutably = || list.push(7);
+
+      println!("In between: {list:?}");
+      borrows_mutably();
+      println!("After calling closure: {list:?}");
+  }
+expected_output: |
+  Before defining closure: [1, 2, 3]
+  In between: [1, 2, 3]
+  After calling closure: [1, 2, 3, 7]
+explanation: |
+  The In between line goes before the closure is defined. The closure
+  holds a mutable borrow from its definition to its last call, so a print
+  between them conflicts. The closure itself must be let mut too: calling
+  it changes what it captured.

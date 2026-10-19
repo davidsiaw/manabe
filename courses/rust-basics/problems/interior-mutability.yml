@@ -1,0 +1,29 @@
+id: interior-mutability
+title: Interior Mutability
+type: multiple_choice
+body: |
+  Rc gives shared ownership, but only immutable access: several owners
+  changing the data would break the borrowing rules. The rules are checked
+  while compiling, and the compiler, being careful, rejects some programs
+  that are actually fine.
+
+  RefCell<T> moves the check to run time. borrow() gives a Ref<T>, like a
+  &T, and borrow_mut() a RefMut<T>, like a &mut T. RefCell counts the
+  borrows that are active, and enforces the same rules: any number of
+  borrow()s, or one borrow_mut(), never both. This is interior mutability:
+  changing data through an immutable reference, safely.
+question: A RefCell already has one borrow_mut() active, and the code calls borrow_mut() again. What happens?
+choices:
+  - id: a
+    text: "It panics: RefCell already borrowed"
+    correct: true
+  - id: b
+    text: It does not compile
+  - id: c
+    text: It waits until the first borrow ends
+  - id: d
+    text: It returns a copy of the data
+explanation: |
+  The mistake the compiler would have caught now crashes the program
+  instead, and costs a little time on each borrow. Use RefCell when you are
+  sure the code is right, and the compiler cannot see it.

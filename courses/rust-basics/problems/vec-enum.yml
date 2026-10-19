@@ -1,0 +1,56 @@
+id: vec-enum
+title: Different Types in One Vector
+type: code
+language: rust
+run: local
+body: |
+  A vector holds one type. When the values really are of different types,
+  an enum is that one type: each variant holds one kind of value.
+
+    enum SpreadsheetCell {
+        Int(i32),
+        Float(f64),
+        Text(String),
+    }
+
+    let row = vec![
+        SpreadsheetCell::Int(3),
+        SpreadsheetCell::Text(String::from("blue")),
+        SpreadsheetCell::Float(10.12),
+    ];
+
+  A match on each element then deals with each kind.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write describe, so that each cell is printed as below. Run it and paste what it printed.
+starter_code: |
+  enum SpreadsheetCell {
+      Int(i32),
+      Float(f64),
+      Text(String),
+  }
+
+  fn describe(cell: &SpreadsheetCell) -> String {
+      todo!()
+  }
+
+  fn main() {
+      let row = vec![
+          SpreadsheetCell::Int(3),
+          SpreadsheetCell::Text(String::from("blue")),
+          SpreadsheetCell::Float(10.5),
+      ];
+
+      for cell in &row {
+          println!("{}", describe(cell));
+      }
+  }
+expected_output: |
+  number 3
+  text "blue"
+  decimal 10.5
+explanation: |
+  A match with an arm per variant, each making a String with format!. \"
+  puts a double quote in a string; {s:?} would print the quotes too.
+  Because the match is exhaustive, adding a variant later makes the
+  compiler point at describe.

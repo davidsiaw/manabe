@@ -1,0 +1,28 @@
+id: hashmap-ownership
+title: Hash Maps Own Their Contents
+type: multiple_choice
+body: |
+  insert takes its key and value by value. Types that are Copy, such as
+  i32, are copied in; owned values, such as String, are moved in, and the
+  hash map owns them from then on.
+
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
+
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+question: What happens if the code then prints field_name?
+choices:
+  - id: a
+    text: "It does not compile: field_name was moved into the map"
+    correct: true
+  - id: b
+    text: It prints Favorite color
+  - id: c
+    text: "It prints nothing: the String is now empty"
+  - id: d
+    text: It compiles, and panics
+explanation: |
+  The error is "borrow of moved value: `field_name`". Inserting
+  references, such as &field_name, would leave the Strings where they
+  are, but then the map cannot outlive them.

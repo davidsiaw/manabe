@@ -1,0 +1,39 @@
+id: result-match
+title: Handling a Result
+type: code
+language: rust
+run: local
+body: |
+  A match on a Result handles both cases:
+
+    let number: u8 = match text.parse() {
+        Ok(n) => n,
+        Err(e) => {
+            println!("{e}");
+            0
+        }
+    };
+
+  The error type of parse, ParseIntError, prints a message saying what was
+  wrong.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0308]: mismatched types
+question: "Match on the result: print the number, or \"not a number:\" and the error. Run it and paste what it printed."
+starter_code: |
+  fn main() {
+      for text in ["42", "4x", "300", ""] {
+          let number: u8 = text.parse();
+          println!("{text:?} is {number}");
+      }
+  }
+expected_output: |
+  "42" is 42
+  "4x" is not a number: invalid digit found in string
+  "300" is not a number: number too large to fit in target type
+  "" is not a number: cannot parse integer from empty string
+explanation: |
+  The error said "expected `u8`, found `Result<_, _>`": parse gives a
+  Result, not the number. Writing Result<u8, _> leaves the error type for
+  Rust to work out. 300 does not fit in a u8, which holds 0 to 255.

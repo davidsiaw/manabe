@@ -1,0 +1,30 @@
+id: cargo-install
+title: Installing Binaries
+type: multiple_choice
+body: |
+  cargo install installs a program published on crates.io, by building it
+  from source:
+
+    cargo install ripgrep
+
+  The program goes in Cargo's bin folder, $HOME/.cargo/bin, which the Rust
+  installer puts on your PATH, so that you can run it by its name: rg for
+  ripgrep. Only packages with a binary crate can be installed this way: it
+  is for tools, not for adding libraries to a project.
+
+  Cargo can also be extended: any program called cargo-something on your
+  PATH can be run as cargo something, and appears in cargo --list.
+question: How do you add a library, such as rand, to your project?
+choices:
+  - id: a
+    text: cargo add rand, which adds it to Cargo.toml
+    correct: true
+  - id: b
+    text: cargo install rand
+  - id: c
+    text: Download it into src
+  - id: d
+    text: cargo publish rand
+explanation: |
+  cargo install is for programs you run; dependencies go in Cargo.toml,
+  and are built along with your project.

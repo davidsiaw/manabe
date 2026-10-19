@@ -1,0 +1,40 @@
+id: testing-slices
+title: "Comparing Arrays and Strings"
+type: code
+language: zig
+body: |
+  expectEqual compares single values. For the contents of arrays and
+  slices, there is expectEqualSlices, which takes the element type first:
+
+      try std.testing.expectEqualSlices(u32, &array1, &array2);
+
+  and for strings, expectEqualStrings, which shows where they differ when
+  they do. Run the program to see it.
+question: Fix initials, so that the checks pass.
+starter_code: |
+  const std = @import("std");
+
+  // The first letter of each word, in capitals: "grace brewster hopper" is "GBH".
+  fn initials(buffer: []u8, name: []const u8) []u8 {
+      var count: usize = 0;
+      var words = std.mem.splitScalar(u8, name, ' ');
+      while (words.next()) |word| {
+          buffer[count] = word[0];
+          count += 1;
+      }
+      return buffer[0..count];
+  }
+
+  pub fn main() !void {
+      var buffer: [8]u8 = undefined;
+      try std.testing.expectEqualStrings("GBH", initials(&buffer, "grace brewster hopper"));
+      try std.testing.expectEqualStrings("AL", initials(&buffer, "ada lovelace"));
+      try std.testing.expectEqualSlices(u8, &.{ 'A', 'L' }, initials(&buffer, "ada lovelace"));
+      std.debug.print("all checks passed\n", .{});
+  }
+expected_output: |
+  all checks passed
+explanation: |
+  std.ascii.toUpper(word[0]), or word[0] - 32, as lower-case ASCII letters
+  are 32 more than their capitals. The report showed the two strings,
+  with a ^ under the first place they differ: G against g.

@@ -1,0 +1,40 @@
+id: pointer-param
+title: "Changing a Value Through a Pointer"
+type: code
+language: zig
+body: |
+  Function parameters are constants, so a function cannot change the
+  arguments it is given. To let it change a variable of the caller's, pass
+  a pointer to the variable; the function writes through it:
+
+      fn reset(p: *u8) void {
+          p.* = 0;
+      }
+
+  A pointer has to respect what it points to: through a pointer to a
+  constant, nothing can be changed. The type says which it is: *u8 points
+  to a variable u8, *const u8 to a constant one.
+
+  Run the program, and read the error.
+question: Make it compile, so that score goes up by 10 three times.
+starter_code: |
+  const std = @import("std");
+
+  fn addTen(p: *u32) void {
+      p.* += 10;
+  }
+
+  pub fn main() void {
+      const score: u32 = 0;
+      addTen(&score);
+      addTen(&score);
+      addTen(&score);
+      std.debug.print("score {d}\n", .{score});
+  }
+expected_output: |
+  score 30
+explanation: |
+  var score. The error was "expected type '*u32', found '*const u32'",
+  with the note "cast discards const qualifier": &score of a constant is
+  a *const u32, and allowing it to become a *u32 would let addTen change
+  a constant.

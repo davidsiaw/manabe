@@ -1,0 +1,63 @@
+id: directories
+title: "Directories"
+type: code
+language: zig
+body: |
+  Directories have their own operations:
+
+  - createDir makes one folder; createDirPath makes a whole path of them,
+    like mkdir -p.
+  - openDir opens one, as a Dir, with .iterate = true to list it.
+  - iterate goes through its entries, each with a name and a kind: file,
+    directory and so on.
+  - deleteDir removes an empty folder; deleteTree removes a folder and
+    everything in it.
+
+      var dir = try cwd.openDir(io, "src", .{ .iterate = true });
+      defer dir.close(io);
+      var it = dir.iterate();
+      while (try it.next(io)) |entry| { ... }
+
+  The order of the entries is up to the file system, so the program sorts
+  the names before printing them.
+question: Make the project's folders, and list the src folder, so that the program prints as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const cwd = std.Io.Dir.cwd();
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      // Make src/decoders, then the files.
+
+      try cwd.writeFile(io, .{ .sub_path = "src/main.zig", .data = "" });
+      try cwd.writeFile(io, .{ .sub_path = "src/decoders/jpg.zig", .data = "" });
+      try cwd.writeFile(io, .{ .sub_path = "src/build.zig", .data = "" });
+
+      var names: std.ArrayList([]const u8) = .empty;
+      defer {
+          for (names.items) |name| allocator.free(name);
+          names.deinit(allocator);
+      }
+      // List src into names, with a / after the names of directories.
+
+      std.mem.sort([]const u8, names.items, {}, lessThan);
+      for (names.items) |name| std.debug.print("{s}\n", .{name});
+  }
+
+  fn lessThan(_: void, a: []const u8, b: []const u8) bool {
+      return std.mem.lessThan(u8, a, b);
+  }
+expected_output: |
+  build.zig
+  decoders/
+  main.zig
+explanation: |
+  createDirPath for both folders at once; then the iteration, copying
+  each name with std.mem.concat, as entry.name only lasts until the next
+  entry. Without the copies, the list would hold slices of the iterator's
+  memory, which changes under them. jpg.zig is not listed: iterate does
+  not go into subfolders; std.Io.Dir.walk does.

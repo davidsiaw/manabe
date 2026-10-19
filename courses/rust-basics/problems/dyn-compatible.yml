@@ -1,0 +1,26 @@
+id: dyn-compatible
+title: dyn Compatibility
+type: multiple_choice
+body: |
+  Not every trait can be made into a trait object. The trait must be dyn
+  compatible: roughly, its methods must not return Self, and must not
+  have generic type parameters. A trait object has forgotten its concrete
+  type, so a method that returns Self could not say what type that is.
+
+  Clone is the classic example: clone returns Self.
+
+    let components: Vec<Box<dyn Clone>> = vec![];
+question: What happens with the line above?
+choices:
+  - id: a
+    text: "It does not compile: the trait `Clone` is not dyn compatible"
+    correct: true
+  - id: b
+    text: It works, as long as the vector is empty
+  - id: c
+    text: It compiles, and panics when cloning
+  - id: d
+    text: "It works: every type can be cloned"
+explanation: |
+  Older documentation calls this object safety. The compiler's error lists
+  the method that is the problem.

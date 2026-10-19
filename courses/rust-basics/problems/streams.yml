@@ -1,0 +1,41 @@
+id: streams
+title: Streams
+type: code
+language: rust
+run: local
+body: |
+  A stream is to async what an iterator is to ordinary code: a sequence of
+  items that arrive over time. trpl::stream_from_iter makes one from an
+  iterator, and the StreamExt trait gives it next, which is async, and
+  adapters such as filter and map:
+
+    use trpl::StreamExt;
+
+    let mut stream = trpl::stream_from_iter([1, 2, 3]).map(|n| n * 2);
+    while let Some(value) = stream.next().await {
+        println!("{value}");
+    }
+
+  Copy the program into src/main.rs in your hello project and run it; it prints nothing.
+question: Turn values into a stream, keep the multiples of 3 or 5, and print each, as below. Run it and paste what it printed.
+starter_code: |
+  use trpl::StreamExt;
+
+  fn main() {
+      trpl::run(async {
+          let values = 1..=12;
+          let _ = values;
+      });
+  }
+expected_output: |
+  The value was: 3
+  The value was: 5
+  The value was: 6
+  The value was: 9
+  The value was: 10
+  The value was: 12
+explanation: |
+  trpl::stream_from_iter(values).filter(...), and a while let over next().
+  Streams shine with items that really do arrive over time, such as
+  messages from a channel or a network; ReceiverStream turns a channel's
+  receiver into one.

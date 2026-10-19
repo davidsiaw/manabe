@@ -1,0 +1,29 @@
+id: more-info-than-compiler
+title: When You Know More Than the Compiler
+type: multiple_choice
+body: |
+  Sometimes the code makes sure a value is valid, but the compiler cannot
+  see it. A hard-coded IP address can never fail to parse, yet parse
+  returns a Result all the same:
+
+    use std::net::IpAddr;
+
+    let home: IpAddr = "127.0.0.1"
+        .parse()
+        .expect("Hardcoded IP address should be valid");
+
+  Then expect is right, with a message that says why it cannot fail.
+question: The address later comes from a configuration file instead. Is expect still right?
+choices:
+  - id: a
+    text: "No: a file can contain anything, so the error should now be handled"
+    correct: true
+  - id: b
+    text: "Yes: the message still explains it"
+  - id: c
+    text: "Yes: parse never fails on addresses"
+  - id: d
+    text: "No: expect only works on hard-coded values"
+explanation: |
+  The reason it could not fail was that the text was in the code. Once it
+  comes from outside, a bad value is an expected failure.

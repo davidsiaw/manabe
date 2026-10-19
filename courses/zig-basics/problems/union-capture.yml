@@ -1,0 +1,52 @@
+id: union-capture
+title: "Changing a Union's Value"
+type: code
+language: zig
+body: |
+  A switch can capture a pointer to the active field's value, with |*x|,
+  and change it in place. The union itself must be a variable, and the
+  switch is on a pointer to it, or on the variable:
+
+      switch (event.*) {
+          .click => |*click| click.count += 1,
+          ...
+      }
+
+  The program below should make every shape twice as big, and changes
+  nothing: run it.
+question: Make grow change the shape it is given.
+starter_code: |
+  const std = @import("std");
+
+  const Shape = union(enum) {
+      circle: f32,
+      square: f32,
+  };
+
+  fn grow(shape: *Shape) void {
+      switch (shape.*) {
+          .circle => |r| {
+              var bigger = r;
+              bigger *= 2;
+          },
+          .square => |side| {
+              var bigger = side;
+              bigger *= 2;
+          },
+      }
+  }
+
+  pub fn main() void {
+      var shapes = [_]Shape{ .{ .circle = 2 }, .{ .square = 3 } };
+      for (&shapes) |*shape| grow(shape);
+      for (shapes) |shape| switch (shape) {
+          .circle => |r| std.debug.print("circle {d}\n", .{r}),
+          .square => |side| std.debug.print("square {d}\n", .{side}),
+      };
+  }
+expected_output: |
+  circle 4
+  square 6
+explanation: |
+  |*r| and r.* *= 2. A plain |r| is a copy, so the starter doubled its
+  copies and threw them away.

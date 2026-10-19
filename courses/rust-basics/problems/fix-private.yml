@@ -1,0 +1,54 @@
+id: fix-private
+title: Private by Default
+type: code
+language: rust
+run: local
+body: |
+  Everything in a module is private to it unless it says otherwise:
+  functions, structs, enums, constants and modules too. Code in a parent
+  module cannot use the private items of its children. It works the other
+  way round: code in a child module can use everything in the modules
+  around it.
+
+  The idea is that a module hides how it works, and only what is marked pub
+  is meant for the code outside. Like a restaurant: customers do not see
+  the kitchen, but the kitchen staff can see the dining room.
+
+  pub mod makes a module visible to its parent. It does not make the
+  module's contents public: each item needs its own pub.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0603]: module `hosting` is private
+question: Add pub where needed, and only there, so that main can call both functions. Run it and paste what it printed.
+starter_code: |
+  mod front_of_house {
+      mod hosting {
+          fn add_to_waitlist() {
+              println!("added to the waitlist");
+              notify_kitchen();
+          }
+
+          fn notify_kitchen() {
+              println!("the kitchen knows");
+          }
+
+          fn seat_at_table() {
+              println!("seated at a table");
+          }
+      }
+  }
+
+  fn main() {
+      crate::front_of_house::hosting::add_to_waitlist();
+      front_of_house::hosting::seat_at_table();
+  }
+expected_output: |
+  added to the waitlist
+  the kitchen knows
+  seated at a table
+explanation: |
+  pub mod hosting, pub fn add_to_waitlist and pub fn seat_at_table.
+  notify_kitchen stays private: only add_to_waitlist, in the same module,
+  calls it. front_of_house needs no pub, as main is in the same module as
+  front_of_house, the crate root, and siblings can see each other.

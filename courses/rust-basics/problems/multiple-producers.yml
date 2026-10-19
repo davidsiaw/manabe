@@ -1,0 +1,48 @@
+id: multiple-producers
+title: Several Producers
+type: code
+language: rust
+run: local
+body: |
+  tx.clone() makes another transmitter for the same channel, so that
+  several threads can send into it. The receiver can be used as an
+  iterator: for received in rx goes through the values as they arrive,
+  and ends once every transmitter is dropped.
+
+  Copy the program into src/main.rs in your hello project and run it: it waits forever, as main's own tx is never dropped, so the
+  channel never closes. Stop it with Ctrl-C.
+question: Give each worker its own clone, and drop main's tx before the loop. Run it and paste what it printed.
+starter_code: |
+  use std::sync::mpsc;
+  use std::thread;
+
+  fn main() {
+      let (tx, rx) = mpsc::channel();
+
+      for worker in 1..=3 {
+          let tx = tx.clone();
+          thread::spawn(move || {
+              for job in 1..=2 {
+                  tx.send(format!("worker {worker} did job {job}")).unwrap();
+              }
+          });
+      }
+
+      let mut messages: Vec<String> = rx.iter().collect();
+      messages.sort();
+      for message in messages {
+          println!("{message}");
+      }
+  }
+expected_output: |
+  worker 1 did job 1
+  worker 1 did job 2
+  worker 2 did job 1
+  worker 2 did job 2
+  worker 3 did job 1
+  worker 3 did job 2
+explanation: |
+  drop(tx) after the loop. The workers' clones are dropped when their
+  threads end, and then the channel is closed, which ends rx.iter(). The
+  messages arrive in an order that changes from run to run, so the program
+  sorts them before printing.

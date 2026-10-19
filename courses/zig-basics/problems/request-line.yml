@@ -1,0 +1,41 @@
+id: request-line
+title: "Taking the Request Line Apart"
+type: code
+language: zig
+body: |
+  The request line is everything up to the first \r\n, and its parts
+  are separated by spaces. Two functions from std.mem do the work:
+
+  - std.mem.indexOf(u8, text, "\r\n") finds where the first line ends,
+    or returns null if there is no \r\n.
+  - std.mem.splitScalar(u8, line, ' ') goes through the pieces between
+    the spaces. Its next() returns each piece, and null after the last.
+
+      var parts = std.mem.splitScalar(u8, "a b c", ' ');
+      const first = parts.next();      // "a", as a ?[]const u8
+
+  Run the program: it takes the parts from the whole text, so the version
+  runs into the headers.
+question: Split only the first line, so that the three parts print as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const text = "GET /users/list HTTP/1.1\r\nHost: localhost:3490\r\nAccept: */*\r\n\r\n";
+
+      var parts = std.mem.splitScalar(u8, text, ' ');
+      const method = parts.next() orelse "";
+      const uri = parts.next() orelse "";
+      const version = parts.next() orelse "";
+      std.debug.print("method [{s}]\nuri [{s}]\nversion [{s}]\n", .{ method, uri, version });
+  }
+expected_output: |
+  method [GET]
+  uri [/users/list]
+  version [HTTP/1.1]
+explanation: |
+  const line_end = std.mem.indexOf(u8, text, "\r\n") orelse text.len;
+  and split text[0..line_end]. orelse text.len handles a request with only
+  one line. The brackets in the output show that nothing extra, such as
+  the \r, is left at the end of the version; the book's version of this
+  code keeps it, as it only looks for the \n.

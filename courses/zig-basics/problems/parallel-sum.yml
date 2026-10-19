@@ -1,0 +1,50 @@
+id: parallel-sum
+title: "Putting It Together: Shared Results"
+type: code
+language: zig
+run: local
+body: |
+  The primes again, but now with one shared total: each thread counts its
+  own range locally, then adds its count to the total under a mutex, once.
+  That is the usual shape of parallel code: work alone, and share only
+  the result.
+
+  Programs in the browser run on a single thread, so this one runs on your
+  computer. Save it as shared.zig, and run zig run shared.zig.
+question: Write countPrimes, and spawn and join eight threads, each with an eighth of the range. Run it and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  fn isPrime(n: u32) bool {
+      if (n < 2) return false;
+      var d: u32 = 2;
+      while (d * d <= n) : (d += 1) {
+          if (n % d == 0) return false;
+      }
+      return true;
+  }
+
+  const Shared = struct {
+      mutex: std.Io.Mutex = .init,
+      total: u32 = 0,
+  };
+
+  fn countPrimes(io: std.Io, shared: *Shared, start: u32, end: u32) void {
+      _ = .{ io, shared, start, end };
+  }
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      var shared: Shared = .{};
+      _ = .{ io, &shared };
+
+      std.debug.print("{d} primes below 2000000\n", .{shared.total});
+  }
+expected_output: |
+  148933 primes below 2000000
+explanation: |
+  Eight threads of 250,000 numbers each; the lock is taken once per
+  thread, not once per prime, so the threads hardly ever wait for each
+  other. On a computer with several cores, it runs several times faster
+  than one thread would. std.Thread.Pool would manage a set of reusable
+  threads for you.

@@ -1,0 +1,29 @@
+id: vec-drop
+title: Dropping a Vector
+type: multiple_choice
+body: |
+  Like any other value, a vector is dropped when it goes out of scope, and
+  then so are all of its elements: an element that is a String frees its
+  text too.
+
+    {
+        let v = vec![String::from("a"), String::from("b")];
+        // use v
+    } // v and both Strings are dropped here
+question: A function returns a reference to an element of a vector made inside the function. What happens?
+choices:
+  - id: a
+    text: "It does not compile: the vector is dropped when the function returns"
+    correct: true
+  - id: b
+    text: "It works: the element is kept alive by the reference"
+  - id: c
+    text: It works, but only for elements that are Copy
+  - id: d
+    text: It compiles, and panics when the reference is used
+explanation: |
+  The compiler refuses: "cannot return value referencing local variable",
+  as for any other reference to a local variable. (With no parameters at
+  all, it first asks for a "lifetime specifier", which is chapter 10's
+  topic.) Returning the element itself, or the whole vector, moves it out
+  instead, and that works.

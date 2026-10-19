@@ -1,0 +1,31 @@
+id: stack-lifo
+title: "What a Stack Is"
+type: multiple_choice
+body: |
+  A stack is a list where items are added and removed at the same end,
+  the top, like a stack of plates. The operations are:
+
+  - push: put an item on top
+  - pop: take the top item off
+  - and often peek, to look at the top item without taking it off
+
+  So the last item pushed is the first popped: last in, first out, or
+  LIFO. Programs use stacks for undo histories, for matching brackets,
+  and for the call stack itself, where each function call pushes a frame.
+
+  Here, the stack keeps its items in a slice from an allocator, like an
+  ArrayList, with a length that counts how many slots are used.
+question: Push 1, then 2, then 3. Pop twice. What is on top?
+choices:
+  - id: a
+    text: "1"
+    correct: true
+  - id: b
+    text: "3"
+  - id: c
+    text: "2"
+  - id: d
+    text: "Nothing"
+explanation: |
+  The pops take 3, then 2, leaving 1. A queue, first in, first out, would
+  have given 1 and 2 instead.

@@ -1,0 +1,39 @@
+id: iterator-chain
+title: Chaining Adapters
+type: code
+language: rust
+run: local
+body: |
+  Adapters chain, each working on what the one before it gives, and a
+  consuming adapter at the end runs the whole chain, one item at a time:
+
+    let total: u32 = (1..=10).filter(|n| n % 2 == 1).map(|n| n * n).sum();
+
+  1..=10 is a range, which is an iterator too, from 1 to 10 inclusive.
+  Other useful adapters: enumerate, which pairs each item with its index;
+  zip, which pairs the items of two iterators; take and skip; rev.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write the three expressions with iterator chains, no loops. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let readings = vec![12, -3, 25, 7, -8, 40];
+
+      // The sum of the squares of the odd numbers from 1 to 10.
+      let odd_squares: i32 = todo!();
+
+      // The positive readings, doubled.
+      let doubled: Vec<i32> = todo!();
+
+      // The index of each reading over 10, in a Vec.
+      let high: Vec<usize> = todo!();
+
+      println!("{odd_squares} {doubled:?} {high:?}");
+  }
+expected_output: |
+  165 [24, 50, 14, 80] [0, 2, 5]
+explanation: |
+  filter's closure gets a reference to each item, and iter() items are
+  references already, hence &&r, or **r: a reference to a reference.
+  enumerate gives (index, item) pairs, which the closures take apart with
+  patterns.

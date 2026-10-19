@@ -1,0 +1,28 @@
+id: orphan-rule
+title: Whose Trait, Whose Type
+type: multiple_choice
+body: |
+  A trait can be implemented for a type only if the trait or the type, or
+  both, belong to your crate:
+
+  - your trait Summary on the standard library's Vec<T>: allowed
+  - the standard library's Display on your SocialPost: allowed
+  - the standard library's Display on its Vec<T>: not allowed
+
+  This is the orphan rule. Without it, two crates could each implement the
+  same trait for the same type, and Rust would not know which to use.
+question: Your crate defines struct Tweet. Which of these can it write?
+choices:
+  - id: a
+    text: impl std::fmt::Display for Tweet
+    correct: true
+  - id: b
+    text: impl std::fmt::Display for String
+  - id: c
+    text: impl std::fmt::Display for i32
+  - id: d
+    text: None of them
+explanation: |
+  Tweet is yours, so you can give it any trait. String and i32 belong to
+  the standard library, as does Display, so neither impl is yours to
+  write.

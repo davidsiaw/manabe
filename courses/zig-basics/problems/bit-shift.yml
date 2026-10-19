@@ -1,0 +1,28 @@
+id: bit-shift
+title: "Shifting Bits"
+type: multiple_choice
+body: |
+  Cutting bytes into groups of 6 bits takes the bitwise operators, which
+  work on the bits of a number. They are the same as in C.
+
+  >> shifts the bits to the right: x >> 2 moves every bit of x two places
+  right, and the two on the right fall off. The first group of a window is
+  the first byte's top 6 bits, which is that byte shifted right by 2.
+
+  << shifts left. Bits pushed out of the top of the type are lost: in a
+  u8, which has 8 bits, 0b11000011 << 4 is 0b00110000.
+question: "'H' is 72, 01001000 in binary. What is 'H' >> 2?"
+choices:
+  - id: a
+    text: "18"
+    correct: true
+  - id: b
+    text: "288"
+  - id: c
+    text: "36"
+  - id: d
+    text: "2"
+explanation: |
+  01001000 shifted right by 2 is 00010010, which is 18: the group 010010
+  of the "Hi" example, with two zeros in front. Shifting right by n is
+  dividing by 2 to the power n: 72 / 4 = 18.

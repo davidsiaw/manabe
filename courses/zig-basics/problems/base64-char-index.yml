@@ -1,0 +1,44 @@
+id: base64-char-index
+title: "From Character Back to Index"
+type: code
+language: zig
+body: |
+  The decoder needs the opposite of the table: given a character, its index
+  in the scale. The simplest way is to go through the table until the
+  character turns up.
+
+  = is not in the scale. Give it the index 64, which no real character has,
+  so that the decoder can tell padding apart.
+question: Write charIndex, so that the program prints the indexes as below.
+starter_code: |
+  const std = @import("std");
+
+  const table: *const [64]u8 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ++ "abcdefghijklmnopqrstuvwxyz" ++ "0123456789+/";
+
+  fn charIndex(char: u8) u8 {
+      _ = char;
+      return 0;
+  }
+
+  pub fn main() void {
+      for ("TWFu+/=") |char| {
+          std.debug.print("{c} {d}\n", .{ char, charIndex(char) });
+      }
+  }
+expected_output: |
+  T 19
+  W 22
+  F 5
+  u 46
+  + 62
+  / 63
+  = 64
+explanation: |
+  if (char == '=') return 64; then a for loop over the table with an index,
+  returning @intCast(i) when the character matches: i is a usize, and
+  @intCast turns it into the u8 that the function returns. What to return
+  for a character that is not in the table at all is up to you; a real
+  decoder would return an error.
+
+  A lookup table the other way, 256 entries long, with each character's
+  index at its own position, would save going through the table each time.

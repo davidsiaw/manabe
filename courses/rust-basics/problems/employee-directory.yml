@@ -1,0 +1,71 @@
+id: employee-directory
+title: "Putting It Together: A Company Directory"
+type: code
+language: rust
+run: local
+body: |
+  The last exercise: a directory of which employees are in which
+  department, built from commands such as "Add Sally to Engineering", and
+  listed with "List Engineering", or "List all" for every department.
+
+  A HashMap<String, Vec<String>> fits: each department's name is a key,
+  and its value the list of the people in it. The lists are printed in
+  alphabetical order, and "List all" goes through the departments in
+  alphabetical order too.
+
+  To take a command apart, split_whitespace().collect() turns it into a
+  Vec<&str> of its words, and a match on a slice of them picks out the
+  pattern:
+
+    let words: Vec<&str> = command.split_whitespace().collect();
+    match words.as_slice() {
+        ["Add", name, "to", department] => ...,
+        ["List", department] => ...,
+        _ => println!("unknown command: {command}"),
+    }
+
+  Copy the program into src/main.rs in your hello project and run it; it prints that it does not know any of the commands.
+question: Make run carry out the commands. Run it and paste what it printed.
+starter_code: |
+  use std::collections::HashMap;
+
+  fn list(directory: &HashMap<String, Vec<String>>, department: &str) {
+      todo!()
+  }
+
+  fn run(directory: &mut HashMap<String, Vec<String>>, command: &str) {
+      let words: Vec<&str> = command.split_whitespace().collect();
+      match words.as_slice() {
+          _ => println!("unknown command: {command}"),
+      }
+  }
+
+  fn main() {
+      let commands = [
+          "Add Sally to Engineering",
+          "Add Amir to Sales",
+          "Add Bob to Engineering",
+          "List Engineering",
+          "Add Ann to Sales",
+          "Fire Bob",
+          "List all",
+      ];
+
+      let mut directory = HashMap::new();
+      for command in commands {
+          run(&mut directory, command);
+      }
+  }
+expected_output: |
+  Engineering: Bob, Sally
+  unknown command: Fire Bob
+  Engineering: Bob, Sally
+  Sales: Amir, Ann
+explanation: |
+  - Add: directory.entry(department.to_string()).or_insert(Vec::new())
+    gives the department's list, new or not, to push the name onto.
+  - List all comes before List department in the match: the arms are
+    tried in order, and "all" would match department too.
+  - list clones the department's list before sorting it, as it only has
+    a & reference to the directory. Sorting when adding would avoid the
+    copy.

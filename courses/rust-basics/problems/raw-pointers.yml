@@ -1,0 +1,45 @@
+id: raw-pointers
+title: Raw Pointers
+type: code
+language: rust
+run: local
+body: |
+  Raw pointers, *const T and *mut T, are like C's pointers: they can be
+  null, can point to memory that is gone, can be many for the same mutable
+  data, and are not freed automatically. They are made with &raw const and
+  &raw mut, which is safe; dereferencing them is not:
+
+    let mut num = 5;
+    let r1 = &raw const num;
+    let r2 = &raw mut num;
+
+    unsafe {
+        *r2 += 1;
+        println!("r1 is: {}", *r1);
+    }
+
+  Having an immutable and a mutable pointer to num at once would not be
+  allowed with references.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0133]: dereference of raw pointer is unsafe and requires unsafe block
+question: Put the dereferences in an unsafe block. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut num = 5;
+
+      let r1 = &raw const num;
+      let r2 = &raw mut num;
+
+      *r2 += 1;
+      println!("r1 is: {}", *r1);
+      println!("r2 is: {}", *r2);
+  }
+expected_output: |
+  r1 is: 6
+  r2 is: 6
+explanation: |
+  An unsafe block around the three lines that dereference. Here the
+  pointers point to num, which is alive, so this is sound; nothing checks
+  that, which is the point of unsafe.

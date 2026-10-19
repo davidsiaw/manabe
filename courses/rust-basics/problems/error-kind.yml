@@ -1,0 +1,47 @@
+id: error-kind
+title: Different Errors, Different Handling
+type: code
+language: rust
+run: local
+body: |
+  An error often says what kind of error it is, and the program can react
+  to each kind differently. ParseIntError has kind(), which returns an
+  IntErrorKind enum:
+
+    use std::num::IntErrorKind;
+
+    match e.kind() {
+        IntErrorKind::Empty => ...,
+        IntErrorKind::PosOverflow => ...,
+        _ => ...,
+    }
+
+  For files, std::io::Error has a kind() too: ErrorKind::NotFound, say, to
+  create a file that is not there yet.
+
+  Copy the program into src/main.rs in your hello project and run it: every error is treated the same.
+question: Treat an empty answer as 0, and a number too large as 255; anything else is still not a number. Run it and paste what it printed.
+starter_code: |
+  use std::num::IntErrorKind;
+
+  fn read_volume(text: &str) -> Result<u8, String> {
+      match text.parse::<u8>() {
+          Ok(n) => Ok(n),
+          Err(e) => Err(format!("not a number: {e}")),
+      }
+  }
+
+  fn main() {
+      for text in ["30", "", "999", "loud"] {
+          println!("{text:?}: {:?}", read_volume(text));
+      }
+  }
+expected_output: |
+  "30": Ok(30)
+  "": Ok(0)
+  "999": Ok(255)
+  "loud": Err("not a number: invalid digit found in string")
+explanation: |
+  A match on e.kind() inside the Err arm. IntErrorKind is non-exhaustive,
+  marked so that the standard library can add kinds later, so a _ arm is
+  required even if you list every kind there is today.

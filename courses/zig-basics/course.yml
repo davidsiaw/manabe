@@ -1,13 +1,18 @@
 id: zig-basics
-title: Zig Basics
+title: Zig 0.17 Basics
 language: zig
 description: |
   Zig from the start, in your browser: your programs are compiled by the real
   Zig compiler (0.17), running right here, and you see everything it says.
-  Covers chapters 1 to 3 of Introduction to Zig: a project-based book, by
+  Covers all 17 chapters of Introduction to Zig: a project-based book, by
   Pedro Duarte Faria (pedropark99.github.io/zig-book), licensed CC BY 4.0:
-  values and types, arrays, slices and strings, control flow, structs, and
-  memory and allocators. The text here is rewritten and shortened, and the
+  values and types, arrays, slices and strings, control flow, structs,
+  memory and allocators, a first project, a Base64 encoder and decoder,
+  debugging, pointers and optionals, a second project, an HTTP server
+  (which you run on your own computer), unit tests, the build system,
+  error handling and unions, data structures, a third project, a generic
+  stack, with comptime, files and input/output, calling C, a fourth
+  project, an image filter, threads, and vectors and SIMD. The text here is rewritten and shortened, and the
   examples are changed into exercises.
 sections:
   - title: Introducing Zig
@@ -42,3 +47,93 @@ sections:
         problems: [compile-time-known, stack-heap, stack-overflow]
       - title: Allocators
         problems: [why-allocators, alloc-free, leak, fixed-buffer, allocator-kinds, arena, create-destroy, repeat-word]
+  - title: "Project 1: Base64"
+    sections:
+      - title: The Base64 Scale
+        problems: [base64-why, base64-scale, base64-windows, base64-padding]
+      - title: The Encoder
+        problems: [base64-encode-length, bit-shift, bit-mask, base64-six-bits, base64-encode]
+      - title: The Decoder
+        problems: [base64-decode-length, base64-char-index, base64-decode, base64-std]
+  - title: Debugging
+    sections:
+      - title: Print Debugging
+        problems: [format-specifiers, stdout-stderr, print-debugging]
+      - title: Debuggers
+        problems: [build-modes, debugger]
+      - title: Types
+        problems: [typeof, debug-overflow]
+  - title: Pointers and Optionals
+    sections:
+      - title: Pointers
+        problems: [pointer-deref, pointer-param, pointer-const, pointer-var, pointer-kinds]
+      - title: Optionals
+        problems: [non-nullable, optionals, optional-pointer, optional-if, orelse, optional-unwrap, linked-list]
+  - title: "Project 2: An HTTP Server"
+    sections:
+      - title: How HTTP Works
+        problems: [http-intro, http-message]
+      - title: Parsing Requests
+        problems: [http-methods, static-string-map, request-line, parse-request]
+      - title: Responding
+        problems: [http-response, install-zig, http-server]
+  - title: Unit Tests
+    sections:
+      - title: Checking Values
+        problems: [test-blocks, testing-expect, testing-expect-equal, testing-slices, testing-errors]
+      - title: zig test
+        problems: [first-zig-test, testing-allocator, test-leak]
+  - title: The Build System
+    sections:
+      - title: build.zig
+        problems: [build-scripts, build-target-mode, build-run-step, build-tests-step]
+      - title: Options and Libraries
+        problems: [build-options, build-libraries, build-c-code]
+  - title: Error Handling and Unions
+    sections:
+      - title: Errors
+        problems: [error-discarded, error-sets, error-coercion, catch-default, catch-capture, if-error]
+      - title: Unions
+        problems: [bare-unions, tagged-unions, union-capture, command-parser]
+  - title: Data Structures
+    sections:
+      - title: Dynamic Arrays
+        problems: [arraylist-capacity, arraylist-append, arraylist-remove, arraylist-insert]
+      - title: Hash Maps
+        problems: [auto-hashmap, hashmap-order-zig, word-frequencies]
+      - title: Lists and Multi-Arrays
+        problems: [intrusive-list, multi-array-list]
+  - title: "Project 3: A Stack"
+    sections:
+      - title: comptime and Generics
+        problems: [comptime-params, comptime-blocks, generic-max, anytype]
+      - title: The Stack
+        problems: [stack-lifo, stack-push, stack-pop, generic-stack, bracket-matcher]
+  - title: Files and Input/Output
+    sections:
+      - title: Input and Output
+        problems: [io-interface, standard-streams, paths]
+      - title: Files
+        problems: [create-file, read-lines, append-file, delete-file, copy-file]
+      - title: Directories
+        problems: [directories, notes-summary]
+  - title: Interoperability with C
+    sections:
+      - title: Calling C
+        problems: [c-interop, extern-functions, translate-c]
+      - title: C Types
+        problems: [c-types, c-variadic, c-structs]
+  - title: "Project 4: An Image Filter"
+    sections:
+      - title: Pixels
+        problems: [raster-images, pixel-index, grayscale-filter]
+      - title: Image Files
+        problems: [png-library, pgm-image, ascii-art]
+  - title: Threads and Parallelism
+    sections:
+      - title: Threads
+        problems: [threads-intro, spawn-join, join-detach]
+      - title: Sharing Data
+        problems: [data-race, mutex, atomics, rwlock, deadlock, parallel-sum]
+  - title: Vectors and SIMD
+    problems: [simd, vectors, splat-reduce, array-to-vector, vector-size]

@@ -1,0 +1,40 @@
+id: generic-max
+title: "A Generic Function"
+type: code
+language: zig
+body: |
+  Types are values in Zig, of the type type, known while compiling. So a
+  function can take a type as a comptime parameter, and use it in the rest
+  of its signature:
+
+      fn max(comptime T: type, a: T, b: T) T {
+          return if (a > b) a else b;
+      }
+
+      max(u8, 4, 10)          // 10
+      max(f64, 89.24, 64.0)   // 89.24
+
+  That is all generics are in Zig: functions with comptime type
+  parameters. Run the program: there is only a maxU8.
+question: Replace maxU8 with a generic max, so that the program prints as below.
+starter_code: |
+  const std = @import("std");
+
+  fn maxU8(a: u8, b: u8) u8 {
+      return if (a > b) a else b;
+  }
+
+  pub fn main() void {
+      std.debug.print("{d}\n", .{max(u8, 4, 10)});
+      std.debug.print("{d}\n", .{max(f64, 89.24, 64.001)});
+      std.debug.print("{d}\n", .{max(i32, -5, -12)});
+  }
+expected_output: |
+  10
+  89.24
+  -5
+explanation: |
+  fn max(comptime T: type, a: T, b: T) T. Calling it with a type that
+  cannot be compared with >, such as a struct, fails to compile, inside
+  max, with the type named: the compiler checks each version it makes.
+  std.math.max does this for you.

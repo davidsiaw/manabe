@@ -1,0 +1,33 @@
+id: panic-or-not
+title: To panic! or Not to panic!
+type: multiple_choice
+body: |
+  Which to use: panic, or return a Result?
+
+  Return a Result when failure is something that can be expected to
+  happen: a user typing a letter where a number belongs, a file that does
+  not exist, a server that does not answer. The caller decides what to do.
+
+  Panic when continuing would be wrong or unsafe: when the code is in a
+  bad state, because something that should never happen happened. That
+  is a bug, to be fixed in the code, not handled while running. A
+  function's contract, the rules for calling it, works the same way: if a
+  caller breaks it, such as by passing an index out of range, a panic
+  points at the caller's bug.
+
+  unwrap and expect are also fine in examples, prototypes and tests,
+  where handling every error would get in the way.
+question: A function reads a number that a user typed. The text is not a number. What should it do?
+choices:
+  - id: a
+    text: Return an error, and let the program ask again or tell the user
+    correct: true
+  - id: b
+    text: "Panic: the input is invalid"
+  - id: c
+    text: Return 0
+  - id: d
+    text: Call std::process::exit
+explanation: |
+  Bad input from a user is normal: users make typos. Panicking would end
+  the whole program over a typo.

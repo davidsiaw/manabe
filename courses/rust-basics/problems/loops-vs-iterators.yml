@@ -1,0 +1,28 @@
+id: loops-vs-iterators
+title: Loops or Iterators?
+type: multiple_choice
+body: |
+  Iterators are one of Rust's zero-cost abstractions: using them adds no
+  cost compared with writing the loop by hand. The compiler turns an
+  iterator chain into the same loop you would have written, and often
+  better, as it knows exactly how many items there are, and can unroll the
+  loop, or drop bounds checks.
+
+  The book compares a loop and an iterator chain searching a whole novel,
+  The Adventures of Sherlock Holmes: the iterator version was slightly
+  faster.
+question: Why do most Rust programmers prefer iterator chains to index loops?
+choices:
+  - id: a
+    text: They say what is wanted, with no index bookkeeping, and cost nothing extra
+    correct: true
+  - id: b
+    text: They are always much faster than loops
+  - id: c
+    text: Loops cannot go through vectors
+  - id: d
+    text: Iterators run on several threads by themselves
+explanation: |
+  A loop is still right when it reads better, such as for a loop with
+  complicated early exits. The point is that choosing iterators never costs
+  speed.

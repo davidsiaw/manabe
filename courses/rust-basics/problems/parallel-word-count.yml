@@ -1,0 +1,54 @@
+id: parallel-word-count
+title: "Putting It Together: Counting in Parallel"
+type: code
+language: rust
+run: local
+body: |
+  A word count, split across threads: each thread counts the words in its
+  own lines, in a HashMap of its own, and sends it down a channel; main
+  merges them. That way, nothing is shared while the threads work, and
+  nothing needs a lock.
+
+  Copy the program into src/main.rs in your hello project and run it: it prints nothing, as no thread is spawned yet.
+question: Write count_words, and the main loop that spawns a thread per chunk and merges the results. Run it and paste what it printed.
+starter_code: |
+  use std::collections::HashMap;
+  use std::sync::mpsc;
+  use std::thread;
+
+  fn count_words(lines: &[&str]) -> HashMap<String, usize> {
+      todo!()
+  }
+
+  fn main() {
+      let text = "the cat sat\nthe dog sat\non the mat\nthe cat ran\na dog ran\non the log";
+      let lines: Vec<&'static str> = text.lines().collect();
+
+      let (tx, rx) = mpsc::channel::<HashMap<String, usize>>();
+      // Spawn a thread for every two lines, each sending its counts.
+
+      drop(tx);
+      let mut total: HashMap<String, usize> = HashMap::new();
+      for counts in rx {
+          for (word, n) in counts {
+              *total.entry(word).or_insert(0) += n;
+          }
+      }
+
+      let mut words: Vec<_> = total.into_iter().collect();
+      words.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+      for (word, n) in words.iter().take(4) {
+          println!("{word}: {n}");
+      }
+  }
+expected_output: |
+  the: 5
+  cat: 2
+  dog: 2
+  on: 2
+explanation: |
+  lines.chunks(2) gives slices of two lines; each thread gets its own copy,
+  chunk.to_vec(), as the closure must own what it uses, and its own tx.
+  The lines are &'static str, slices of a literal, which is why they can
+  go to another thread at all. The sort puts the most common words first,
+  and ties in alphabetical order, so the output is the same every run.

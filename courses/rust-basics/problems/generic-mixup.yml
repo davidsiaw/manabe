@@ -1,0 +1,32 @@
+id: generic-mixup
+title: Method Generics
+type: multiple_choice
+body: |
+  A method can have type parameters of its own, besides its struct's:
+
+    struct Point<X1, Y1> {
+        x: X1,
+        y: Y1,
+    }
+
+    impl<X1, Y1> Point<X1, Y1> {
+        fn mixup<X2, Y2>(self, other: Point<X2, Y2>) -> Point<X1, Y2> {
+            Point { x: self.x, y: other.y }
+        }
+    }
+
+  X1 and Y1 come with the struct, in the impl; X2 and Y2 only matter for
+  this method, so they are declared on it.
+question: "p1 is Point { x: 5, y: 10.4 } and p2 is Point { x: \"Hello\", y: 'c' }. What is p1.mixup(p2)?"
+choices:
+  - id: a
+    text: "Point { x: 5, y: 'c' }"
+    correct: true
+  - id: b
+    text: "Point { x: \"Hello\", y: 10.4 }"
+  - id: c
+    text: "Point { x: 5, y: 10.4 }"
+  - id: d
+    text: It does not compile, as the types differ
+explanation: |
+  x comes from self, p1, and y from other, p2: a Point<i32, char>.

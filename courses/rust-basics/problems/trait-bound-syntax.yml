@@ -1,0 +1,31 @@
+id: trait-bound-syntax
+title: Trait Bound Syntax
+type: multiple_choice
+body: |
+  impl Summary in a parameter is short for a generic type with a trait
+  bound:
+
+    pub fn notify(item: &impl Summary)          // short
+    pub fn notify<T: Summary>(item: &T)         // the same, written out
+
+  The difference shows with two parameters:
+
+    pub fn notify(item1: &impl Summary, item2: &impl Summary)
+    pub fn notify<T: Summary>(item1: &T, item2: &T)
+
+  In the first, each parameter can be any type that implements Summary,
+  and they can be different types. In the second, both are the same T.
+question: With the second version, what happens when you call notify(&article, &post), a NewsArticle and a SocialPost?
+choices:
+  - id: a
+    text: "It does not compile: both must be the same type T"
+    correct: true
+  - id: b
+    text: It works, as both implement Summary
+  - id: c
+    text: It works, and T becomes Summary
+  - id: d
+    text: It compiles, and panics
+explanation: |
+  T can only be one type at a time. The impl Trait form gives each
+  parameter its own hidden type parameter, so it accepts the two.

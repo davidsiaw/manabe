@@ -1,0 +1,69 @@
+id: use-search
+title: Using search
+type: code
+language: rust
+run: local
+body: |
+  The library is done, and tested; now the program uses it. A package's
+  binary can use its library crate by name, like any other crate:
+
+    use minigrep::search;
+
+  run then prints each line that search returns, instead of the whole
+  text. Copy the program into src/main.rs, keeping src/lib.rs and poem.txt.
+question: Make run print the lines that contain the query, one per line. Run cargo run -- body poem.txt and paste what it printed.
+starter_code: |
+  use std::env;
+  use std::error::Error;
+  use std::fs;
+  use std::process;
+
+  use minigrep::search;
+
+  fn main() {
+      let args: Vec<String> = env::args().collect();
+
+      let config = Config::build(&args).unwrap_or_else(|err| {
+          eprintln!("Problem parsing arguments: {err}");
+          process::exit(1);
+      });
+
+      if let Err(e) = run(config) {
+          eprintln!("Application error: {e}");
+          process::exit(1);
+      }
+  }
+
+  struct Config {
+      query: String,
+      file_path: String,
+  }
+
+  impl Config {
+      fn build(args: &[String]) -> Result<Config, &'static str> {
+          if args.len() < 3 {
+              return Err("not enough arguments");
+          }
+
+          let query = args[1].clone();
+          let file_path = args[2].clone();
+
+          Ok(Config { query, file_path })
+      }
+  }
+
+  fn run(config: Config) -> Result<(), Box<dyn Error>> {
+      let contents = fs::read_to_string(config.file_path)?;
+
+      println!("Searching for {}", config.query);
+      println!("With text:\n{contents}");
+
+      Ok(())
+  }
+expected_output: |
+  I'm nobody! Who are you?
+  Are you nobody, too?
+  How dreary to be somebody!
+explanation: |
+  for line in search(&config.query, &contents) { println!("{line}"); }.
+  Try other words: frog gives one line, and monomorphization none at all.

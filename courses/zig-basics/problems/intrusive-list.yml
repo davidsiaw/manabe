@@ -1,0 +1,56 @@
+id: intrusive-list
+title: "Linked Lists"
+type: code
+language: zig
+body: |
+  Zig's linked lists are intrusive: instead of the list holding your data,
+  your data holds a node of the list:
+
+      const Item = struct {
+          value: u32,
+          node: std.SinglyLinkedList.Node = .{},
+      };
+
+      var list: std.SinglyLinkedList = .{};
+      list.prepend(&item.node);
+
+  The list only links nodes together, so it never allocates. To get from
+  a node back to the Item it is in, @fieldParentPtr takes the name of the
+  field and a pointer to it:
+
+      const item: *Item = @fieldParentPtr("node", node);
+question: Write sum, which goes through the list and adds up the items' values.
+starter_code: |
+  const std = @import("std");
+
+  const Item = struct {
+      value: u32,
+      node: std.SinglyLinkedList.Node = .{},
+  };
+
+  fn sum(list: std.SinglyLinkedList) u32 {
+      _ = list;
+      return 0;
+  }
+
+  pub fn main() void {
+      var list: std.SinglyLinkedList = .{};
+      var a = Item{ .value = 1 };
+      var b = Item{ .value = 20 };
+      var c = Item{ .value = 300 };
+      list.prepend(&c.node);
+      list.prepend(&b.node);
+      list.prepend(&a.node);
+
+      std.debug.print("sum {d}\n", .{sum(list)});
+      _ = list.popFirst();
+      std.debug.print("sum {d}\n", .{sum(list)});
+  }
+expected_output: |
+  sum 321
+  sum 320
+explanation: |
+  Walk the nodes from list.first, as in the linked list of the pointers
+  chapter, and get each Item with @fieldParentPtr. One Item can have
+  several nodes, and so be in several lists at once. DoublyLinkedList
+  works the same way, with last and prev as well.

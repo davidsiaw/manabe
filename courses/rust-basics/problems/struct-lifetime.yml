@@ -1,0 +1,44 @@
+id: struct-lifetime
+title: References in Structs
+type: code
+language: rust
+run: local
+body: |
+  A struct can hold references, if every reference in it has a lifetime
+  annotation:
+
+    struct ImportantExcerpt<'a> {
+        part: &'a str,
+    }
+
+  This means an ImportantExcerpt cannot outlive the text its part refers
+  to. Methods go in an impl with the same lifetime: impl<'a>
+  ImportantExcerpt<'a>.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0106]: missing lifetime specifier
+question: Add the lifetime to the struct and its impl. Run it and paste what it printed.
+starter_code: |
+  struct ImportantExcerpt {
+      part: &str,
+  }
+
+  impl ImportantExcerpt {
+      fn announce(&self) {
+          println!("Attention please: {}", self.part);
+      }
+  }
+
+  fn main() {
+      let novel = String::from("Call me Ishmael. Some years ago...");
+      let first_sentence = novel.split('.').next().unwrap();
+      let excerpt = ImportantExcerpt { part: first_sentence };
+      excerpt.announce();
+  }
+expected_output: |
+  Attention please: Call me Ishmael
+explanation: |
+  struct ImportantExcerpt<'a> with part: &'a str, and impl<'a>
+  ImportantExcerpt<'a> (impl ImportantExcerpt<'_> works too). novel lives
+  until the end of main, after excerpt, so excerpt's reference is fine.

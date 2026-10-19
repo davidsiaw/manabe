@@ -1,0 +1,57 @@
+id: multi-array-list
+title: "MultiArrayList"
+type: code
+language: zig
+body: |
+  An array of structs keeps each struct's fields together in memory.
+  MultiArrayList keeps each field in an array of its own instead: all the
+  names together, and all the ages together. Code that only looks at one
+  field, such as adding up the ages, then reads memory that holds nothing
+  else, which is faster for the processor's caches.
+
+      var people: std.MultiArrayList(Person) = .{};
+      defer people.deinit(allocator);
+      try people.append(allocator, .{ .name = "Elena", .age = 50 });
+
+      for (people.items(.age)) |*age| age.* += 1;
+
+  items(.age) is a slice of just the ages. Run the program first: Zig
+  refuses a var that is never changed, until the loop changes total.
+question: Write the loop that adds up the ages, using items(.age), and make everyone a year older.
+starter_code: |
+  const std = @import("std");
+
+  const Person = struct {
+      name: []const u8,
+      age: u8,
+  };
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      var people: std.MultiArrayList(Person) = .{};
+      defer people.deinit(allocator);
+      try people.append(allocator, .{ .name = "Elena", .age = 50 });
+      try people.append(allocator, .{ .name = "Michael", .age = 26 });
+      try people.append(allocator, .{ .name = "Ana", .age = 4 });
+
+      var total: u32 = 0;
+
+      std.debug.print("total age {d}\n", .{total});
+      for (people.items(.name), people.items(.age)) |name, age| {
+          std.debug.print("{s} is {d}\n", .{ name, age });
+      }
+  }
+expected_output: |
+  total age 80
+  Elena is 51
+  Michael is 27
+  Ana is 5
+explanation: |
+  for (people.items(.age)) |*age|, with a pointer capture so that the age
+  can be changed: total += age.* first, then age.* += 1, so the total is
+  of the ages before the birthday, 50 + 26 + 4. The last loop goes through
+  two fields side by side, as for can take several slices of the same
+  length.

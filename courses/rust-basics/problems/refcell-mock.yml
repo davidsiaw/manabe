@@ -1,0 +1,79 @@
+id: refcell-mock
+title: RefCell in a Test Double
+type: code
+language: rust
+run: local
+body: |
+  The book's example: a library sends warnings about a quota through a
+  Messenger trait, whose send takes &self. A mock messenger, for tests,
+  wants to record each message it is sent, which means changing itself,
+  through a &self.
+
+    sent_messages: RefCell<Vec<String>>
+
+  lets send call self.sent_messages.borrow_mut().push(...), and the test
+  read them with borrow().
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0596]: cannot borrow `self.sent_messages` as mutable, as it is behind a `&` reference
+question: Make MockMessenger record its messages through a RefCell, without changing the Messenger trait. Run it and paste what it printed.
+starter_code: |
+  pub trait Messenger {
+      fn send(&self, msg: &str);
+  }
+
+  pub struct LimitTracker<'a, T: Messenger> {
+      messenger: &'a T,
+      value: usize,
+      max: usize,
+  }
+
+  impl<'a, T: Messenger> LimitTracker<'a, T> {
+      pub fn new(messenger: &'a T, max: usize) -> LimitTracker<'a, T> {
+          LimitTracker { messenger, value: 0, max }
+      }
+
+      pub fn set_value(&mut self, value: usize) {
+          self.value = value;
+          let percentage_of_max = self.value as f64 / self.max as f64;
+
+          if percentage_of_max >= 1.0 {
+              self.messenger.send("Error: You are over your quota!");
+          } else if percentage_of_max >= 0.9 {
+              self.messenger.send("Urgent warning: You've used up over 90% of your quota!");
+          } else if percentage_of_max >= 0.75 {
+              self.messenger.send("Warning: You've used up over 75% of your quota!");
+          }
+      }
+  }
+
+  struct MockMessenger {
+      sent_messages: Vec<String>,
+  }
+
+  impl Messenger for MockMessenger {
+      fn send(&self, message: &str) {
+          self.sent_messages.push(String::from(message));
+      }
+  }
+
+  fn main() {
+      let messenger = MockMessenger { sent_messages: vec![] };
+      let mut tracker = LimitTracker::new(&messenger, 100);
+      for value in [50, 80, 95, 120] {
+          tracker.set_value(value);
+      }
+      println!("{:#?}", messenger.sent_messages);
+  }
+expected_output: |
+  [
+      "Warning: You've used up over 75% of your quota!",
+      "Urgent warning: You've used up over 90% of your quota!",
+      "Error: You are over your quota!",
+  ]
+explanation: |
+  The field becomes a RefCell<Vec<String>>, made with RefCell::new;
+  send uses borrow_mut(), and main borrow(). Changing send to take &mut
+  self would also compile here, but it would change the trait for every
+  real messenger, just for the sake of a test.

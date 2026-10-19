@@ -1,0 +1,27 @@
+id: copy-file
+title: "Copying and Renaming"
+type: multiple_choice
+body: |
+  Dir has methods for the other everyday file operations, among them:
+
+      try cwd.copyFile("report.txt", cwd, "backup/report.txt", io, .{});
+      try cwd.rename("draft.txt", cwd, "final.txt", io);
+
+  copyFile takes the source path, the Dir to copy into, and the
+  destination path relative to it, so that a file can be copied from one
+  folder to another. The standard library's documentation lists the
+  rest, with their options.
+question: Where does copyFile("a.txt", other_dir, "b.txt", io, .{}) put the copy?
+choices:
+  - id: a
+    text: "In other_dir, as b.txt"
+    correct: true
+  - id: b
+    text: "In the current directory, as b.txt"
+  - id: c
+    text: "In other_dir, as a.txt"
+  - id: d
+    text: "Next to a.txt, as a.txt.copy"
+explanation: |
+  Paths are relative to the Dir they are given with: the source to the Dir
+  copyFile is called on, and the destination to other_dir.

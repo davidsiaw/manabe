@@ -1,0 +1,52 @@
+id: select-race
+title: Racing Futures
+type: code
+language: rust
+run: local
+body: |
+  Sometimes only the first result matters. trpl::select(a, b) runs both,
+  and finishes as soon as one does, returning which with an Either:
+  Either::Left with a's result, or Either::Right with b's. The other future
+  is dropped, unfinished.
+
+  A timeout is a race between the work and a sleep:
+
+    match trpl::select(work, trpl::sleep(max)).await {
+        Either::Left(output) => Ok(output),
+        Either::Right(_) => Err(max),
+    }
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write timeout. Run it and paste what it printed.
+starter_code: |
+  use std::time::Duration;
+  use trpl::Either;
+
+  async fn timeout<F: Future>(work: F, max: Duration) -> Result<F::Output, Duration> {
+      todo!()
+  }
+
+  async fn slow(name: &str, ms: u64) -> String {
+      trpl::sleep(Duration::from_millis(ms)).await;
+      format!("{name} finished")
+  }
+
+  fn main() {
+      trpl::run(async {
+          let max = Duration::from_millis(200);
+          for (name, ms) in [("quick", 50), ("sluggish", 500)] {
+              match timeout(slow(name, ms), max).await {
+                  Ok(message) => println!("{message}"),
+                  Err(limit) => println!("{name} failed after {} ms", limit.as_millis()),
+              }
+          }
+      });
+  }
+expected_output: |
+  quick finished
+  sluggish failed after 200 ms
+explanation: |
+  The match above. timeout is generic over any future F, and F::Output is
+  whatever that future produces. Combining small async functions like this,
+  rather than using a ready-made one, is what the book means by composing
+  futures.

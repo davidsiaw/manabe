@@ -1,0 +1,30 @@
+id: named-shadowing
+title: Named Variables in Patterns
+type: multiple_choice
+body: |
+  A name in a pattern is a new variable, which matches anything, and it
+  shadows any variable of the same name outside:
+
+    let x = Some(5);
+    let y = 10;
+
+    match x {
+        Some(50) => println!("Got 50"),
+        Some(y) => println!("Matched, y = {y}"),
+        _ => println!("Default case, x = {x:?}"),
+    }
+question: What does this print?
+choices:
+  - id: a
+    text: Matched, y = 5
+    correct: true
+  - id: b
+    text: Matched, y = 10
+  - id: c
+    text: Default case, x = Some(5)
+  - id: d
+    text: Got 50
+explanation: |
+  Some(y) does not compare with the outer y: it binds a new y to whatever is
+  inside, here 5. To compare with an outer variable, use a match guard:
+  Some(n) if n == y, later in this chapter.

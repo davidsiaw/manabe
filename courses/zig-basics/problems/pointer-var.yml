@@ -1,0 +1,41 @@
+id: pointer-var
+title: "Pointing Somewhere Else"
+type: code
+language: zig
+body: |
+  A pointer declared with var can be made to point to something else, by
+  assigning it a new address. The program below finds the tallest
+  building by keeping a pointer to the tallest one seen so far, instead of
+  copying each building. Run it.
+
+  A for loop over &buildings, the array's address, gives a pointer to each
+  element, with |*building|, rather than a copy.
+question: Make it compile, so that it prints the tallest building.
+starter_code: |
+  const std = @import("std");
+
+  const Building = struct {
+      name: []const u8,
+      height: u32,
+  };
+
+  pub fn main() void {
+      const buildings = [_]Building{
+          .{ .name = "Shard", .height = 310 },
+          .{ .name = "Burj Khalifa", .height = 828 },
+          .{ .name = "Taipei 101", .height = 508 },
+      };
+
+      const tallest = &buildings[0];
+      for (&buildings) |*building| {
+          if (building.height > tallest.height) tallest = building;
+      }
+      std.debug.print("{s}, {d} m\n", .{ tallest.name, tallest.height });
+  }
+expected_output: |
+  Burj Khalifa, 828 m
+explanation: |
+  var tallest. The buildings stay constant: tallest is a pointer to a
+  constant Building, which can itself change. Fields are reached through
+  a pointer to a struct directly, so tallest.height means
+  tallest.*.height.

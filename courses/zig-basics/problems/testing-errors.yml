@@ -1,0 +1,42 @@
+id: testing-errors
+title: "expectError"
+type: code
+language: zig
+body: |
+  A test can also check that a function fails the way it should.
+  expectError(expected_error, result) passes when result is that error,
+  and fails otherwise:
+
+      try std.testing.expectError(error.OutOfMemory, allocate(allocator));
+
+  withdraw should refuse to take out more than the balance, and refuse an
+  amount of 0. Run the program: it does neither yet.
+question: Make withdraw return error.InsufficientFunds and error.ZeroAmount in those cases, so that the checks pass.
+starter_code: |
+  const std = @import("std");
+
+  const Account = struct {
+      balance: u32,
+
+      fn withdraw(self: *Account, amount: u32) !void {
+          self.balance -%= amount;
+      }
+  };
+
+  pub fn main() !void {
+      var account = Account{ .balance = 100 };
+      try account.withdraw(30);
+      try std.testing.expectEqual(70, account.balance);
+      try std.testing.expectError(error.InsufficientFunds, account.withdraw(80));
+      try std.testing.expectError(error.ZeroAmount, account.withdraw(0));
+      try std.testing.expectEqual(70, account.balance);
+      std.debug.print("all checks passed\n", .{});
+  }
+expected_output: |
+  all checks passed
+explanation: |
+  Two checks before the subtraction, which can then be a plain -=. -%= is
+  wrapping subtraction: below 0, it wraps round to a huge number instead
+  of panicking, which is how the starter's account ended up with
+  4294967286. The last check makes sure a refused withdrawal leaves the
+  balance alone.

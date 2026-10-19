@@ -1,0 +1,31 @@
+id: string-push
+title: Growing a String
+type: code
+language: rust
+run: local
+body: |
+  A String grows like a vector:
+
+  - push_str appends a string slice: s.push_str("bar").
+  - push appends a single character, a char, in single quotes: s.push('!').
+
+  push_str takes a &str, so it does not take ownership of what it adds,
+  which can still be used afterwards.
+
+  Copy the program into src/main.rs in your hello project and run it: it prints only the start.
+question: Use push_str and push to build the greeting, so that it prints as below. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let name = "Ferris";
+      let mut greeting = String::from("Hello");
+
+      println!("{greeting}");
+      println!("{name} is still here");
+  }
+expected_output: |
+  Hello, Ferris!
+  Ferris is still here
+explanation: |
+  push_str(", "), push_str(name) and push('!'). name is still usable: it
+  was only borrowed. Writing push("!") with double quotes is refused, as
+  "!" is a &str, not a char.

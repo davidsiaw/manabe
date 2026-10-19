@@ -1,0 +1,51 @@
+id: channels
+title: Message Passing with Channels
+type: code
+language: rust
+run: local
+body: |
+  "Do not communicate by sharing memory; instead, share memory by
+  communicating." A channel sends values from one thread to another: a
+  transmitter, tx, and a receiver, rx.
+
+    use std::sync::mpsc;
+
+    let (tx, rx) = mpsc::channel();
+    thread::spawn(move || {
+        tx.send(String::from("hi")).unwrap();
+    });
+    let received = rx.recv().unwrap();
+
+  mpsc means multiple producer, single consumer: many transmitters, one
+  receiver. recv waits for a value, and returns an Err once every
+  transmitter has been dropped.
+
+  send takes ownership of the value, so the thread cannot use it after
+  sending it: it now belongs to the receiving thread. Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: borrow of moved value: `val`
+question: Print val before sending it, so that the program compiles and prints as below. Run it and paste what it printed.
+starter_code: |
+  use std::sync::mpsc;
+  use std::thread;
+
+  fn main() {
+      let (tx, rx) = mpsc::channel();
+
+      let handle = thread::spawn(move || {
+          let val = String::from("hi");
+          tx.send(val).unwrap();
+          println!("sent {val}");
+      });
+
+      handle.join().unwrap();
+      let received = rx.recv().unwrap();
+      println!("Got: {received}");
+  }
+expected_output: |
+  sent hi
+  Got: hi
+explanation: |
+  The println! before the send. Once sent, the value could be changed or
+  dropped by the receiver at any moment, so using it in the sending thread
+  would be a data race; the compiler stops it, as a use of a moved value.

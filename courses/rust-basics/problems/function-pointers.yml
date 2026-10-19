@@ -1,0 +1,57 @@
+id: function-pointers
+title: Function Pointers
+type: code
+language: rust
+run: local
+body: |
+  Functions can be passed to functions too: fn(i32) -> i32, with a
+  lower-case fn, is the type of a function pointer.
+
+    fn add_one(x: i32) -> i32 {
+        x + 1
+    }
+
+    fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+        f(arg) + f(arg)
+    }
+
+  Function pointers implement all three closure traits, so they can be
+  passed where a closure is expected: .map(ToString::to_string) instead of
+  .map(|i| i.to_string()). Tuple struct and enum variant names are
+  functions too: .map(Status::Value) makes a Status for each item.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write do_twice, and the two maps, using function names rather than closures. Run it and paste what it printed.
+starter_code: |
+  fn add_one(x: i32) -> i32 {
+      x + 1
+  }
+
+  fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+      todo!()
+  }
+
+  #[derive(Debug)]
+  enum Status {
+      Value(u32),
+  }
+
+  fn main() {
+      println!("The answer is: {}", do_twice(add_one, 5));
+
+      let list_of_numbers = vec![1, 2, 3];
+      let list_of_strings: Vec<String> = todo!();
+      println!("{list_of_strings:?}");
+
+      let list_of_statuses: Vec<Status> = todo!();
+      println!("{list_of_statuses:?}");
+  }
+expected_output: |
+  The answer is: 12
+  ["1", "2", "3"]
+  [Value(0), Value(1), Value(2), Value(3), Value(4)]
+explanation: |
+  f(arg) + f(arg); .map(ToString::to_string), the method by its full path;
+  and (0u32..5).map(Status::Value). Unlike closures, function pointers
+  cannot capture anything, which is why C code, which has no closures, can
+  take them.

@@ -1,0 +1,33 @@
+id: async-concurrency
+title: Concurrency and Parallelism
+type: multiple_choice
+body: |
+  Much of what programs do is waiting: for a network, a disk, a user.
+  Threads let a program do something else while it waits, but each thread
+  costs memory, and some systems have none. Async programming is another
+  way: tasks that pause while they wait, and let other tasks run, often
+  all on one thread.
+
+  Two words to keep apart:
+
+  - concurrency: several tasks in progress, switching between them, like
+    one person working on several projects in turn
+  - parallelism: several tasks running at the same moment, on several
+    cores, like several people each working on one
+
+  Async code is concurrent; whether it is also parallel depends on the
+  runtime that runs it.
+question: One thread switches between three downloads, working on whichever has data ready. Is that concurrency or parallelism?
+choices:
+  - id: a
+    text: Concurrency
+    correct: true
+  - id: b
+    text: Parallelism
+  - id: c
+    text: Both
+  - id: d
+    text: Neither
+explanation: |
+  Nothing runs at the same moment, but all three make progress. Async Rust
+  is built for exactly this: lots of waiting, on one thread or a few.

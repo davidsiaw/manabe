@@ -1,0 +1,52 @@
+id: static-string-map
+title: "From Text to Enum"
+type: code
+language: zig
+body: |
+  The method arrives as text, "GET", and has to become a Method. A
+  StaticStringMap maps strings to values, and is built while compiling,
+  so looking something up in it is fast:
+
+      const MethodMap = std.static_string_map.StaticStringMap(Method).initComptime(.{
+          .{ "GET", .GET },
+          .{ "POST", .POST },
+      });
+
+  get returns an optional: null for a string that is not in the map. A
+  client can send anything, so an unknown method is not a bug, and should
+  not crash the server: it should be an error the server can answer.
+
+  Run the program: "BREW" is not a method, and .? panics.
+question: Make parseMethod return error.UnsupportedMethod for text that is not in the map, instead of panicking.
+starter_code: |
+  const std = @import("std");
+
+  const Method = enum { GET, POST };
+
+  const MethodMap = std.static_string_map.StaticStringMap(Method).initComptime(.{
+      .{ "GET", .GET },
+      .{ "POST", .POST },
+  });
+
+  fn parseMethod(text: []const u8) !Method {
+      return MethodMap.get(text).?;
+  }
+
+  pub fn main() void {
+      for ([_][]const u8{ "GET", "BREW", "POST" }) |text| {
+          if (parseMethod(text)) |method| {
+              std.debug.print("{s}: {s}\n", .{ text, @tagName(method) });
+          } else |err| {
+              std.debug.print("{s}: {s}\n", .{ text, @errorName(err) });
+          }
+      }
+  }
+expected_output: |
+  GET: GET
+  BREW: UnsupportedMethod
+  POST: POST
+explanation: |
+  MethodMap.get(text) orelse error.UnsupportedMethod. The right side of
+  orelse can be an error, as the function returns an error union. main's
+  if ... else |err| is the error-union version of unwrapping with if: the
+  value in the first block, the error in the else.

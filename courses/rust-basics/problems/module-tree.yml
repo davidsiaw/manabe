@@ -1,0 +1,51 @@
+id: module-tree
+title: The Module Tree
+type: multiple_choice
+body: |
+  Modules group related code, and give the group a name. For a restaurant
+  library, the front of house, where customers are, might be:
+
+    mod front_of_house {
+        mod hosting {
+            fn add_to_waitlist() {}
+            fn seat_at_table() {}
+        }
+
+        mod serving {
+            fn take_order() {}
+            fn serve_order() {}
+            fn take_payment() {}
+        }
+    }
+
+  Modules can hold other modules, functions, structs, enums, constants and
+  more. Together they form a tree, whose root is an implicit module called
+  crate, made of the crate root's contents:
+
+    crate
+     └── front_of_house
+         ├── hosting
+         │   ├── add_to_waitlist
+         │   └── seat_at_table
+         └── serving
+             ├── take_order
+             ├── serve_order
+             └── take_payment
+
+  Like a family tree: hosting is a child of front_of_house, front_of_house
+  is the parent of hosting, and hosting and serving, both children of
+  front_of_house, are siblings.
+question: In this tree, what is the parent of front_of_house?
+choices:
+  - id: a
+    text: The module crate
+    correct: true
+  - id: b
+    text: hosting
+  - id: c
+    text: serving
+  - id: d
+    text: "It has none: it is the root"
+explanation: |
+  The crate root's contents form the module crate, so every module of a
+  crate has a parent, up to crate itself.

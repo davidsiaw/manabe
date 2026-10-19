@@ -1,0 +1,31 @@
+id: iterators-lazy
+title: Iterators Are Lazy
+type: multiple_choice
+body: |
+  An iterator goes through a series of items, one at a time. In Rust,
+  iterators are lazy: making one does nothing until something consumes it.
+
+    let v1 = vec![1, 2, 3];
+    let v1_iter = v1.iter();       // nothing happens yet
+
+    for val in v1_iter {           // the for loop consumes it
+        println!("Got: {val}");
+    }
+
+  Iterators replace index bookkeeping: there is no counter to start at 0,
+  compare with the length, or forget to increase.
+question: What does v1.iter().map(|x| x + 1); do, on a line of its own?
+choices:
+  - id: a
+    text: "Nothing, and the compiler warns: unused `Map` that must be used"
+    correct: true
+  - id: b
+    text: Adds one to every element of v1
+  - id: c
+    text: Prints the new values
+  - id: d
+    text: It does not compile
+explanation: |
+  map makes a new iterator, which would add one to each item as it is
+  consumed; nothing consumes it. The warning says "iterators are lazy and
+  do nothing unless consumed".

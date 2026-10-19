@@ -1,0 +1,70 @@
+id: expression-evaluator
+title: "Putting It Together: An Expression Evaluator"
+type: code
+language: rust
+run: local
+body: |
+  Patterns shine on recursive enums. An arithmetic expression is a number,
+  or an operation on two smaller expressions, in Boxes:
+
+    enum Expr {
+        Num(i64),
+        Add(Box<Expr>, Box<Expr>),
+        Mul(Box<Expr>, Box<Expr>),
+        Neg(Box<Expr>),
+    }
+
+  eval works it out, recursively. simplify applies some rules: x + 0 is x,
+  x * 1 is x, x * 0 is 0, and - - x is x. Simplify the parts first, moving
+  each out of its Box with *a, then match on the pair of simplified parts,
+  with | for rules that are mirror images, such as x + 0 and 0 + x, and @
+  to keep a matched value.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write eval and simplify. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug, Clone)]
+  enum Expr {
+      Num(i64),
+      Add(Box<Expr>, Box<Expr>),
+      Mul(Box<Expr>, Box<Expr>),
+      Neg(Box<Expr>),
+  }
+
+  use Expr::{Add, Mul, Neg, Num};
+
+  fn eval(e: &Expr) -> i64 {
+      todo!()
+  }
+
+  // One pass of the rules, from the inside out.
+  fn simplify(e: Expr) -> Expr {
+      todo!()
+  }
+
+  fn main() {
+      // (2 + 3) * (4 + 0)
+      let e = Mul(Box::new(Add(Box::new(Num(2)), Box::new(Num(3)))), Box::new(Add(Box::new(Num(4)), Box::new(Num(0)))));
+      println!("{} = {}", eval(&e), eval(&simplify(e.clone())));
+      println!("{:?}", simplify(e));
+
+      // -(-(7 * 1))
+      let e = Neg(Box::new(Neg(Box::new(Mul(Box::new(Num(7)), Box::new(Num(1)))))));
+      println!("{:?}", simplify(e));
+
+      // 9 * (5 + 0) * 0
+      let e = Mul(Box::new(Mul(Box::new(Num(9)), Box::new(Add(Box::new(Num(5)), Box::new(Num(0)))))), Box::new(Num(0)));
+      println!("{:?}", simplify(e));
+  }
+expected_output: |
+  20 = 20
+  Mul(Add(Num(2), Num(3)), Num(4))
+  Num(7)
+  Num(0)
+explanation: |
+  eval matches each variant, recursing into the boxes. simplify first
+  simplifies the parts, *a moving each expression out of its Box, then
+  matches the pair of results: | joins the rules that are mirror images,
+  and zero @ Num(0) keeps the matched value to return it. No guards were
+  needed after all: the patterns say it all. Simplifying the parts first
+  is what turns (5 + 0) into 5 before the multiplication by 0 is seen.

@@ -1,0 +1,34 @@
+id: arraylist-capacity
+title: "Dynamic Arrays"
+type: multiple_choice
+body: |
+  An array's length is fixed while compiling. A dynamic array grows as
+  elements are added: std.ArrayList, like Rust's Vec or C++'s vector.
+
+  It keeps its elements in memory from an allocator, with room to spare.
+  Two numbers describe it:
+
+  - its length, items.len: how many elements it holds
+  - its capacity: how many fit in the memory it has
+
+  While the length is below the capacity, adding is cheap. When it is
+  full, it allocates a larger block, usually about one and a half times
+  as large, copies the elements over, and frees the old block.
+
+  In Zig 0.17, ArrayList does not keep the allocator: each method that may
+  allocate, and deinit, takes it.
+question: An ArrayList has a length of 10 and a capacity of 10. What happens when one more element is appended?
+choices:
+  - id: a
+    text: "It allocates a larger block, copies the 10 elements, and adds the new one"
+    correct: true
+  - id: b
+    text: "It returns an error: the list is full"
+  - id: c
+    text: "It overwrites the last element"
+  - id: d
+    text: "It allocates room for exactly one more"
+explanation: |
+  Growing by a factor makes appending cheap on average, even though an
+  occasional append copies everything. initCapacity sets the starting
+  capacity, when you know about how many elements there will be.

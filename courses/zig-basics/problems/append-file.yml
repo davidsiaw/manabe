@@ -1,0 +1,49 @@
+id: append-file
+title: "Appending to a File"
+type: code
+language: zig
+body: |
+  createFile empties a file that exists. To add to the end of a file
+  instead, open it for writing with openFile, .mode = .read_write, and
+  write at its end: writePositionalAll writes bytes at a given position,
+  and length gives the file's length, which is where its end is.
+
+      const file = try cwd.openFile(io, "log.txt", .{ .mode = .read_write });
+      defer file.close(io);
+      try file.writePositionalAll(io, "another line\n", try file.length(io));
+
+  Run the program: each log entry replaces the one before.
+question: Make log add each entry to the end of the file, keeping the earlier ones.
+starter_code: |
+  const std = @import("std");
+
+  fn log(io: std.Io, message: []const u8) !void {
+      const file = try std.Io.Dir.cwd().createFile(io, "app.log", .{});
+      defer file.close(io);
+      try file.writePositionalAll(io, message, 0);
+  }
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const cwd = std.Io.Dir.cwd();
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      try cwd.writeFile(io, .{ .sub_path = "app.log", .data = "" });
+      try log(io, "started\n");
+      try log(io, "loaded 3 files\n");
+      try log(io, "stopped\n");
+
+      const text = try cwd.readFileAlloc(io, "app.log", allocator, .unlimited);
+      defer allocator.free(text);
+      std.debug.print("{s}", .{text});
+  }
+expected_output: |
+  started
+  loaded 3 files
+  stopped
+explanation: |
+  openFile with .mode = .read_write, and the file's length as the position.
+  openFile fails with error.FileNotFound if the file does not exist, which
+  is why main makes it, empty, first.

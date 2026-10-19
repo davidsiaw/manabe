@@ -1,0 +1,38 @@
+id: return-impl-trait
+title: Returning impl Trait
+type: multiple_choice
+body: |
+  impl Trait also works as a return type: the function returns some type
+  that implements the trait, without naming it.
+
+    fn returns_summarizable() -> impl Summary {
+        SocialPost { ... }
+    }
+
+  This is especially useful for closures and iterators, chapter 13, whose
+  types are very long or cannot be written at all.
+
+  But it still means one type, chosen by the function:
+
+    fn returns_summarizable(switch: bool) -> impl Summary {
+        if switch {
+            NewsArticle { ... }
+        } else {
+            SocialPost { ... }
+        }
+    }
+question: What happens with the second function?
+choices:
+  - id: a
+    text: "It does not compile: it can return two different types"
+    correct: true
+  - id: b
+    text: It compiles, and returns whichever the switch picks
+  - id: c
+    text: It compiles, but always returns a NewsArticle
+  - id: d
+    text: It compiles, and panics when switch is false
+explanation: |
+  The compiler says "`if` and `else` have incompatible types". Returning
+  one of several types is possible with trait objects, Box<dyn Summary>,
+  in chapter 18.

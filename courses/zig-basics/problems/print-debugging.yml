@@ -1,0 +1,34 @@
+id: print-debugging
+title: "Print Debugging"
+type: code
+language: zig
+body: |
+  sum_to(n) should add up the numbers from 1 to n, but its answers are
+  wrong: run it. Rather than staring at the code, look at what it does:
+  print the values it works with, in the loop, and the mistake shows.
+
+      std.debug.print("adding {d}\n", .{i});
+
+  Once you have found it, fix it and take the debugging print out again.
+question: Fix sum_to, so that the program prints what is below and nothing else.
+starter_code: |
+  const std = @import("std");
+
+  fn sum_to(n: u32) u32 {
+      var sum: u32 = 0;
+      for (0..n) |i| {
+          sum += @intCast(i);
+      }
+      return sum;
+  }
+
+  pub fn main() void {
+      std.debug.print("1 to 4: {d}\n", .{sum_to(4)});
+      std.debug.print("1 to 100: {d}\n", .{sum_to(100)});
+  }
+expected_output: |
+  1 to 4: 10
+  1 to 100: 5050
+explanation: |
+  The prints show it adding 0, 1, 2 and 3: a range a..b includes a and
+  stops before b. for (1..n + 1) goes from 1 to n.

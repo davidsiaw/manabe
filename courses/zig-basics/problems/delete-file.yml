@@ -1,0 +1,45 @@
+id: delete-file
+title: "Deleting Files"
+type: code
+language: zig
+body: |
+  deleteFile removes a file. Opening one that does not exist fails with
+  error.FileNotFound, which a program can catch, to report it or to make
+  the file:
+
+      const file = cwd.openFile(io, "config.txt", .{}) catch |err| switch (err) {
+          error.FileNotFound => ...,
+          else => return err,
+      };
+
+  The program makes a temporary file, uses it, and should delete it. Run
+  it: the check at the end finds it still there.
+question: Delete the file, and make exists report whether a file is there, without failing.
+starter_code: |
+  const std = @import("std");
+
+  fn exists(io: std.Io, path: []const u8) !bool {
+      const file = try std.Io.Dir.cwd().openFile(io, path, .{});
+      file.close(io);
+      return true;
+  }
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const cwd = std.Io.Dir.cwd();
+
+      try cwd.writeFile(io, .{ .sub_path = "temp.txt", .data = "scratch work" });
+      std.debug.print("before: {any}\n", .{try exists(io, "temp.txt")});
+
+      std.debug.print("after: {any}\n", .{try exists(io, "temp.txt")});
+      std.debug.print("never made: {any}\n", .{try exists(io, "other.txt")});
+  }
+expected_output: |
+  before: true
+  after: false
+  never made: false
+explanation: |
+  try cwd.deleteFile(io, "temp.txt");, and a catch in exists that turns
+  FileNotFound into false and passes any other error on. A file that
+  exists but cannot be opened, for lack of permission, would then still be
+  an error, rather than a wrong false.

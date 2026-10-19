@@ -1,0 +1,38 @@
+id: orelse
+title: "orelse"
+type: code
+language: zig
+body: |
+  orelse gives a value to use in place of null:
+
+      const x: ?i32 = null;
+      const doubled = (x orelse 15) * 2;     // 30
+
+  If the left side is not null, its value is used; otherwise the right
+  side. The right side can also leave, with return or break, when there is
+  no sensible value to use.
+
+  The program reads a few settings, any of which may be missing. Run it.
+question: "Use orelse to give the missing settings these defaults: width 80, height 24, retries 3."
+starter_code: |
+  const std = @import("std");
+
+  const Settings = struct {
+      width: ?u32,
+      height: ?u32,
+      retries: ?u32,
+  };
+
+  pub fn main() void {
+      const settings = Settings{ .width = 120, .height = null, .retries = null };
+
+      const width: u32 = settings.width;
+      const height: u32 = settings.height;
+      const retries: u32 = settings.retries;
+      std.debug.print("{d}x{d}, {d} retries\n", .{ width, height, retries });
+  }
+expected_output: |
+  120x24, 3 retries
+explanation: |
+  settings.width orelse 80, and the same for the others. width keeps its
+  120: orelse only steps in for null.

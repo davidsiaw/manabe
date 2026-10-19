@@ -1,0 +1,86 @@
+id: c-structs
+title: "Putting It Together: C Structs and C Code"
+type: code
+language: zig
+run: local
+body: |
+  A small project with C code of its own: a C struct, a C function that
+  prints it, and a Zig program that uses both, along with powf from C's
+  math library. Make a folder with these files:
+
+  build.zig translates src/c.h into the c module, compiles src/user.c,
+  and links libc:
+
+      const std = @import("std");
+
+      pub fn build(b: *std.Build) void {
+          const target = b.graph.host;
+
+          const c = b.addTranslateC(.{
+              .root_source_file = b.path("src/c.h"),
+              .target = target,
+              .optimize = .Debug,
+          });
+          c.addIncludePath(b.path("src"));
+
+          const exe = b.addExecutable(.{
+              .name = "users",
+              .root_module = b.createModule(.{
+                  .root_source_file = b.path("src/main.zig"),
+                  .target = target,
+                  .link_libc = true,
+              }),
+          });
+          exe.root_module.addImport("c", c.createModule());
+          exe.root_module.addCSourceFile(.{ .file = b.path("src/user.c") });
+          exe.root_module.addIncludePath(b.path("src"));
+          b.installArtifact(exe);
+
+          const run_step = b.step("run", "Run the program");
+          run_step.dependOn(&b.addRunArtifact(exe).step);
+      }
+
+  src/c.h brings in what the program needs:
+
+      #include <math.h>
+      #include <stdio.h>
+      #include "user.h"
+
+  src/user.h declares the struct and the function:
+
+      #include <stdint.h>
+
+      typedef struct {
+          uint64_t id;
+          const char *name;
+      } User;
+
+      void print_user(const User *user);
+
+  src/user.c implements it:
+
+      #include <stdio.h>
+      #include "user.h"
+
+      void print_user(const User *user) {
+          printf("User %llu: %s\n", (unsigned long long)user->id, user->name);
+      }
+
+  The translated User is a Zig struct, with the fields' types translated:
+  id is a u64, and name a [*c]const u8, which a string literal converts to.
+question: Write src/main.zig, which prints powf(15.2, 2.6) with printf and "%.3f\n", then makes a User with id 1 and the name pedro, and passes a pointer to it to print_user. Run zig build run and paste what it printed.
+starter_code: |
+  const std = @import("std");
+  const c = @import("c");
+
+  pub fn main() void {
+      std.debug.print("not written yet\n", .{});
+  }
+expected_output: |
+  1182.478
+  User 1: pedro
+explanation: |
+  c.powf, c.printf, c.User and c.print_user all come from the translated
+  header. printf's result, the number of characters printed, has to be
+  discarded with _ =, as Zig never lets a value go unused. &user is a
+  *const c.User, which converts to the C pointer print_user takes.

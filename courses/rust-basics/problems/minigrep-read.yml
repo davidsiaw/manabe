@@ -1,0 +1,59 @@
+id: minigrep-read
+title: Reading the File
+type: code
+language: rust
+run: local
+body: |
+  The file to search is next. Make poem.txt in the project folder, at the
+  top, next to Cargo.toml, with this poem by Emily Dickinson in it:
+
+    I'm nobody! Who are you?
+    Are you nobody, too?
+    Then there's a pair of us - don't tell!
+    They'd banish us, you know.
+
+    How dreary to be somebody!
+    How public, like a frog
+    To tell your name the livelong day
+    To an admiring bog!
+
+  std::fs::read_to_string reads a whole file into a String, and returns a
+  Result, as reading can fail.
+
+  Copy the program into src/main.rs. It panics at todo!().
+question: Read the file named in file_path into contents, using expect. Run cargo run -- the poem.txt and paste what it printed.
+starter_code: |
+  use std::env;
+  use std::fs;
+
+  fn main() {
+      let args: Vec<String> = env::args().collect();
+
+      let query = &args[1];
+      let file_path = &args[2];
+
+      println!("Searching for {query}");
+      println!("In file {file_path}");
+
+      let contents: String = todo!();
+
+      println!("With text:\n{contents}");
+  }
+expected_output: |
+  Searching for the
+  In file poem.txt
+  With text:
+  I'm nobody! Who are you?
+  Are you nobody, too?
+  Then there's a pair of us - don't tell!
+  They'd banish us, you know.
+
+  How dreary to be somebody!
+  How public, like a frog
+  To tell your name the livelong day
+  To an admiring bog!
+explanation: |
+  fs::read_to_string(file_path).expect("Should have been able to read the
+  file"). The path is relative to where the program runs, the folder
+  cargo run is run in. main does everything now; the next problems split
+  it up.

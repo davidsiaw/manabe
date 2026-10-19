@@ -1,0 +1,32 @@
+id: deref-coercion
+title: Deref Coercion
+type: multiple_choice
+body: |
+  Deref coercion converts a reference to a type that implements Deref into
+  a reference to its Target, wherever a function's parameter needs it:
+
+    fn hello(name: &str) {
+        println!("Hello, {name}!");
+    }
+
+    let m = MyBox::new(String::from("Rust"));
+    hello(&m);
+
+  &m is a &MyBox<String>. Deref turns it into a &String, and String's own
+  Deref into a &str. Rust applies as many derefs as it needs, while
+  compiling, at no cost when running.
+question: Without deref coercion, what would the call have to be?
+choices:
+  - id: a
+    text: hello(&(*m)[..]);
+    correct: true
+  - id: b
+    text: hello(m);
+  - id: c
+    text: hello(*m);
+  - id: d
+    text: hello(&m.0.0);
+explanation: |
+  *m is the String, [..] slices it into a str, and & borrows that. Deref
+  coercion writes all that for you. DerefMut does the same for mutable
+  references.

@@ -1,0 +1,62 @@
+id: linked-list
+title: "Putting It Together: A Linked List"
+type: code
+language: zig
+body: |
+  A linked list is a chain of nodes, each holding a value and a pointer to
+  the next one. The last node has no next, so the pointer is optional,
+  null at the end:
+
+      const Node = struct {
+          value: u32,
+          next: ?*Node,
+      };
+
+  A while loop with a capture walks it: it runs while the optional is not
+  null, with the pointer unwrapped, and the continue expression moves on:
+
+      var current: ?*Node = &first;
+      while (current) |node| : (current = node.next) {
+          // node is a *Node
+      }
+
+  Here the nodes are local variables, linked up by hand.
+question: Write sum, which adds up the values, and find, which returns a pointer to the first node with a value, or null. main doubles the value it finds.
+starter_code: |
+  const std = @import("std");
+
+  const Node = struct {
+      value: u32,
+      next: ?*Node,
+  };
+
+  fn sum(head: ?*Node) u32 {
+      _ = head;
+      return 0;
+  }
+
+  fn find(head: ?*Node, value: u32) ?*Node {
+      _ = head;
+      _ = value;
+      return null;
+  }
+
+  pub fn main() void {
+      var third = Node{ .value = 30, .next = null };
+      var second = Node{ .value = 20, .next = &third };
+      var first = Node{ .value = 10, .next = &second };
+
+      std.debug.print("sum {d}\n", .{sum(&first)});
+      if (find(&first, 20)) |node| node.value *= 2;
+      std.debug.print("sum {d}\n", .{sum(&first)});
+      std.debug.print("find 99: {any}\n", .{find(&first, 99)});
+  }
+expected_output: |
+  sum 60
+  sum 80
+  find 99: null
+explanation: |
+  Both walk the list with while (current) |node| : (current = node.next).
+  find returns node, a *Node, which becomes a ?*Node by itself, and main
+  changes the node in the list through it: second, now 40. The nodes must
+  be var for that, and so that &first is a *Node, not a *const Node.

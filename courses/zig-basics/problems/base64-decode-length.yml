@@ -1,0 +1,24 @@
+id: base64-decode-length
+title: "How Long the Decoded Data Is"
+type: multiple_choice
+body: |
+  Decoding goes the other way: every 4 characters become 3 bytes. Padding
+  does not stand for any data, so each = at the end means one byte less:
+
+      "TWFu"   4 characters, no =    3 bytes, "Man"
+      "SGk="   4 characters, one =   2 bytes, "Hi"
+      "MA=="   4 characters, two =   1 byte, "0"
+question: How many bytes does "TWFuTWE=" decode to?
+choices:
+  - id: a
+    text: "5"
+    correct: true
+  - id: b
+    text: "6"
+  - id: c
+    text: "8"
+  - id: d
+    text: "4"
+explanation: |
+  8 characters are two windows, 6 bytes, and the one = takes one away: 5,
+  "ManMa".

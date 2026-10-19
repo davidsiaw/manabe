@@ -1,0 +1,27 @@
+id: join-detach
+title: "join or detach"
+type: multiple_choice
+body: |
+  Every thread that is spawned must be either joined or detached:
+
+  - join waits for the thread to finish, and frees what it used. Use it
+    when you need the thread's work, or need to know it is done.
+  - detach lets the thread run on by itself, and frees what it used when
+    it finishes. Use it for a thread that can be left to its job.
+
+  When main returns, the whole program ends, threads and all, finished or
+  not.
+question: main spawns a thread to write a file, detaches it, and returns straight away. What happens to the file?
+choices:
+  - id: a
+    text: "It may be half written, or not written at all: the program ends with main"
+    correct: true
+  - id: b
+    text: "main waits for the thread before the program ends"
+  - id: c
+    text: "The thread keeps running after the program has ended"
+  - id: d
+    text: "It does not compile: detached threads must be joined"
+explanation: |
+  Detaching only means nobody will wait for the thread; it does not keep
+  the program alive. Here, main should join.

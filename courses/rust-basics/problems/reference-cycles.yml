@@ -1,0 +1,27 @@
+id: reference-cycles
+title: Reference Cycles
+type: multiple_choice
+body: |
+  Rust makes memory leaks hard, but not impossible: Rc values that point
+  to each other in a cycle keep each other's counts above zero, so neither
+  is ever dropped, even after every variable that reached them is gone.
+
+    a -> b -> a -> b -> ...
+
+  The compiler does not catch this. Programs that build graphs or trees
+  with Rc<RefCell<T>> have to avoid it by design, usually by making the
+  links that point back weak.
+question: a and b are Rc lists, and each one's tail is set to point to the other. Both variables go out of scope. What happens to the lists?
+choices:
+  - id: a
+    text: "They are never freed: each keeps the other's count at 1"
+    correct: true
+  - id: b
+    text: They are freed, as nothing refers to them
+  - id: c
+    text: The program panics
+  - id: d
+    text: It does not compile
+explanation: |
+  A leak like this is not undefined behaviour, which is why safe Rust
+  allows it; it is still a bug. Weak<T>, next, breaks such cycles.

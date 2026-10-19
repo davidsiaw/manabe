@@ -1,0 +1,34 @@
+id: data-race
+title: "Data Races"
+type: multiple_choice
+body: |
+  Two threads run this function, each adding 1,000,000 to a shared
+  counter:
+
+      var counter: u64 = 0;
+
+      fn increment() void {
+          for (0..1_000_000) |_| counter += 1;
+      }
+
+  counter += 1 is three steps: read counter, add one, write it back. When
+  both threads read the same value before either writes, both write the
+  same result, and one of the additions is lost. That is a data race:
+  threads using the same memory at the same time, with at least one
+  writing.
+question: What does the program print, after joining both threads?
+choices:
+  - id: a
+    text: "Usually less than 2000000, and a different number each run"
+    correct: true
+  - id: b
+    text: "Always 2000000"
+  - id: c
+    text: "Always 1000000"
+  - id: d
+    text: "It does not compile"
+explanation: |
+  Three runs on a computer with 12 cores printed 1317083, 1021388 and
+  1145883. The bug may not show at all on a lightly loaded machine, which
+  is what makes data races so hard to find: the code looks right, and
+  usually seems to work.

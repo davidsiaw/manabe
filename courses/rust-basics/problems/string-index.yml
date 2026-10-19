@@ -1,0 +1,42 @@
+id: string-index
+title: Strings Cannot Be Indexed
+type: code
+language: rust
+run: local
+body: |
+  In many languages, s[0] is the first character of a string. In Rust, it
+  does not compile:
+
+    error[E0277]: the type `str` cannot be indexed by `{integer}`
+
+  A String is UTF-8 bytes, and in UTF-8 a character takes from 1 to 4
+  bytes. "hello" is 5 bytes, one per letter, but "Здравствуйте" is 24
+  bytes for 12 letters: each Cyrillic letter takes 2. So the first byte of
+  "Здравствуйте" is only half of the З, and s[0] would rarely be what you
+  meant. Rust refuses, rather than give you a byte where you expected a
+  letter.
+
+  To work with the characters, use chars(), which goes through the
+  string one char, one Unicode scalar value, at a time:
+
+    let first = s.chars().next();     // an Option<char>: None if s is empty
+
+  Copy the program into src/main.rs in your hello project and run it.
+question: Print each word's first character, using chars(). Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let words = ["hello", "Здравствуйте", "こんにちは"];
+
+      for word in words {
+          let first = word[0];
+          println!("{word} starts with {first}");
+      }
+  }
+expected_output: |
+  hello starts with h
+  Здравствуйте starts with З
+  こんにちは starts with こ
+explanation: |
+  word.chars().next() is an Option<char>, None for an empty string, so it
+  needs unwrap() (or a match) to get the char. None of these words is
+  empty, so unwrap is safe here.

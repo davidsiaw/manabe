@@ -1,0 +1,52 @@
+id: word-stats
+title: "Putting It Together: Word Statistics"
+type: code
+language: rust
+run: local
+body: |
+  Closures and iterators together. Given a text, make:
+
+  - the number of words
+  - the longest word, with max_by_key
+  - the distinct words of four letters or more, lower-cased, in
+    alphabetical order, with no duplicates
+
+  For the last, collect into a BTreeSet, from std::collections, a set that
+  keeps its items sorted and drops duplicates by itself, then turn it into a
+  Vec.
+
+  Words are what split_whitespace gives, without the punctuation at their
+  ends: trim_matches(|c: char| !c.is_alphabetic()) removes it.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write the three expressions with iterator chains. Run it and paste what it printed.
+starter_code: |
+  use std::collections::BTreeSet;
+
+  fn main() {
+      let text = "The cat sat. The cat ran! A dog, a very fast dog, chased the cat.";
+      let words: Vec<&str> = text
+          .split_whitespace()
+          .map(|w| w.trim_matches(|c: char| !c.is_alphabetic()))
+          .collect();
+
+      let count: usize = todo!();
+      let longest: &str = todo!();
+      let long_words: Vec<String> = todo!();
+
+      println!("{count} words, the longest is {longest:?}");
+      println!("{long_words:?}");
+  }
+expected_output: |
+  15 words, the longest is "chased"
+  ["chased", "fast", "very"]
+explanation: |
+  - words.len(), or words.iter().count().
+  - max_by_key(|w| w.len()) returns an Option, None for no words; copied()
+    turns the &&str items into &str.
+  - filter, map to lower case, collect into a BTreeSet to sort and remove
+    duplicates, and collect again into a Vec. collect::<BTreeSet<_>>() is
+    the turbofish, naming the collection in the middle of a chain.
+
+  max_by_key returns the last of several equally long maximums; here
+  there is only one six-letter word.

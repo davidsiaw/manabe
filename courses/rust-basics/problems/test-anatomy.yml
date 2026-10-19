@@ -1,0 +1,37 @@
+id: test-anatomy
+title: How Tests Are Organised
+type: multiple_choice
+body: |
+  The test that cargo new made sits in a module of its own:
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn it_works() { ... }
+    }
+
+  - #[cfg(test)] compiles the module only for cargo test, so the tests
+    are not part of the library itself.
+  - use super::* brings everything from the parent module, the code being
+    tested, into the tests module.
+  - #[test] marks a test; other functions in the module are just helpers.
+
+  A test fails when it panics. assert_eq! and the other assert macros
+  panic when their check fails; a test that ends without panicking passes.
+question: A test contains only panic!("Make this test fail"). What does cargo test say about it?
+choices:
+  - id: a
+    text: It FAILED, and shows the panic message
+    correct: true
+  - id: b
+    text: It passed, as it ran to the end
+  - id: c
+    text: It does not compile
+  - id: d
+    text: It is ignored
+explanation: |
+  The runner runs each test in a thread of its own, notices the thread
+  panicked, and marks the test FAILED, listing the failures and their
+  messages after the results. The other tests still run.

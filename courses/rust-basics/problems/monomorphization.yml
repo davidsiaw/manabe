@@ -1,0 +1,27 @@
+id: monomorphization
+title: Generics Cost Nothing
+type: multiple_choice
+body: |
+  Generic code runs exactly as fast as code written for each type. While
+  compiling, Rust makes a copy of the generic code for each concrete type
+  it is used with, and compiles each copy: this is monomorphization. For
+
+    let integer = Some(5);
+    let float = Some(5.0);
+
+  the compiled program has an Option_i32 and an Option_f64, as if you had
+  written them by hand.
+question: What does monomorphization cost?
+choices:
+  - id: a
+    text: Some compile time and program size, but nothing while the program runs
+    correct: true
+  - id: b
+    text: A check of the type every time generic code runs
+  - id: c
+    text: Nothing at all, in any way
+  - id: d
+    text: Generic code runs at half the speed
+explanation: |
+  Each use with a new type adds a copy to compile and to ship. In return,
+  nothing has to be looked up while running.

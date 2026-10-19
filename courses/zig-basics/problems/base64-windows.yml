@@ -1,0 +1,30 @@
+id: base64-windows
+title: "Three Bytes, Four Characters"
+type: multiple_choice
+body: |
+  A byte has 8 bits, and a Base64 character holds 6, a number from 0 to 63.
+  The encoder works on 3 bytes at a time, 24 bits, which make exactly four
+  groups of 6 bits, so four characters:
+
+      M        a        n           3 bytes
+      01001101 01100001 01101110
+      010011 010110 000101 101110   4 groups of 6 bits
+      19     22     5      46       their values
+      T      W      F      u        the characters at those indexes
+
+  So "Man" is "TWFu" in Base64. The decoder does the opposite: 4 characters
+  at a time, back into 3 bytes.
+question: How many characters does Base64 make of 30 bytes?
+choices:
+  - id: a
+    text: "40"
+    correct: true
+  - id: b
+    text: "30"
+  - id: c
+    text: "45"
+  - id: d
+    text: "24"
+explanation: |
+  30 bytes are 10 windows of 3 bytes, and each window makes 4 characters.
+  That is the third that Base64 adds to the size.

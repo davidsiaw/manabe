@@ -1,0 +1,24 @@
+id: vec-borrow-why
+title: Why push Is Refused
+type: multiple_choice
+body: |
+  It might seem that a reference to the first element should not care
+  about a new element at the end. But a vector keeps its elements next to
+  each other. When there is no room left after the last one, push
+  allocates a bigger block of memory, copies every element over, and frees
+  the old block.
+question: What would a reference to the first element point to, after a push that moved the elements?
+choices:
+  - id: a
+    text: Memory that has been freed
+    correct: true
+  - id: b
+    text: The new first element, as Rust updates references
+  - id: c
+    text: The new element
+  - id: d
+    text: The same element, since elements never move
+explanation: |
+  The reference would dangle. Whether a given push moves the elements
+  depends on the room left, so the borrow checker refuses all of them
+  while a reference is in use.

@@ -1,0 +1,45 @@
+id: base64-scale
+title: "The Base64 Scale"
+type: code
+language: zig
+body: |
+  Each Base64 character stands for a number from 0 to 63, its index in the
+  scale:
+
+  - 0 to 25 are A to Z
+  - 26 to 51 are a to z
+  - 52 to 61 are 0 to 9
+  - 62 is +, and 63 is /
+
+  The simplest way to turn an index into its character is a lookup table:
+  work out every answer once, store them in an array, and look up the
+  index. Here the table is just the 64 characters in order, joined with ++,
+  which joins arrays while compiling:
+
+      const table = "ABCD" ++ "EFGH";   // "ABCDEFGH", a *const [8:0]u8
+
+  The program below does not compile: read the error. table is declared as
+  a pointer to exactly 64 bytes, and what it is given is shorter.
+question: Complete the table, so that the program prints the characters at the indexes it lists.
+starter_code: |
+  const std = @import("std");
+
+  const table: *const [64]u8 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ++ "abcdefghijklmnopqrstuvwxyz";
+
+  pub fn main() void {
+      for ([_]usize{ 0, 25, 26, 52, 62, 63 }) |index| {
+          std.debug.print("{d} is {c}\n", .{ index, table[index] });
+      }
+  }
+expected_output: |
+  0 is A
+  25 is Z
+  26 is a
+  52 is 0
+  62 is +
+  63 is /
+explanation: |
+  ++ "0123456789+/" adds the last 12. The error said the types did not
+  match: "expected type '*const [64]u8', found '*const [52:0]u8'". With the
+  length in the type, the compiler counts the characters for you. {c}
+  prints a byte as a character.

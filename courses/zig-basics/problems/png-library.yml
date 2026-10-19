@@ -1,0 +1,36 @@
+id: png-library
+title: "Decoding PNG with a C Library"
+type: multiple_choice
+body: |
+  The book reads and writes real PNG files. A PNG's pixels are compressed,
+  and decoding them is a lot of work, so the book uses a C library,
+  libspng, through the C interop of the last chapter: its header is
+  translated, and the library is linked.
+
+      const spng = @import("spng");           // translated spng.h
+      const ctx = spng.spng_ctx_new(0) orelse unreachable;
+      defer spng.spng_ctx_free(ctx);
+      // spng_set_png_file, spng_get_ihdr for the size,
+      // spng_decode_image to fill a buffer with RGBA
+
+  Its functions report errors as C does, with an int that is 0 for
+  success, which the Zig code checks and turns into Zig errors.
+
+  This course stays in the browser instead, with pixels in memory, and
+  writes images in a format so simple that no library is needed: the
+  next problem.
+question: Why does the book's version link a C library to read PNG files?
+choices:
+  - id: a
+    text: "PNG data is compressed, and decoding it is a lot of code that libspng already has"
+    correct: true
+  - id: b
+    text: "Zig cannot read binary files"
+  - id: c
+    text: "PNG files are written in C"
+  - id: d
+    text: "The browser requires it"
+explanation: |
+  Using a well-tested C library, rather than rewriting it, is one of the
+  main things C interop is for. There are PNG decoders written in Zig as
+  well.

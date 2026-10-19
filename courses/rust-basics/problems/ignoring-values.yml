@@ -1,0 +1,29 @@
+id: ignoring-values
+title: Ignoring Values
+type: multiple_choice
+body: |
+  Patterns can ignore what they do not need:
+
+  - _ matches anything, and binds nothing: Some(_) checks there is a value
+    without taking it.
+  - _name binds, but silences the warning about an unused variable.
+  - .. ignores the remaining parts: Point { x, .. }, or (first, .., last)
+    for a tuple.
+
+  There is a difference between _ and _name: _name binds the value, so if
+  the value is not Copy, it is moved into _name; _ does not touch it.
+question: s is a String. After let _ = s;, can s still be used?
+choices:
+  - id: a
+    text: "Yes: _ does not bind, so s is not moved"
+    correct: true
+  - id: b
+    text: "No: s was moved into _"
+  - id: c
+    text: "No: _ drops s"
+  - id: d
+    text: It does not compile
+explanation: |
+  let _s = s; would move s, and using s afterwards would be an error. (..)
+  can only be used once in a pattern: (.., second, ..) is ambiguous, and
+  does not compile.

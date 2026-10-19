@@ -1,0 +1,30 @@
+id: optional-pointer
+title: "Optional Pointers"
+type: multiple_choice
+body: |
+  Pointers can be optional too, and where the ? goes matters:
+
+      var num: i32 = 5;
+      var ptr: ?*i32 = &num;    // an optional pointer: null, or points to an i32
+      ptr = null;
+
+      var maybe: ?i32 = 5;
+      const p = &maybe;         // a *?i32: a pointer to an optional i32
+
+  Read the type from left to right: ?*i32 is "maybe a pointer to an i32",
+  *?i32 is "a pointer to a maybe-i32".
+question: Which of these can be null itself?
+choices:
+  - id: a
+    text: "A ?*i32"
+    correct: true
+  - id: b
+    text: "A *?i32"
+  - id: c
+    text: "Both"
+  - id: d
+    text: "Neither: pointers can never be null"
+explanation: |
+  A *?i32 always points somewhere; what it points to may be null. Optional
+  pointers cost nothing extra: null is stored as the address 0, which no
+  real pointer has.

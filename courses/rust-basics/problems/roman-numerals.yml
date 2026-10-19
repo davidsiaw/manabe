@@ -1,0 +1,80 @@
+id: roman-numerals
+title: "Putting It Together: Tests First"
+type: code
+language: rust
+run: local
+body: |
+  One way of working is to write the tests first, and then the code that
+  makes them pass. Here the tests are already written: they say what
+  to_roman must do, Roman numerals for numbers from 1 to 3999, and panic
+  for 0. Your job is the code.
+
+  A table of values and their numerals, largest first, makes it short:
+  take the largest value that fits, append its numeral, subtract, and
+  repeat. Including 900 (CM), 400 (CD), 90 (XC), 40 (XL), 9 (IX) and 4 (IV)
+  in the table handles the subtractive forms.
+
+  Replace src/lib.rs in your adder project with the code below, and run cargo test -- --test-threads=1: every test fails at todo!().
+question: Write to_roman, so that every test passes. Run the tests and paste everything cargo test printed.
+starter_code: |
+  pub fn to_roman(n: u32) -> String {
+      todo!()
+  }
+
+  #[cfg(test)]
+  mod tests {
+      use super::*;
+
+      #[test]
+      fn single_symbols() {
+          assert_eq!(to_roman(1), "I");
+          assert_eq!(to_roman(5), "V");
+          assert_eq!(to_roman(1000), "M");
+      }
+
+      #[test]
+      fn repeated_symbols() {
+          assert_eq!(to_roman(3), "III");
+          assert_eq!(to_roman(30), "XXX");
+      }
+
+      #[test]
+      fn subtractive_forms() {
+          assert_eq!(to_roman(4), "IV");
+          assert_eq!(to_roman(9), "IX");
+          assert_eq!(to_roman(40), "XL");
+          assert_eq!(to_roman(900), "CM");
+      }
+
+      #[test]
+      fn years() {
+          assert_eq!(to_roman(1987), "MCMLXXXVII");
+          assert_eq!(to_roman(2024), "MMXXIV");
+          assert_eq!(to_roman(3999), "MMMCMXCIX");
+      }
+
+      #[test]
+      #[should_panic(expected = "no Roman numeral for 0")]
+      fn zero() {
+          to_roman(0);
+      }
+  }
+expected_output: |
+  running 5 tests
+  test tests::repeated_symbols ... ok
+  test tests::single_symbols ... ok
+  test tests::subtractive_forms ... ok
+  test tests::years ... ok
+  test tests::zero - should panic ... ok
+
+  test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+  running 0 tests
+
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+explanation: |
+  The panic for 0, then the table loop. The tests describe the behaviour
+  precisely, and tell you at once when a change breaks it: try removing
+  (4, "IV") from the table and running them again. Note that zero passes
+  even with todo!() in place of the check, if expected is left out: it
+  only checks that something panicked.

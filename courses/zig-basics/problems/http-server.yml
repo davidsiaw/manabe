@@ -1,0 +1,91 @@
+id: http-server
+title: "Putting It Together: The Server"
+type: code
+language: zig
+run: local
+body: |
+  The whole server, with the pieces from this chapter. Read it: main
+  listens on 127.0.0.1, port 3490, and handles two connections, one after
+  the other, then stops. For each, it parses the request line, skips the
+  headers, and sends a response.
+
+      const address = try std.Io.net.IpAddress.parseIp4("127.0.0.1", 3490);
+      var server = try address.listen(io, .{ .mode = .stream, .protocol = .tcp, .reuse_address = true });
+      const connection = try server.accept(io);    // waits for a client
+
+  reuse_address lets the server start again straight after it stopped.
+  Without it, the system keeps the port reserved for a while after its
+  connections close, and listen fails with error.AddressInUse.
+
+  The connection's reader gives the request a line at a time, with
+  takeDelimiterInclusive('\n'), and its writer sends the response.
+
+  But the server answers 200 to everything. Save the program as
+  server.zig, run it with zig run server.zig, and then, in a second
+  terminal, request two pages from it:
+
+      curl http://127.0.0.1:3490/
+      curl http://127.0.0.1:3490/missing
+
+  (Or open both in a web browser, one after the other.)
+question: Make the server send 404 Not Found, with the body <h1>File not found!</h1>, for any URI but /. Run it again, make the same two requests, and paste what the server printed.
+starter_code: |
+  const std = @import("std");
+
+  const Method = enum { GET };
+  const MethodMap = std.static_string_map.StaticStringMap(Method).initComptime(.{
+      .{ "GET", .GET },
+  });
+
+  const Request = struct {
+      method: Method,
+      uri: []const u8,
+      version: []const u8,
+  };
+
+  fn parseRequest(line: []const u8) !Request {
+      var parts = std.mem.splitScalar(u8, std.mem.trimEnd(u8, line, "\r\n"), ' ');
+      const method = MethodMap.get(parts.next() orelse return error.BadRequest) orelse return error.UnsupportedMethod;
+      const uri = parts.next() orelse return error.BadRequest;
+      const version = parts.next() orelse return error.BadRequest;
+      return .{ .method = method, .uri = uri, .version = version };
+  }
+
+  fn respond(writer: *std.Io.Writer, status: []const u8, body: []const u8) !void {
+      try writer.print("HTTP/1.1 {s}\r\nContent-Length: {d}\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n{s}", .{ status, body.len, body });
+      try writer.flush();
+  }
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const address = try std.Io.net.IpAddress.parseIp4("127.0.0.1", 3490);
+      var server = try address.listen(io, .{ .mode = .stream, .protocol = .tcp, .reuse_address = true });
+      defer server.deinit(io);
+      std.debug.print("listening on http://127.0.0.1:3490\n", .{});
+
+      for (0..2) |_| {
+          const connection = try server.accept(io);
+          defer connection.close(io);
+
+          var read_buffer: [1024]u8 = undefined;
+          var reader = connection.reader(io, &read_buffer);
+          const request = try parseRequest(try reader.interface.takeDelimiterInclusive('\n'));
+          // The headers, up to the empty line that ends them.
+          while ((try reader.interface.takeDelimiterInclusive('\n')).len > 2) {}
+
+          var write_buffer: [1024]u8 = undefined;
+          var writer = connection.writer(io, &write_buffer);
+          try respond(&writer.interface, "200 OK", "<h1>Hello, World!</h1>");
+          std.debug.print("{s} {s} -> 200\n", .{ @tagName(request.method), request.uri });
+      }
+  }
+expected_output: |
+  listening on http://127.0.0.1:3490
+  GET / -> 200
+  GET /missing -> 404
+explanation: |
+  An if on std.mem.eql(u8, request.uri, "/"), with the 200 in one branch
+  and the 404 in the other. curl -i shows the whole response, status line
+  and headers included. This server is as small as can be: a real one
+  handles connections at the same time, with threads (chapter 16), and
+  reads the body as well.

@@ -1,0 +1,35 @@
+id: error-sets
+title: "Error Sets"
+type: multiple_choice
+body: |
+  An error set lists the errors a function can return:
+
+      const ReadError = error{
+          ConnectionTimedOut,
+          EndOfStream,
+      };
+
+      fn readByte() ReadError!u8 { ... }
+
+  ReadError!u8 is an error union: either an error from ReadError, or a
+  u8. Written as !u8, with nothing before the !, the compiler works out
+  the error set from the function's body: every error it can return,
+  including those passed on by try.
+
+  Each error name is global: error.EndOfStream is the same value in every
+  set that contains it.
+question: fn parse() !u32 contains try a(), where a can fail with error.Empty, and return error.TooLong. What is its error set?
+choices:
+  - id: a
+    text: "error{ Empty, TooLong }"
+    correct: true
+  - id: b
+    text: "error{ TooLong }"
+  - id: c
+    text: "anyerror"
+  - id: d
+    text: "None: !u32 cannot return errors from other functions"
+explanation: |
+  try passes a's errors on, so they are part of the inferred set. An
+  explicit set documents the errors, and makes the compiler check that no
+  others can escape; an inferred one is convenient.

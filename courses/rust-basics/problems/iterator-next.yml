@@ -1,0 +1,46 @@
+id: iterator-next
+title: The Iterator Trait and next
+type: code
+language: rust
+run: local
+body: |
+  All iterators implement the Iterator trait, which needs one method:
+
+    pub trait Iterator {
+        type Item;
+        fn next(&mut self) -> Option<Self::Item>;
+    }
+
+  type Item is an associated type, the type of the items, which chapter 20
+  covers. next returns the next item in a Some, and None once there are no
+  more. It changes the iterator, which keeps track of where it is, so it
+  takes &mut self, and the iterator must be mut to call it. A for loop does
+  that behind the scenes.
+
+  iter() gives immutable references to the items; into_iter() takes
+  ownership and gives the items themselves; iter_mut() gives mutable
+  references.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0596]: cannot borrow `v1_iter` as mutable, as it is not declared as mutable
+question: Make the program compile. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let v1 = vec![1, 2, 3];
+
+      let v1_iter = v1.iter();
+
+      println!("{:?}", v1_iter.next());
+      println!("{:?}", v1_iter.next());
+      println!("{:?}", v1_iter.next());
+      println!("{:?}", v1_iter.next());
+  }
+expected_output: |
+  Some(1)
+  Some(2)
+  Some(3)
+  None
+explanation: |
+  let mut v1_iter. The items are &i32, references into v1, though they
+  print like numbers. After None, the iterator is used up.

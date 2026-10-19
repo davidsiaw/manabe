@@ -1,0 +1,57 @@
+id: stack-push
+title: "push"
+type: code
+language: zig
+body: |
+  The stack starts with room for a few items. When it is full, push has to
+  make room: allocate a slice twice as large, copy the items over, and
+  free the old one, as an ArrayList does.
+
+  Run the program: pushing more than the capacity panics.
+question: Make push grow the stack when it is full, so that it holds all ten numbers.
+starter_code: |
+  const std = @import("std");
+
+  const Stack = struct {
+      items: []u32,
+      length: usize,
+      allocator: std.mem.Allocator,
+
+      pub fn init(allocator: std.mem.Allocator, capacity: usize) !Stack {
+          return .{
+              .items = try allocator.alloc(u32, capacity),
+              .length = 0,
+              .allocator = allocator,
+          };
+      }
+
+      pub fn deinit(self: *Stack) void {
+          self.allocator.free(self.items);
+      }
+
+      pub fn push(self: *Stack, value: u32) !void {
+          self.items[self.length] = value;
+          self.length += 1;
+      }
+  };
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      var stack = try Stack.init(allocator, 2);
+      defer stack.deinit();
+      for (1..11) |i| try stack.push(@intCast(i * i));
+
+      std.debug.print("{d} items, capacity {d}\n", .{ stack.length, stack.items.len });
+      std.debug.print("{any}\n", .{stack.items[0..stack.length]});
+  }
+expected_output: |
+  10 items, capacity 16
+  { 1, 4, 9, 16, 25, 36, 49, 64, 81, 100 }
+explanation: |
+  When length equals items.len, allocate twice as many, @memcpy the items
+  into the start of the new slice, free the old one, and use the new one.
+  The capacity went 2, 4, 8, 16. The DebugAllocator would report it if
+  the old slices were not freed.

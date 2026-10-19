@@ -1,0 +1,88 @@
+id: generic-stack
+title: "A Generic Stack"
+type: code
+language: zig
+body: |
+  The stack only holds u32s. To make it hold any type, turn it into a
+  function that takes the type and returns a struct type:
+
+      fn Stack(comptime T: type) type {
+          return struct {
+              items: []T,
+              // ...
+              const Self = @This();
+
+              pub fn push(self: *Self, value: T) !void { ... }
+          };
+      }
+
+  @This() is the struct being defined, which has no name of its own,
+  hence Self. Stack(u32) and Stack([]const u8) are then two types, made
+  while compiling. std.ArrayList(T) is written exactly this way.
+
+  Run the program: main wants a stack of strings.
+question: Make Stack generic, so that the program prints as below.
+starter_code: |
+  const std = @import("std");
+
+  const Stack = struct {
+      items: []u32,
+      length: usize,
+      allocator: std.mem.Allocator,
+
+      pub fn init(allocator: std.mem.Allocator, capacity: usize) !Stack {
+          return .{
+              .items = try allocator.alloc(u32, capacity),
+              .length = 0,
+              .allocator = allocator,
+          };
+      }
+
+      pub fn deinit(self: *Stack) void {
+          self.allocator.free(self.items);
+      }
+
+      pub fn push(self: *Stack, value: u32) !void {
+          if (self.length == self.items.len) {
+              const bigger = try self.allocator.alloc(u32, self.items.len * 2);
+              @memcpy(bigger[0..self.length], self.items);
+              self.allocator.free(self.items);
+              self.items = bigger;
+          }
+          self.items[self.length] = value;
+          self.length += 1;
+      }
+
+      pub fn pop(self: *Stack) ?u32 {
+          if (self.length == 0) return null;
+          self.length -= 1;
+          return self.items[self.length];
+      }
+  };
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      var numbers = try Stack(u32).init(allocator, 2);
+      defer numbers.deinit();
+      try numbers.push(7);
+      try numbers.push(8);
+      std.debug.print("{?d}\n", .{numbers.pop()});
+
+      var words = try Stack([]const u8).init(allocator, 2);
+      defer words.deinit();
+      for ([_][]const u8{ "first", "second", "third" }) |word| try words.push(word);
+      while (words.pop()) |word| std.debug.print("{s}\n", .{word});
+  }
+expected_output: |
+  8
+  third
+  second
+  first
+explanation: |
+  Wrap the struct in fn Stack(comptime T: type) type { return struct {
+  ... }; }, add const Self = @This();, and replace u32 with T and Stack
+  with Self throughout. Nothing else changes: the code was already
+  written for one type, and now works for each type it is used with.

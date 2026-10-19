@@ -1,0 +1,46 @@
+id: pixel-index
+title: "Finding a Pixel"
+type: code
+language: zig
+body: |
+  The pixels are stored a row at a time, from the top row down, and each
+  row from left to right. So the pixel in column x of row y, both counted
+  from 0, comes after y whole rows and x pixels:
+
+      index = (y * width + x) * 4
+
+  and its red, green, blue and alpha are the four bytes from there.
+
+  Run the program: pixelAt gets the wrong pixels.
+question: Fix pixelAt, so that the program prints the pixels as below.
+starter_code: |
+  const std = @import("std");
+
+  // A 3 by 2 image, in RGBA, row by row from the top.
+  const width = 3;
+  const height = 2;
+  const pixels = [_]u8{
+      255, 0, 0, 255,     0, 255, 0, 255,     0, 0, 255, 255,
+      255, 255, 255, 255, 0, 0, 0, 255,       128, 64, 32, 128,
+  };
+
+  fn pixelAt(x: usize, y: usize) []const u8 {
+      const index = (x * width + y) * 4;
+      return pixels[index .. index + 4];
+  }
+
+  pub fn main() void {
+      std.debug.print("top left {any}\n", .{pixelAt(0, 0)});
+      std.debug.print("top right {any}\n", .{pixelAt(2, 0)});
+      std.debug.print("bottom left {any}\n", .{pixelAt(0, 1)});
+      std.debug.print("bottom right {any}\n", .{pixelAt(2, 1)});
+  }
+expected_output: |
+  top left { 255, 0, 0, 255 }
+  top right { 0, 0, 255, 255 }
+  bottom left { 255, 255, 255, 255 }
+  bottom right { 128, 64, 32, 128 }
+explanation: |
+  (y * width + x) * 4: whole rows first. The starter swapped them, which
+  happens to work for a square image, and panics with an index out of
+  bounds on this one. The last pixel is half transparent: alpha 128.

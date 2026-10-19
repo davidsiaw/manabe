@@ -1,0 +1,37 @@
+id: translate-c
+title: "Translating C Headers"
+type: multiple_choice
+body: |
+  For a library with many functions, writing every declaration by hand is
+  tedious and easy to get wrong. A header file already has them, and
+  translate-c turns C declarations into Zig ones:
+
+      zig translate-c /usr/include/stdio.h -lc > c.zig
+
+  In a project, the build system does it, with addTranslateC, and the
+  result is a module that the program imports:
+
+      const c = b.addTranslateC(.{
+          .root_source_file = b.path("src/c.h"),
+          .target = target,
+          .optimize = optimize,
+      });
+      exe.root_module.addImport("c", c.createModule());
+
+  and then, in the program, const c = @import("c"); and c.printf, and
+  so on. The book also shows @cImport, which did the same inside the
+  source code; Zig 0.17 removed it, in favour of the build system.
+question: What does translate-c produce from a C header?
+choices:
+  - id: a
+    text: "Zig declarations of the header's functions, types and constants"
+    correct: true
+  - id: b
+    text: "A compiled library"
+  - id: c
+    text: "C code with the Zig types replaced"
+  - id: d
+    text: "Nothing, if the header has no function bodies"
+explanation: |
+  Headers declare; the code that implements them is still in the C
+  library, which must be linked, or in C files compiled into the program.

@@ -1,0 +1,46 @@
+id: read-lines
+title: "Reading Line by Line"
+type: code
+language: zig
+body: |
+  For a large file, reading it all into memory at once is wasteful. A
+  reader goes through it a piece at a time:
+
+      var buffer: [256]u8 = undefined;
+      var reader = file.reader(io, &buffer);
+      while (try reader.interface.takeDelimiter('\n')) |line| {
+          // use line
+      }
+
+  takeDelimiter returns the next line without its '\n', and null at the
+  end of the file; a last line with no '\n' after it still comes back.
+  The line is a slice of the reader's buffer: it is only valid until the
+  next read. A line longer than the buffer is an error, StreamTooLong.
+
+  The program makes a file of scores; read it back, and add up the scores.
+question: Read scores.txt a line at a time, and add up the numbers.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const cwd = std.Io.Dir.cwd();
+      try cwd.writeFile(io, .{ .sub_path = "scores.txt", .data = "12\n7\n30\n1\n" });
+
+      const file = try cwd.openFile(io, "scores.txt", .{});
+      defer file.close(io);
+
+      var total: u32 = 0;
+      var count: u32 = 0;
+      _ = &total;
+      _ = &count;
+
+      std.debug.print("{d} scores, total {d}\n", .{ count, total });
+  }
+expected_output: |
+  4 scores, total 50
+explanation: |
+  The loop above, parsing each line. writeFile, at the top, is the short
+  way to make a file with given contents. The reader has a lower-level
+  takeDelimiterExclusive too, which leaves the '\n' to be skipped by
+  hand; takeDelimiter does it for you.

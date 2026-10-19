@@ -1,0 +1,72 @@
+id: conditional-impl
+title: Implementing a Trait for Your Type
+type: code
+language: rust
+run: local
+body: |
+  An impl block can have trait bounds too, so that its methods only exist
+  when the type parameter can do what they need:
+
+    impl<T: Display + PartialOrd> Pair<T> {
+        fn cmp_display(&self) { ... }
+    }
+
+  A Pair of a type that cannot be printed or compared simply has no
+  cmp_display.
+
+  Celsius below is such a type. To give it what cmp_display needs,
+  implement the standard library's Display for it, which is how a type
+  says how {} prints it:
+
+    use std::fmt;
+
+    impl fmt::Display for Celsius {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{}°C", self.0)
+        }
+    }
+
+  and derive PartialOrd, as Debug is derived.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0599]: the method `cmp_display` exists for struct `Pair<Celsius>`, but its trait bounds were not satisfied
+question: Make Pair<Celsius> have cmp_display. Run it and paste what it printed.
+starter_code: |
+  use std::fmt::Display;
+
+  struct Pair<T> {
+      x: T,
+      y: T,
+  }
+
+  impl<T> Pair<T> {
+      fn new(x: T, y: T) -> Self {
+          Self { x, y }
+      }
+  }
+
+  impl<T: Display + PartialOrd> Pair<T> {
+      fn cmp_display(&self) {
+          if self.x >= self.y {
+              println!("The largest member is x = {}", self.x);
+          } else {
+              println!("The largest member is y = {}", self.y);
+          }
+      }
+  }
+
+  struct Celsius(f64);
+
+  fn main() {
+      Pair::new(3, 8).cmp_display();
+      Pair::new(Celsius(21.5), Celsius(19.0)).cmp_display();
+  }
+expected_output: |
+  The largest member is y = 8
+  The largest member is x = 21.5°C
+explanation: |
+  #[derive(PartialEq, PartialOrd)] on Celsius (PartialOrd needs
+  PartialEq, as the compiler says if you leave it out), and the Display
+  impl. write! is like format!, writing into the formatter f. The error
+  listed exactly the bounds that were missing.

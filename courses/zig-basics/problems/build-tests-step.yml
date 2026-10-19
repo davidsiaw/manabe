@@ -1,0 +1,34 @@
+id: build-tests-step
+title: "A Test Step"
+type: multiple_choice
+body: |
+  Tests get a step the same way. addTest builds a test program from a
+  module's test blocks, and a run step runs it:
+
+      const tests = b.addTest(.{
+          .root_module = b.createModule(.{
+              .root_source_file = b.path("src/main.zig"),
+              .target = b.graph.host,
+          }),
+      });
+      const run_tests = b.addRunArtifact(tests);
+      const test_step = b.step("test", "Run the unit tests");
+      test_step.dependOn(&run_tests.step);
+
+  zig build test then runs every test in src/main.zig, and the files it
+  imports.
+question: zig build test runs and all the tests pass. What does it print?
+choices:
+  - id: a
+    text: "Nothing: zig build says nothing when every step succeeds"
+    correct: true
+  - id: b
+    text: "A line per test, as zig test does"
+  - id: c
+    text: "All tests passed., and nothing else"
+  - id: d
+    text: "The number of tests, and their names"
+explanation: |
+  Silence means success. zig build test --summary all lists every step
+  and how it went, including how many tests passed. When a test fails,
+  zig build prints its error, as zig test does.

@@ -1,0 +1,26 @@
+id: static-lifetime
+title: The 'static Lifetime
+type: multiple_choice
+body: |
+  'static is a lifetime that lasts for the whole program. All string
+  literals have it, as they are stored in the program itself:
+
+    let s: &'static str = "I have a static lifetime.";
+
+  Compiler messages sometimes suggest 'static. Usually the real problem is
+  a reference that would dangle, or lifetimes that do not match, and
+  'static is not the fix.
+question: Which of these has the type &'static str?
+choices:
+  - id: a
+    text: "\"hello\", a string literal"
+    correct: true
+  - id: b
+    text: "&s[0..2], where s is a String in main"
+  - id: c
+    text: Any &str
+  - id: d
+    text: "None: 'static is only for constants"
+explanation: |
+  A slice of a String lives only as long as the String. A literal is part
+  of the program, so it is valid everywhere.

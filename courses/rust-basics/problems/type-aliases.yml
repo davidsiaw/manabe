@@ -1,0 +1,30 @@
+id: type-aliases
+title: Type Aliases
+type: multiple_choice
+body: |
+  type gives an existing type another name:
+
+    type Kilometers = i32;
+
+  Unlike a newtype, an alias is the same type: a Kilometers and an i32 can
+  be added, and the compiler will not stop you mixing them up. Aliases are
+  for shortening long types, such as
+
+    type Thunk = Box<dyn Fn() + Send + 'static>;
+    type Result<T> = std::result::Result<T, std::io::Error>;
+
+  The second is how std::io::Result is defined.
+question: "type Kilometers = i32; let x: i32 = 5; let y: Kilometers = 5; What is x + y?"
+choices:
+  - id: a
+    text: "10: they are the same type"
+    correct: true
+  - id: b
+    text: "It does not compile: different types"
+  - id: c
+    text: Kilometers(10)
+  - id: d
+    text: It panics
+explanation: |
+  For the compiler to keep them apart, use a newtype, struct Kilometers(i32),
+  instead.

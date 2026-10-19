@@ -1,0 +1,40 @@
+id: word-count
+title: Updating a Value
+type: code
+language: rust
+run: local
+body: |
+  Because or_insert returns a mutable reference to the value, it can also
+  update it: insert a starting value when the key is new, and change it
+  either way. This counts how often each word appears:
+
+    let count = map.entry(word).or_insert(0);
+    *count += 1;
+
+  count is a &mut i32, so *count changes the value in the map. The
+  reference ends with the loop body, so the map is free again for the next
+  word.
+
+  split_whitespace() goes through a string's words. Copy the program into src/main.rs in your hello project and run it: every count is
+  missing.
+question: Count the words. Run it and paste what it printed.
+starter_code: |
+  use std::collections::HashMap;
+
+  fn main() {
+      let text = "the cat and the hat and the bat";
+
+      let mut counts: HashMap<&str, i32> = HashMap::new();
+      for word in text.split_whitespace() {
+      }
+
+      let mut words: Vec<_> = counts.into_iter().collect();
+      words.sort();
+      println!("{words:?}");
+  }
+expected_output: |
+  [("and", 2), ("bat", 1), ("cat", 1), ("hat", 1), ("the", 3)]
+explanation: |
+  The two lines above, in the loop; *counts.entry(word).or_insert(0) += 1
+  does it in one. into_iter() moves the pairs out of the map, so that
+  they can be sorted.

@@ -1,0 +1,62 @@
+id: encapsulation
+title: Encapsulation
+type: code
+language: rust
+run: local
+body: |
+  AveragedCollection keeps a list of numbers and their average, kept up to
+  date with each change, so that reading it is instant. Its fields are
+  private, so the only way to change the list is through add and remove,
+  which update the average. If code outside could push to the list itself,
+  the average would be wrong.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0616]: field `list` of struct `AveragedCollection` is private
+question: Write remove, which removes the last number and returns it, keeping the average up to date, and make main use add and remove. Run it and paste what it printed.
+starter_code: |
+  mod collection {
+      pub struct AveragedCollection {
+          list: Vec<i32>,
+          average: f64,
+      }
+
+      impl AveragedCollection {
+          pub fn new() -> AveragedCollection {
+              AveragedCollection { list: vec![], average: 0.0 }
+          }
+
+          pub fn add(&mut self, value: i32) {
+              self.list.push(value);
+              self.update_average();
+          }
+
+          pub fn average(&self) -> f64 {
+              self.average
+          }
+
+          fn update_average(&mut self) {
+              let total: i32 = self.list.iter().sum();
+              self.average = total as f64 / self.list.len() as f64;
+          }
+      }
+  }
+
+  fn main() {
+      let mut numbers = collection::AveragedCollection::new();
+      numbers.list.push(4);
+      numbers.list.push(8);
+      numbers.list.push(9);
+      println!("average {}", numbers.average());
+      println!("removed {:?}, average {}", numbers.list.pop(), numbers.average());
+  }
+expected_output: |
+  average 7
+  removed Some(9), average 6
+explanation: |
+  remove pops, and updates the average if something was removed. In main,
+  numbers.remove() can go straight into the println!, as its arguments are
+  worked out from left to right, so the average is read after the remove.
+  Because the fields are private, the collection could later keep its
+  numbers in another kind of collection, without any code outside
+  changing.

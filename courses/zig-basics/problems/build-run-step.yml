@@ -1,0 +1,48 @@
+id: build-run-step
+title: "A Run Step"
+type: code
+language: zig
+run: local
+body: |
+  Building is one step; running the program is another, which the script
+  has to add. It is three lines:
+
+      const run_step = b.step("run", "Run the program");
+      const run_exe = b.addRunArtifact(exe);
+      run_step.dependOn(&run_exe.step);
+
+  b.step makes a step that zig build can be asked for by name, and that
+  zig build --help lists. addRunArtifact makes a step that runs the
+  program, building it first if needed, and dependOn hangs it under the
+  run step.
+
+  Make a folder for the project, with the program below in src/main.zig,
+  and the build script in build.zig next to src:
+
+      const std = @import("std");
+
+      pub fn main() void {
+          std.debug.print("Hello from zig build!\n", .{});
+      }
+
+  Run zig build run in the folder: "no such step: run".
+question: Add the run step to build.zig. Run zig build run, and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  pub fn build(b: *std.Build) void {
+      const exe = b.addExecutable(.{
+          .name = "hello",
+          .root_module = b.createModule(.{
+              .root_source_file = b.path("src/main.zig"),
+              .target = b.graph.host,
+          }),
+      });
+      b.installArtifact(exe);
+  }
+expected_output: |
+  Hello from zig build!
+explanation: |
+  The three lines after installArtifact. zig build run now builds the
+  program and runs it; zig build alone still only builds and installs.
+  zig build --help lists run under Steps, with its description.

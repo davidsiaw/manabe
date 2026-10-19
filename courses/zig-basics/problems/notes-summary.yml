@@ -1,0 +1,49 @@
+id: notes-summary
+title: "Putting It Together: A Word Report"
+type: code
+language: zig
+body: |
+  Reading, processing and writing files together: the program below has
+  notes in two files. Write report, which reads every .txt file in the
+  notes folder, counts the words in each, and writes a report file with a
+  line per note, in alphabetical order, and the total.
+
+  std.mem.endsWith(u8, name, ".txt") checks a name's ending, and
+  std.mem.tokenizeAny(u8, text, " \n") goes through the words.
+question: Write report, so that report.txt reads as below.
+starter_code: |
+  const std = @import("std");
+
+  fn report(io: std.Io, allocator: std.mem.Allocator) !void {
+      _ = io;
+      _ = allocator;
+  }
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const cwd = std.Io.Dir.cwd();
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      try cwd.createDirPath(io, "notes");
+      try cwd.writeFile(io, .{ .sub_path = "notes/zig.txt", .data = "comptime is neat\nso are slices\n" });
+      try cwd.writeFile(io, .{ .sub_path = "notes/rust.txt", .data = "the borrow checker\n" });
+      try cwd.writeFile(io, .{ .sub_path = "notes/todo.md", .data = "not a note" });
+      try cwd.writeFile(io, .{ .sub_path = "report.txt", .data = "" });
+
+      try report(io, allocator);
+
+      const text = try cwd.readFileAlloc(io, "report.txt", allocator, .unlimited);
+      defer allocator.free(text);
+      std.debug.print("{s}", .{text});
+  }
+expected_output: |
+  rust.txt: 3 words
+  zig.txt: 6 words
+  total: 9 words
+explanation: |
+  List and sort the .txt names (copied with dupe), then for each, read it
+  with notes.readFileAlloc, a path relative to the notes folder, count its
+  words, and print a line to the report's writer, flushing at the end.
+  Every allocation has its free, and the DebugAllocator checks.

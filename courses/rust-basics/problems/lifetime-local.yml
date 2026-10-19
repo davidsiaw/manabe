@@ -1,0 +1,30 @@
+id: lifetime-local
+title: What Lifetimes Cannot Fix
+type: multiple_choice
+body: |
+  Lifetime annotations describe how the result relates to the
+  parameters. A function that returns a reference to something it made
+  itself has no annotation that helps:
+
+    fn longest<'a>(x: &str, y: &str) -> &'a str {
+        let result = String::from("really long string");
+        result.as_str()
+    }
+
+  result is dropped when the function returns, so a reference to it would
+  dangle, whatever the signature says.
+question: How should such a function be fixed?
+choices:
+  - id: a
+    text: Return an owned value, a String, so the caller owns it
+    correct: true
+  - id: b
+    text: Use a longer lifetime name
+  - id: c
+    text: Add 'a to x and y
+  - id: d
+    text: It cannot be fixed
+explanation: |
+  The compiler says "cannot return value referencing local variable
+  `result`". Returning the String moves it to the caller, and nothing
+  dangles.

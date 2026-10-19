@@ -1,0 +1,62 @@
+id: integration-tests
+title: Integration Tests
+type: code
+language: rust
+run: local
+body: |
+  Integration tests go in a tests folder at the top of the project, next
+  to src. Each file in it is compiled as a crate of its own, which uses
+  your library like any other crate would: through its public API, with
+  use adder::...; and no #[cfg(test)] is needed.
+
+  Make the folder, and in it tests/integration_test.rs:
+
+    use adder::add_two;
+
+    #[test]
+    fn it_adds_two() {
+        let result = add_two(2);
+        assert_eq!(result, 4);
+    }
+
+  Replace src/lib.rs in your adder project with the code below, and run cargo test -- --test-threads=1:
+
+    error[E0603]: function `add_two` is private
+question: Make add_two usable from the integration test. Run the tests and paste everything cargo test printed.
+starter_code: |
+  fn add_two(a: u64) -> u64 {
+      internal_adder(a, 2)
+  }
+
+  fn internal_adder(left: u64, right: u64) -> u64 {
+      left + right
+  }
+
+  #[cfg(test)]
+  mod tests {
+      use super::*;
+
+      #[test]
+      fn internal() {
+          assert_eq!(internal_adder(2, 2), 4);
+      }
+  }
+expected_output: |
+  running 1 test
+  test tests::internal ... ok
+
+  test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+  running 1 test
+  test it_adds_two ... ok
+
+  test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+  running 0 tests
+
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+explanation: |
+  pub fn add_two. The unit test could use it privately; the integration
+  test is outside the crate, and sees only what is pub. There are now
+  three sections: the unit tests, the integration test, and the doc
+  tests. If the unit tests fail, the others are not run.

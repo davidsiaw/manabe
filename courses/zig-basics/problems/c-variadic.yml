@@ -1,0 +1,30 @@
+id: c-variadic
+title: "Variadic C Functions"
+type: multiple_choice
+body: |
+  printf takes a format and any number of arguments after it: it is
+  variadic. C cannot check the arguments' types, and Zig only lets through
+  those whose representation C understands.
+
+      const name: []const u8 = "ziggy";
+      _ = c.printf("%s\n", name);
+
+  gives:
+
+      error: cannot pass '[]const u8' to variadic function
+      note: slices have no guaranteed in-memory representation
+question: How do you pass the name?
+choices:
+  - id: a
+    text: "As name.ptr, after declaring name as [:0]const u8"
+    correct: true
+  - id: b
+    text: "As name, unchanged: the error is only a warning"
+  - id: c
+    text: "As &name"
+  - id: d
+    text: "You cannot print strings with printf from Zig"
+explanation: |
+  The pointer to the first byte is what %s wants, and the sentinel makes
+  sure the 0 is there. Floats can be passed as they are: an f32 is promoted
+  to a double, as in C.

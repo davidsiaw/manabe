@@ -1,0 +1,55 @@
+id: extract-function
+title: Removing Duplication
+type: code
+language: rust
+run: local
+body: |
+  This chapter is about writing code once for many types. It starts with
+  the familiar step before that: writing code once for many values.
+
+  The program below finds the largest number of two lists, with the same
+  loop written out twice. Duplicated code is tedious, and when one copy is
+  fixed, the other is easily forgotten. The cure is a function, which takes
+  the part that changes, the list, as a parameter:
+
+    fn largest(list: &[i32]) -> &i32
+
+  Someone has started: the third list already calls largest, which does
+  not exist yet. Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0425]: cannot find function `largest` in this scope
+question: Write largest, with the loop in it, and use it for all three lists. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let number_list = vec![34, 50, 25, 100, 65];
+
+      let mut max = &number_list[0];
+      for number in &number_list {
+          if number > max {
+              max = number;
+          }
+      }
+      println!("The largest number is {max}");
+
+      let number_list = vec![102, 34, 6000, 89, 54, 2, 43, 8];
+
+      let mut max = &number_list[0];
+      for number in &number_list {
+          if number > max {
+              max = number;
+          }
+      }
+      println!("The largest number is {max}");
+
+      let number_list = vec![7, 3, 9];
+      println!("The largest number is {}", largest(&number_list));
+  }
+expected_output: |
+  The largest number is 100
+  The largest number is 6000
+  The largest number is 9
+explanation: |
+  The loop is now written once, and each list takes one line. A &Vec<i32>
+  passes as a &[i32], a slice, so largest works for arrays too. Generics
+  take the same step one level up: the next problem makes largest work for
+  any type, not just i32.

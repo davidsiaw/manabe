@@ -1,0 +1,45 @@
+id: match-guards
+title: Match Guards
+type: code
+language: rust
+run: local
+body: |
+  A match guard is an extra if after an arm's pattern: the arm only matches
+  when the pattern matches and the condition is true.
+
+    match num {
+        Some(x) if x % 2 == 0 => println!("The number {x} is even"),
+        Some(x) => println!("The number {x} is odd"),
+        None => (),
+    }
+
+  The guard can use variables from outside the match, which a pattern
+  cannot: Some(n) if n == y compares with an outer y.
+
+  With |, the guard applies to all the alternatives: 4 | 5 | 6 if y means
+  (4 | 5 | 6) if y.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write check, using match guards. Run it and paste what it printed.
+starter_code: |
+  // "too small" below the limit's minimum, "too big" above its maximum,
+  // "even", or "odd". None is "missing".
+  fn check(value: Option<i32>, min: i32, max: i32) -> &'static str {
+      todo!()
+  }
+
+  fn main() {
+      for value in [Some(4), Some(7), Some(-3), Some(120), None] {
+          println!("{value:?}: {}", check(value, 0, 100));
+      }
+  }
+expected_output: |
+  Some(4): even
+  Some(7): odd
+  Some(-3): too small
+  Some(120): too big
+  None: missing
+explanation: |
+  Guards on Some(n) for the limits and evenness, then Some(_) and None. The
+  compiler does not look inside guards when checking that a match covers
+  everything, so the arms without guards are what make it exhaustive.

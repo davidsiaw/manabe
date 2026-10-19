@@ -1,0 +1,33 @@
+id: hashmap-order-zig
+title: "Order in Hash Maps"
+type: multiple_choice
+body: |
+  Going through a hash map gives its entries in an order that depends on
+  the hashes, not on when they were put in:
+
+      var it = ages.iterator();
+      while (it.next()) |entry| {
+          std.debug.print("{s}: {d}\n", .{ entry.key_ptr.*, entry.value_ptr.* });
+      }
+
+  The array hash maps, such as AutoArrayHashMapUnmanaged, keep their
+  entries in an array as well, in the order they were put in, and go
+  through them in that order, at some cost in memory and in the speed of
+  removing. For string keys, use StringHashMap or
+  StringArrayHashMapUnmanaged: Auto would hash the slice's pointer, not
+  its text.
+question: Keys are put into an AutoHashMap in the order 3, 1, 2. In what order does its iterator give them?
+choices:
+  - id: a
+    text: "In an order that depends on the hashes"
+    correct: true
+  - id: b
+    text: "3, 1, 2"
+  - id: c
+    text: "1, 2, 3"
+  - id: d
+    text: "2, 1, 3"
+explanation: |
+  With AutoArrayHashMapUnmanaged, it would be 3, 1, 2. The iterator's
+  entries give pointers, key_ptr and value_ptr, so values can be changed
+  while going through.

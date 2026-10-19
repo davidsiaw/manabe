@@ -1,0 +1,35 @@
+id: result-enum
+title: Result
+type: multiple_choice
+body: |
+  Most errors are not serious enough to stop the program. A function that
+  can fail returns a Result, an enum in the prelude:
+
+    enum Result<T, E> {
+        Ok(T),
+        Err(E),
+    }
+
+  Ok holds the value, of type T, when it worked; Err holds an error, of
+  type E, when it did not. T and E are generic type parameters, which
+  chapter 10 explains: each function picks its own.
+
+  parse, which turns a string into a number, returns a Result, as the
+  string might not be a number:
+
+    let result: Result<u8, std::num::ParseIntError> = "42".parse();
+question: "\"4x\".parse::<u8>() fails. What does it return?"
+choices:
+  - id: a
+    text: An Err holding a ParseIntError
+    correct: true
+  - id: b
+    text: Ok(0)
+  - id: c
+    text: None
+  - id: d
+    text: "Nothing: it panics"
+explanation: |
+  The ::<u8> after parse, called the turbofish, says which type to parse
+  into, when nothing else in the code does. Like Option, the Result makes
+  the caller deal with the failure before using the value.

@@ -1,0 +1,49 @@
+id: doc-tests
+title: Documentation Tests
+type: code
+language: rust
+run: local
+body: |
+  The code in a documentation comment's examples is also a test: cargo test
+  runs every example, as a doc-test. Examples cannot go out of date without
+  the tests saying so.
+
+  Make a library, cargo new my_crate --lib, and replace src/lib.rs with the
+  code below. The example in the documentation is right, but add_one is
+  not. Run cargo test -- --test-threads=1: there are no unit tests, and the
+  doc-test fails.
+question: Fix add_one, without changing its documentation. Run cargo test -- --test-threads=1 and paste everything it printed.
+starter_code: |
+  //! # My Crate
+  //!
+  //! `my_crate` is a collection of utilities to make performing certain
+  //! calculations more convenient.
+
+  /// Adds one to the number given.
+  ///
+  /// # Examples
+  ///
+  /// ```
+  /// let arg = 5;
+  /// let answer = my_crate::add_one(arg);
+  ///
+  /// assert_eq!(6, answer);
+  /// ```
+  pub fn add_one(x: i32) -> i32 {
+      x + 2
+  }
+expected_output: |
+  running 0 tests
+
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+  running 1 test
+  test src/lib.rs - add_one (line 10) ... ok
+
+  test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+explanation: |
+  x + 1. The doc-test is named after the file, the function and the line
+  where the example starts. The //! lines at the top are a different kind
+  of documentation comment, the next problem's subject. Cargo also prints
+  how long the doc-tests took, which is left out when your answer is
+  checked.

@@ -1,0 +1,34 @@
+id: build-libraries
+title: "Linking Libraries"
+type: multiple_choice
+body: |
+  A program that uses a C library, such as libpng for PNG images, has to
+  be linked to it, and to the C standard library, libc:
+
+      const exe = b.addExecutable(.{
+          .name = "image_filter",
+          .root_module = b.createModule(.{
+              .root_source_file = b.path("src/main.zig"),
+              .target = b.graph.host,
+              .link_libc = true,
+          }),
+      });
+      exe.root_module.linkSystemLibrary("png", .{});
+
+  linkSystemLibrary looks for a library installed on the computer.
+  Libraries built in the same script are linked with linkLibrary instead,
+  and b.addLibrary builds one, static or dynamic.
+question: A program uses libpng, which is installed on the computer. Which line links it?
+choices:
+  - id: a
+    text: "exe.root_module.linkSystemLibrary(\"png\", .{});"
+    correct: true
+  - id: b
+    text: "const png = @import(\"png\");"
+  - id: c
+    text: "b.installArtifact(\"png\");"
+  - id: d
+    text: "exe.root_module.addOptions(\"png\", options);"
+explanation: |
+  @import is for Zig modules; a C library is linked, and its functions
+  declared from its header, which chapter 14 shows.

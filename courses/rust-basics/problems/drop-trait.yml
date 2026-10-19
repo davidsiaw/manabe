@@ -1,0 +1,42 @@
+id: drop-trait
+title: The Drop Trait
+type: code
+language: rust
+run: local
+body: |
+  Drop lets a type run code when a value of it goes out of scope: freeing
+  memory, closing a file, releasing a lock. Its one method is drop:
+
+    impl Drop for CustomSmartPointer {
+        fn drop(&mut self) {
+            println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+        }
+    }
+
+  Rust calls it by itself; you never call it. Values are dropped in the
+  reverse order they were created in.
+
+  Copy the program into src/main.rs in your hello project and run it: it prints only the line from main.
+question: Implement Drop as above. Run it and paste what it printed.
+starter_code: |
+  struct CustomSmartPointer {
+      data: String,
+  }
+
+  fn main() {
+      let c = CustomSmartPointer {
+          data: String::from("my stuff"),
+      };
+      let d = CustomSmartPointer {
+          data: String::from("other stuff"),
+      };
+      println!("CustomSmartPointers created.");
+  }
+expected_output: |
+  CustomSmartPointers created.
+  Dropping CustomSmartPointer with data `other stuff`!
+  Dropping CustomSmartPointer with data `my stuff`!
+explanation: |
+  d was created last, so it is dropped first. The variables are still
+  unused, so the compiler warns about them, which is fine here: the point
+  is that they are dropped.

@@ -1,0 +1,30 @@
+id: search-lifetimes
+title: Why search Needs a Lifetime
+type: multiple_choice
+body: |
+  Without the annotations, search does not compile:
+
+    pub fn search(query: &str, contents: &str) -> Vec<&str>
+
+    error[E0106]: missing lifetime specifier
+
+  The result holds references, slices of lines, and the compiler cannot
+  tell from the signature whether they come from query or from contents:
+  there are two reference parameters, so the elision rules do not apply.
+question: Which says correctly where the results come from?
+choices:
+  - id: a
+    text: "pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str>"
+    correct: true
+  - id: b
+    text: "pub fn search<'a>(query: &'a str, contents: &str) -> Vec<&'a str>"
+  - id: c
+    text: "pub fn search(query: &str, contents: &str) -> Vec<String>"
+  - id: d
+    text: "pub fn search<'a>(query: &'a str, contents: &'a str) -> Vec<&str>"
+explanation: |
+  The lines are slices of contents, so they live as long as contents does.
+  The query is only read. With 'a on both, the compiler would also accept
+  it, but would then keep the query borrowed for as long as the results
+  are used, for no reason. Returning Vec<String> works too, at the cost of
+  copying every line.

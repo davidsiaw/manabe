@@ -1,0 +1,71 @@
+id: define-trait
+title: Traits
+type: code
+language: rust
+run: local
+body: |
+  A trait defines behaviour that types can share: a set of methods that
+  each type implements in its own way. Other languages call this an
+  interface.
+
+    pub trait Summary {
+        fn summarize(&self) -> String;
+    }
+
+  The trait only gives the method's signature, ending with a semicolon.
+  Each type then implements the trait, in an impl Trait for Type block,
+  with a body for every method:
+
+    impl Summary for NewsArticle {
+        fn summarize(&self) -> String {
+            format!("{}, by {} ({})", self.headline, self.author, self.location)
+        }
+    }
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0599]: no method named `summarize` found for struct `SocialPost` in the current scope
+question: Implement Summary for SocialPost, as the username, a colon and the content. Run it and paste what it printed.
+starter_code: |
+  pub trait Summary {
+      fn summarize(&self) -> String;
+  }
+
+  pub struct NewsArticle {
+      pub headline: String,
+      pub location: String,
+      pub author: String,
+  }
+
+  impl Summary for NewsArticle {
+      fn summarize(&self) -> String {
+          format!("{}, by {} ({})", self.headline, self.author, self.location)
+      }
+  }
+
+  pub struct SocialPost {
+      pub username: String,
+      pub content: String,
+  }
+
+  fn main() {
+      let article = NewsArticle {
+          headline: String::from("Penguins win the Stanley Cup Championship!"),
+          location: String::from("Pittsburgh, PA, USA"),
+          author: String::from("Iceburgh"),
+      };
+      let post = SocialPost {
+          username: String::from("horse_ebooks"),
+          content: String::from("of course, as you probably already know, people"),
+      };
+
+      println!("{}", article.summarize());
+      println!("{}", post.summarize());
+  }
+expected_output: |
+  Penguins win the Stanley Cup Championship!, by Iceburgh (Pittsburgh, PA, USA)
+  horse_ebooks: of course, as you probably already know, people
+explanation: |
+  impl Summary for SocialPost, with format!("{}: {}", self.username,
+  self.content). Leaving the method out of an impl Summary would not
+  compile either: "not all trait items implemented, missing: `summarize`".

@@ -1,0 +1,55 @@
+id: use-scope
+title: use and Its Scope
+type: code
+language: rust
+run: local
+body: |
+  Writing out paths gets repetitive. use makes a shortcut, like a symbolic
+  link in a file system:
+
+    use crate::front_of_house::hosting;
+
+    pub fn eat_at_restaurant() {
+        hosting::add_to_waitlist();
+    }
+
+  After the use, hosting is a name in that scope, as if the module had
+  been defined there. Privacy is still checked, as for any path.
+
+  A use only applies in the scope where it is written. A module is a new
+  scope, so code inside a module does not see the uses outside it.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0433]: cannot find module or crate `hosting` in this scope
+
+  There is also a warning that the use is unused.
+question: Move the use where it applies. Run it and paste what it printed.
+starter_code: |
+  mod front_of_house {
+      pub mod hosting {
+          pub fn add_to_waitlist() {
+              println!("added to the waitlist");
+          }
+      }
+  }
+
+  use crate::front_of_house::hosting;
+
+  mod customer {
+      pub fn eat_at_restaurant() {
+          hosting::add_to_waitlist();
+          println!("eating");
+      }
+  }
+
+  fn main() {
+      customer::eat_at_restaurant();
+  }
+expected_output: |
+  added to the waitlist
+  eating
+explanation: |
+  Inside mod customer, before the function. The use outside could also
+  stay, with the call written super::hosting::add_to_waitlist(): the
+  shortcut is a name in the parent module.

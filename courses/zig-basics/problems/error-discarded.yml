@@ -1,0 +1,36 @@
+id: error-discarded
+title: "Errors Cannot Be Ignored"
+type: code
+language: zig
+body: |
+  In Zig, an error is a value, returned from a function like any other,
+  and the compiler does not let a program ignore one. A call that can fail
+  returns an error union, and discarding it with _ = does not compile.
+
+  std.fmt.parseInt(u8, text, 10) turns text into a u8, in base 10, and
+  fails if it cannot. Run the program. The first error is that n is not a
+  number at all, but an error union:
+
+      error: expected type 'u32', found 'error{InvalidCharacter,Overflow}!u8'
+
+  and once that is fixed, the compiler gets to the line with _ =.
+question: Handle the errors with try, so that the program compiles and prints the total.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var total: u32 = 0;
+      for ([_][]const u8{ "12", "30", "7" }) |text| {
+          const n = std.fmt.parseInt(u8, text, 10);
+          total += n;
+      }
+      _ = std.fmt.parseInt(u8, "99", 10);
+      std.debug.print("total {d}\n", .{total});
+  }
+expected_output: |
+  total 49
+explanation: |
+  try on both calls. For the second, the compiler said "error union is
+  discarded", with the note "consider using 'try', 'catch', or 'if'": the
+  three ways of dealing with an error, which this chapter goes through. Even with _ =,
+  the possible error must be handled; only the value can be thrown away.

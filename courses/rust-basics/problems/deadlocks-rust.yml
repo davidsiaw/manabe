@@ -1,0 +1,24 @@
+id: deadlocks-rust
+title: Mutexes Can Deadlock
+type: multiple_choice
+body: |
+  Rust prevents data races, but not every concurrency bug. A thread that
+  locks one mutex and then waits for another, while a second thread holds
+  the second and waits for the first, waits forever: a deadlock.
+
+  A MutexGuard also keeps its mutex locked until it is dropped, at the end
+  of its scope. Holding it longer than needed makes other threads wait.
+question: Which is the best habit with a MutexGuard?
+choices:
+  - id: a
+    text: Keep the locked section short, and drop the guard as soon as you are done
+    correct: true
+  - id: b
+    text: Lock once at the start of the thread, and keep the guard until it ends
+  - id: c
+    text: Never call lock in a loop
+  - id: d
+    text: Call unlock by hand
+explanation: |
+  A block, or drop(guard), ends the lock early. Taking several locks in the
+  same order everywhere prevents deadlocks.

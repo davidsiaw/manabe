@@ -1,0 +1,40 @@
+id: newtype-orphan
+title: The Newtype Pattern
+type: code
+language: rust
+run: local
+body: |
+  The orphan rule forbids implementing an outside trait on an outside type:
+  Display for Vec<String>, say. The way around it is a newtype: a tuple
+  struct with one field, wrapping the outside type in a type of your own:
+
+    struct Wrapper(Vec<String>);
+
+    impl fmt::Display for Wrapper { ... }
+
+  The wrapper costs nothing at run time. It hides the Vec's methods,
+  though; implementing Deref would give them back.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0117]: only traits defined in the current crate can be implemented for types defined outside of the crate
+question: Wrap the vector in a newtype, and implement Display on that, printing as below. Run it and paste what it printed.
+starter_code: |
+  use std::fmt;
+
+  impl fmt::Display for Vec<String> {
+      fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+          write!(f, "[{}]", self.join(", "))
+      }
+  }
+
+  fn main() {
+      let w = vec![String::from("hello"), String::from("world")];
+      println!("w = {w}");
+  }
+expected_output: |
+  w = [hello, world]
+explanation: |
+  struct Wrapper(Vec<String>), with the impl on Wrapper and self.0 for the
+  vector inside. Newtypes are also used to keep units apart, as Millimeters
+  and Meters did, and to hide a type's details behind a smaller API.

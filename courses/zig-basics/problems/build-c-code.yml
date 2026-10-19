@@ -1,0 +1,30 @@
+id: build-c-code
+title: "Building C Code"
+type: multiple_choice
+body: |
+  The Zig build system builds C and C++ too: Zig comes with a C compiler,
+  so a project can be built on any system with nothing but Zig installed.
+  C files are added to a module with the compiler flags they need:
+
+      const c_flags = [_][]const u8{ "-Wall", "-Wextra", "-Werror" };
+      lib.root_module.addCSourceFiles(.{
+          .files = &.{ "src/base/ftbase.c", "src/autofit/autofit.c" },
+          .flags = &c_flags,
+      });
+
+  Some projects use Zig only for this: replacing a C project's make or
+  CMake with a build.zig, and getting cross-compilation for free.
+question: Why can a Zig build script compile C code without a separate C compiler installed?
+choices:
+  - id: a
+    text: "Zig includes a C compiler of its own"
+    correct: true
+  - id: b
+    text: "It translates the C into Zig first, and compiles that"
+  - id: c
+    text: "It cannot: it calls gcc"
+  - id: d
+    text: "The C files are downloaded already compiled"
+explanation: |
+  zig cc is the same compiler, usable on its own as a drop-in for cc and
+  gcc, including for cross-compiling C.

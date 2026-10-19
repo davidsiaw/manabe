@@ -1,0 +1,55 @@
+id: super-paths
+title: super
+type: code
+language: rust
+run: local
+body: |
+  A relative path can start with super, which is the parent module, like ..
+  in a file path. It reaches code in the module around the current one:
+
+    fn deliver_order() {}
+
+    mod back_of_house {
+        fn fix_incorrect_order() {
+            cook_order();
+            super::deliver_order();
+        }
+
+        fn cook_order() {}
+    }
+
+  super is a good choice when the two are closely related and likely to
+  move together: if back_of_house and deliver_order are both moved into
+  another module, the path still works.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0425]: cannot find function `deliver_order` in this scope
+question: Fix the call with a path that starts with super. Run it and paste what it printed.
+starter_code: |
+  fn deliver_order() {
+      println!("order delivered");
+  }
+
+  mod back_of_house {
+      pub fn fix_incorrect_order() {
+          cook_order();
+          deliver_order();
+      }
+
+      fn cook_order() {
+          println!("order cooked again");
+      }
+  }
+
+  fn main() {
+      back_of_house::fix_incorrect_order();
+  }
+expected_output: |
+  order cooked again
+  order delivered
+explanation: |
+  super::deliver_order();. A name alone is looked for in the current module
+  only, and deliver_order is not in back_of_house. deliver_order needs no
+  pub: a child module can use the private items of its parent.
+  crate::deliver_order() would work too.

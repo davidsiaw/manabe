@@ -1,0 +1,27 @@
+id: mod-rs
+title: "The Older Style: mod.rs"
+type: multiple_choice
+body: |
+  For a submodule such as garden::vegetables, there are two places its file
+  can be:
+
+    src/garden/vegetables.rs       the current style
+    src/garden/vegetables/mod.rs   the older style, still supported
+
+  With the older style, a project ends up with many files all called
+  mod.rs, which is confusing when several are open in an editor. A project
+  can mix the styles for different modules, though that is confusing too.
+question: A project has both src/garden.rs and src/garden/mod.rs. What happens?
+choices:
+  - id: a
+    text: "It does not compile: the module garden is found in two places"
+    correct: true
+  - id: b
+    text: src/garden.rs is used, and mod.rs is ignored
+  - id: c
+    text: Both are loaded, one after the other
+  - id: d
+    text: src/garden/mod.rs is used, as it is more specific
+explanation: |
+  The compiler reports "file for module `garden` found at both" the two
+  paths: each module must have exactly one file.

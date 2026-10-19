@@ -1,0 +1,51 @@
+id: box-recursive
+title: Box and Recursive Types
+type: code
+language: rust
+run: local
+body: |
+  Box<T> puts a value on the heap, and keeps only a pointer to it on the
+  stack. Box::new(5) is a box holding 5; it is used like the value inside.
+
+  One thing a Box makes possible is a recursive type, a type that contains
+  itself. A cons list, from Lisp, is a pair: a value, and the rest of the
+  list, which is either another pair or Nil:
+
+    enum List {
+        Cons(i32, List),
+        Nil,
+    }
+
+  To know a List's size, Rust needs the size of a List, which contains a
+  List, and so on forever. A Box has a known size, that of a pointer,
+  whatever it points to, so Cons(i32, Box<List>) works.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0072]: recursive type `List` has infinite size
+question: Put the rest of the list in a Box, and make main's list with Box::new. Run it and paste what it printed.
+starter_code: |
+  enum List {
+      Cons(i32, List),
+      Nil,
+  }
+
+  use List::{Cons, Nil};
+
+  fn sum(list: &List) -> i32 {
+      match list {
+          Cons(value, rest) => value + sum(rest),
+          Nil => 0,
+      }
+  }
+
+  fn main() {
+      let list = Cons(1, Cons(2, Cons(3, Nil)));
+      println!("sum {}", sum(&list));
+  }
+expected_output: |
+  sum 6
+explanation: |
+  Cons(i32, Box<List>), and Box::new around each rest of the list. sum did
+  not change: rest is a &Box<List>, which works as a &List, thanks to
+  Deref, the next problem's subject.

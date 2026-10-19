@@ -1,0 +1,28 @@
+id: eprintln
+title: Printing Errors to stderr
+type: multiple_choice
+body: |
+  Terminals show two output streams: standard output, for results, and
+  standard error, for error messages. A shell can send standard output to
+  a file while errors still reach the screen:
+
+    cargo run > output.txt
+
+  println! writes to standard output; eprintln! writes to standard error.
+  minigrep's error messages use eprintln!, so that they are not mixed into
+  the results, and someone who redirects the output still sees them.
+question: minigrep's error messages used println! instead. You run cargo run > output.txt with no arguments. What do you see?
+choices:
+  - id: a
+    text: Nothing on screen; the error message ends up in output.txt
+    correct: true
+  - id: b
+    text: The error on screen, and an empty output.txt
+  - id: c
+    text: The error on screen and in output.txt
+  - id: d
+    text: A panic
+explanation: |
+  The message would be in output.txt, where nobody expects an error,
+  with nothing on screen to say anything went wrong. With eprintln!, the
+  screen shows it, and output.txt is empty.

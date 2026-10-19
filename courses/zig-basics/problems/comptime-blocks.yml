@@ -1,0 +1,35 @@
+id: comptime-blocks
+title: "comptime Expressions and Blocks"
+type: multiple_choice
+body: |
+  comptime in front of an expression or a block makes the compiler work
+  it out while compiling, and put only the result in the program:
+
+      const table = comptime blk: {
+          var squares: [10]u32 = undefined;
+          for (&squares, 0..) |*s, i| s.* = @intCast(i * i);
+          break :blk squares;
+      };
+
+  The block is labelled blk, and break :blk gives its value. Running the
+  program costs nothing for it: the table is part of the program, like a
+  literal. The base64 lookup table in the first project could have been
+  made this way.
+
+  Code run while compiling cannot do what needs the running program, such
+  as reading a file or allocating with an allocator.
+question: When does the loop in the block above run?
+choices:
+  - id: a
+    text: "Once, while compiling"
+    correct: true
+  - id: b
+    text: "Every time the program starts"
+  - id: c
+    text: "Every time table is used"
+  - id: d
+    text: "Never: table is undefined"
+explanation: |
+  The values are worked out once and stored in the program. Constants at
+  the top level of a file are always worked out while compiling, so there
+  comptime is implied.

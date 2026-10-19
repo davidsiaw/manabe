@@ -1,0 +1,29 @@
+id: deadlock
+title: "Deadlocks"
+type: multiple_choice
+body: |
+  A deadlock is two threads each waiting for the other, forever. The
+  classic way to make one is to take two locks in different orders:
+
+      // thread 1               // thread 2
+      mut1.lock(io);           mut2.lock(io);
+      mut2.lock(io);           mut1.lock(io);
+
+  If thread 1 gets mut1 and thread 2 gets mut2 at the same moment, each
+  waits for the lock the other holds, and neither ever continues.
+question: How do you prevent this deadlock?
+choices:
+  - id: a
+    text: "Make every thread take the locks in the same order"
+    correct: true
+  - id: b
+    text: "Use more threads"
+  - id: c
+    text: "Unlock before locking"
+  - id: d
+    text: "Detach the threads instead of joining them"
+explanation: |
+  With one order, whichever thread gets mut1 first is the only one that
+  can go on to take mut2, and the other waits for mut1. Zig, like most
+  languages, cannot kill a single thread from outside, so a deadlocked
+  thread stays stuck until the program ends.

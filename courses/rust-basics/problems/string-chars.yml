@@ -1,0 +1,31 @@
+id: string-chars
+title: Going Through a String
+type: code
+language: rust
+run: local
+body: |
+  for c in s.chars() goes through the characters, and for b in s.bytes()
+  through the bytes. A char has methods of its own, such as
+  is_alphabetic, is_numeric and is_uppercase, which work for every
+  language.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write count_letters, which counts the alphabetic characters, so that it prints as below. Run it and paste what it printed.
+starter_code: |
+  fn count_letters(text: &str) -> usize {
+      todo!()
+  }
+
+  fn main() {
+      for text in ["Hello, world!", "Здравствуйте, мир!", "R2-D2"] {
+          println!("{text}: {} bytes, {} letters", text.len(), count_letters(text));
+      }
+  }
+expected_output: |
+  Hello, world!: 13 bytes, 10 letters
+  Здравствуйте, мир!: 33 bytes, 15 letters
+  R2-D2: 5 bytes, 2 letters
+explanation: |
+  A for loop over text.chars(), counting where is_alphabetic() is true.
+  Chapter 13's iterators shorten it to
+  text.chars().filter(|c| c.is_alphabetic()).count().

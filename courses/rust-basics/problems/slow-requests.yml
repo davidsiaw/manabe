@@ -1,0 +1,27 @@
+id: slow-requests
+title: One Request at a Time
+type: multiple_choice
+body: |
+  The server handles one connection, then the next. If one request is
+  slow, the book's /sleep, which waits five seconds before answering,
+  every other request waits behind it, even ones that would take no time.
+
+  One way out is a thread per connection: thread::spawn for each. But
+  then anyone can start any number of threads by opening connections, and
+  bring the server down. A thread pool has a fixed number of threads,
+  each taking the next waiting job when it is free.
+question: A thread pool has 4 threads, and 6 slow requests arrive at once. What happens?
+choices:
+  - id: a
+    text: 4 are handled at once; the other 2 wait for a thread to be free
+    correct: true
+  - id: b
+    text: All 6 are handled at once
+  - id: c
+    text: The last 2 are refused
+  - id: d
+    text: The pool starts 2 more threads
+explanation: |
+  The number of threads, and so the work done at once, has a limit,
+  however many requests come in. Async, chapter 17, is the other answer to
+  the same problem.

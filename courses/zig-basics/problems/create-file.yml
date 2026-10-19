@@ -1,0 +1,56 @@
+id: create-file
+title: "Creating and Writing a File"
+type: code
+language: zig
+body: |
+  createFile makes a file, or empties it if it exists, and opens it for
+  writing. A writer on it, with a buffer, writes to it like stdout:
+
+      const file = try cwd.createFile(io, "foo.txt", .{});
+      defer file.close(io);
+      var buffer: [256]u8 = undefined;
+      var writer = file.writer(io, &buffer);
+      try writer.interface.print("{d} items\n", .{count});
+      try writer.interface.flush();
+
+  In this course, each program runs in a folder of its own, in the
+  browser's memory, that starts empty and is gone when the program ends:
+  files a program makes are only there while it runs.
+
+  The program writes three lines and reads the file back. Run it: the
+  file comes back empty.
+question: Make the lines reach the file.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const cwd = std.Io.Dir.cwd();
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      {
+          const file = try cwd.createFile(io, "shopping.txt", .{});
+          defer file.close(io);
+          var buffer: [256]u8 = undefined;
+          var writer = file.writer(io, &buffer);
+          for ([_][]const u8{ "milk", "eggs", "bread" }, 1..) |item, i| {
+              try writer.interface.print("{d}. {s}\n", .{ i, item });
+          }
+      }
+
+      const text = try cwd.readFileAlloc(io, "shopping.txt", allocator, .unlimited);
+      defer allocator.free(text);
+      std.debug.print("{d} bytes:\n{s}", .{ text.len, text });
+  }
+expected_output: |
+  25 bytes:
+  1. milk
+  2. eggs
+  3. bread
+explanation: |
+  try writer.interface.flush(); after the loop. The lines were in the
+  buffer, and closing the file does not flush it: the writer is separate
+  from the file. The block makes the file close before it is read back.
+  readFileAlloc reads a whole file into memory from the allocator.

@@ -1,0 +1,31 @@
+id: unsafe-intro
+title: Unsafe Rust
+type: multiple_choice
+body: |
+  The compiler's checks are conservative: some correct programs cannot be
+  proven correct, and are rejected. And some things, talking to hardware or
+  to C, cannot be checked at all. unsafe blocks allow five extra things:
+
+  - dereference a raw pointer
+  - call an unsafe function or method
+  - access or change a mutable static variable
+  - implement an unsafe trait
+  - access the fields of a union
+
+  unsafe does not turn the borrow checker or other checks off; it only
+  unlocks those five. Inside, you promise the compiler that the code is
+  correct, and bugs there can be undefined behaviour.
+question: Inside an unsafe block, what does the borrow checker do?
+choices:
+  - id: a
+    text: It still checks references as usual
+    correct: true
+  - id: b
+    text: It is turned off
+  - id: c
+    text: It only warns
+  - id: d
+    text: It checks raw pointers too
+explanation: |
+  Keeping unsafe blocks small, and wrapping them in safe functions, means
+  that when memory goes wrong, the place to look is short.

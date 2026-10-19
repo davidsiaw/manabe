@@ -1,0 +1,32 @@
+id: smart-pointers
+title: Smart Pointers
+type: multiple_choice
+body: |
+  A pointer is a variable that holds an address: a reference, &, is the
+  most common kind in Rust. A smart pointer is a struct that acts like a
+  pointer, and adds abilities, such as owning the data, or counting how
+  many owners there are. String and Vec<T> are smart pointers: they own
+  heap memory, and free it when they are dropped.
+
+  Smart pointers implement two traits:
+
+  - Deref, so that *x and method calls reach the data
+  - Drop, which runs code when the value goes out of scope
+
+  This chapter covers the standard library's: Box<T>, for a value on the
+  heap; Rc<T>, for several owners; and RefCell<T>, for borrowing rules
+  checked while running.
+question: What makes String a smart pointer and not just a struct?
+choices:
+  - id: a
+    text: It owns heap memory, and acts on it through Deref and Drop
+    correct: true
+  - id: b
+    text: It is written with *
+  - id: c
+    text: It cannot be moved
+  - id: d
+    text: It holds a reference to a str literal
+explanation: |
+  Deref is why a &String works where a &str is expected, and Drop is why the
+  text is freed when the String goes out of scope.

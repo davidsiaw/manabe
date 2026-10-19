@@ -1,0 +1,54 @@
+id: mutex-arc
+title: Mutex and Arc
+type: code
+language: rust
+run: local
+body: |
+  Shared state is the other way: several threads using the same data,
+  guarded by a mutex, which lets one thread at a time in.
+
+    let m = Mutex::new(5);
+    {
+        let mut num = m.lock().unwrap();     // a MutexGuard, like a &mut i32
+        *num = 6;
+    }                                       // unlocked when the guard is dropped
+
+  To share the mutex between threads, it needs several owners, as each
+  thread's closure takes ownership of what it captures. Rc does not work:
+  its count is not safe to change from several threads. Arc, an atomic Rc,
+  is, at a small cost. Arc<Mutex<T>> is the common combination.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: borrow of moved value: `counter`
+question: Share the counter with Arc, cloning it for each thread. Run it and paste what it printed.
+starter_code: |
+  use std::sync::Mutex;
+  use std::thread;
+
+  fn main() {
+      let counter = Mutex::new(0);
+      let mut handles = vec![];
+
+      for _ in 0..10 {
+          let handle = thread::spawn(move || {
+              let mut num = counter.lock().unwrap();
+              *num += 1;
+          });
+          handles.push(handle);
+      }
+
+      for handle in handles {
+          handle.join().unwrap();
+      }
+
+      println!("Result: {}", *counter.lock().unwrap());
+  }
+expected_output: |
+  Result: 10
+explanation: |
+  Arc::new(Mutex::new(0)), and let counter = Arc::clone(&counter); in the
+  loop, before the move closure. With Rc instead, the error is
+  "`Rc<Mutex<i32>>` cannot be sent between threads safely". counter is
+  not mut, yet its value changes: Mutex gives interior mutability, as
+  RefCell does for one thread.

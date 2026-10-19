@@ -1,0 +1,37 @@
+id: pointer-kinds
+title: "Single-Item and Many-Item Pointers"
+type: multiple_choice
+body: |
+  Zig has two kinds of pointer:
+
+  - *T, a single-item pointer, points to exactly one value. & always gives
+    one of these.
+  - [*]T, a many-item pointer, points to the first of an unknown number of
+    values, and supports pointer arithmetic, as in C: ptr[2], or ptr += 1
+    to move on to the next.
+
+      const ar = [_]i32{ 1, 2, 3, 4 };
+      var ptr: [*]const i32 = &ar;
+      ptr += 1;                      // ptr[0] is now 2
+
+  A many-item pointer does not know how many values there are, so nothing
+  checks that an index stays inside them.
+
+  A slice, []T, is a many-item pointer with a length. It is what Zig code
+  normally uses: the length goes along with the pointer, and every index
+  is checked. Many-item pointers are mostly for code that talks to C.
+question: With the code above, after ptr += 1, what does ptr[5] do?
+choices:
+  - id: a
+    text: "Reads whatever happens to be in memory past the end of ar"
+    correct: true
+  - id: b
+    text: "Panics with index out of bounds"
+  - id: c
+    text: "Does not compile"
+  - id: d
+    text: "Returns 0"
+explanation: |
+  There is no length to check against, so ptr[5] reads past the end of
+  the array: when we tried it, it printed 7, a value that is not in ar
+  at all. With a slice, ar[1..], the same index panics in Debug.

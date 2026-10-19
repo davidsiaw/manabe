@@ -1,0 +1,28 @@
+id: anytype
+title: "anytype"
+type: multiple_choice
+body: |
+  A parameter can also be anytype: the function accepts a value of any
+  type, and the type is worked out from the argument at each call:
+
+      fn describe(value: anytype) void {
+          std.debug.print("{any} is a {s}\n", .{ value, @typeName(@TypeOf(value)) });
+      }
+
+  std.debug.print takes its list of values that way. @TypeOf(value)
+  gives the type, when the function needs it.
+question: "Compared with fn max(comptime T: type, a: T, b: T) T, what can max(a: anytype, b: anytype) not easily say?"
+choices:
+  - id: a
+    text: "That a and b have the same type, and that the result has it too"
+    correct: true
+  - id: b
+    text: "That a and b are known while compiling"
+  - id: c
+    text: "Nothing: they are the same"
+  - id: d
+    text: "That a and b can be compared"
+explanation: |
+  Each anytype parameter has its own type, and the return type has to be
+  written as @TypeOf(a), or the like. A comptime type parameter names the
+  type once, and ties all of them together.

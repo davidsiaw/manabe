@@ -1,0 +1,24 @@
+id: non-nullable
+title: "No Null by Default"
+type: multiple_choice
+body: |
+  In C, any pointer can be null, pointing to nothing, and using a null
+  pointer crashes the program, or worse. Many bugs come from forgetting
+  that a value might be missing.
+
+  In Zig, no value and no pointer can be null, unless its type says it
+  can. A u8 is always a u8, and a *u8 always points to one.
+question: "var number: u8 = 5; number = null; What happens?"
+choices:
+  - id: a
+    text: "It does not compile"
+    correct: true
+  - id: b
+    text: "number becomes 0"
+  - id: c
+    text: "It compiles, and panics when it runs"
+  - id: d
+    text: "number becomes null, and printing it prints null"
+explanation: |
+  The error is "expected type 'u8', found '@TypeOf(null)'". null is not a
+  u8, and the compiler checks it, so a missing value can never sneak in.

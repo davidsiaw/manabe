@@ -1,0 +1,137 @@
+id: thread-pool
+title: The Thread Pool
+type: code
+language: rust
+run: local
+body: |
+  The book's design, which src/lib.rs below follows:
+
+  - ThreadPool::new(size) makes a channel, and size Workers, each with a
+    thread that loops: take the next job from the channel, run it.
+  - The receiver is shared by the workers, so it is in an Arc<Mutex<...>>:
+    a worker locks it, takes one job, and unlocks it before running the
+    job, letting the others take the next ones.
+  - A Job is a Box<dyn FnOnce() + Send + 'static>: any closure that can be
+    sent to another thread, and called once.
+  - execute(f) boxes the closure, and sends it down the channel.
+
+  To try the pool without a network, src/main.rs computes some factorials
+  with it, sends them back on a channel of its own, and prints them
+  sorted.
+
+  Make a project for the server, cargo new hello_server. Its code goes in
+  src/main.rs, and, from the thread pool on, src/lib.rs.
+
+  Put the code below in src/lib.rs, and src/main.rs is:
+
+    use std::sync::mpsc;
+    use hello_server::ThreadPool;
+
+    fn main() {
+        let pool = ThreadPool::new(4);
+        let (tx, rx) = mpsc::channel();
+
+        for n in 1..=8u64 {
+            let tx = tx.clone();
+            pool.execute(move || {
+                tx.send((n, (1..=n).product::<u64>())).unwrap();
+            });
+        }
+        drop(tx);
+
+        let mut results: Vec<(u64, u64)> = rx.iter().collect();
+        results.sort();
+        for (n, factorial) in results {
+            println!("{n}! = {factorial}");
+        }
+    }
+
+  cargo run panics at todo!(): execute does nothing yet.
+question: Write execute, which boxes the job and sends it to the workers. Run cargo run and paste what it printed.
+starter_code: |
+  use std::{
+      sync::{Arc, Mutex, mpsc},
+      thread,
+  };
+
+  pub struct ThreadPool {
+      workers: Vec<Worker>,
+      sender: Option<mpsc::Sender<Job>>,
+  }
+
+  type Job = Box<dyn FnOnce() + Send + 'static>;
+
+  impl ThreadPool {
+      /// Creates a new ThreadPool. `size` is the number of threads.
+      ///
+      /// # Panics
+      ///
+      /// `new` panics if the size is zero.
+      pub fn new(size: usize) -> ThreadPool {
+          assert!(size > 0);
+
+          let (sender, receiver) = mpsc::channel();
+          let receiver = Arc::new(Mutex::new(receiver));
+
+          let mut workers = Vec::with_capacity(size);
+          for id in 0..size {
+              workers.push(Worker::new(id, Arc::clone(&receiver)));
+          }
+
+          ThreadPool { workers, sender: Some(sender) }
+      }
+
+      pub fn execute<F>(&self, f: F)
+      where
+          F: FnOnce() + Send + 'static,
+      {
+          todo!()
+      }
+  }
+
+  impl Drop for ThreadPool {
+      fn drop(&mut self) {
+          drop(self.sender.take());
+
+          for worker in self.workers.drain(..) {
+              worker.thread.join().unwrap();
+          }
+      }
+  }
+
+  struct Worker {
+      id: usize,
+      thread: thread::JoinHandle<()>,
+  }
+
+  impl Worker {
+      fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
+          let thread = thread::spawn(move || {
+              loop {
+                  let message = receiver.lock().unwrap().recv();
+
+                  match message {
+                      Ok(job) => job(),
+                      Err(_) => break,
+                  }
+              }
+          });
+
+          Worker { id, thread }
+      }
+  }
+expected_output: |
+  1! = 1
+  2! = 2
+  3! = 6
+  4! = 24
+  5! = 120
+  6! = 720
+  7! = 5040
+  8! = 40320
+explanation: |
+  let job = Box::new(f); and send it with self.sender.as_ref().unwrap().
+  The bound F: FnOnce() + Send + 'static is what thread::spawn requires too:
+  the closure goes to another thread, and may outlive the caller. In the
+  worker, the lock is a temporary in let message = ...;, so it is released
+  before job() runs.

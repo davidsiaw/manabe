@@ -1,0 +1,29 @@
+id: sized-trait
+title: Dynamically Sized Types
+type: multiple_choice
+body: |
+  Most types have a size known while compiling. Some do not: str, a string
+  slice of any length, and dyn Trait, a value of any type implementing the
+  trait. These are dynamically sized types, and they can only be used
+  behind a pointer that also carries the size: &str carries the length,
+  and Box<dyn Trait> a pointer to the type's methods and size.
+
+  Generic functions only accept sized types unless they say otherwise:
+
+    fn generic<T>(t: T) {}            // is really fn generic<T: Sized>
+    fn generic<T: ?Sized>(t: &T) {}   // T may be unsized, behind a &
+question: Why can a variable not have the type str?
+choices:
+  - id: a
+    text: Its size is not known while compiling, so it cannot be on the stack
+    correct: true
+  - id: b
+    text: str is private
+  - id: c
+    text: str can only be used in literals
+  - id: d
+    text: "It can: let s: str = \"hi\"; works"
+explanation: |
+  Every value on the stack needs a known size, as the stack frame is laid
+  out while compiling. &str is a pointer and a length, two usizes, whatever
+  the text.

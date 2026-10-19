@@ -1,0 +1,74 @@
+id: default-impl
+title: Default Implementations
+type: code
+language: rust
+run: local
+body: |
+  A trait method can have a body: a default, which types get when they
+  implement the trait without writing that method. A default can call the
+  trait's other methods, even those without a body:
+
+    pub trait Summary {
+        fn summarize_author(&self) -> String;
+
+        fn summarize(&self) -> String {
+            format!("(Read more from {}...)", self.summarize_author())
+        }
+    }
+
+  A type then implements only summarize_author, and gets summarize for
+  free; or it implements summarize too, which overrides the default.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0046]: not all trait items implemented, missing: `summarize`
+question: Give summarize the default above, so that SocialPost needs nothing more. Run it and paste what it printed.
+starter_code: |
+  pub trait Summary {
+      fn summarize_author(&self) -> String;
+
+      fn summarize(&self) -> String;
+  }
+
+  pub struct SocialPost {
+      pub username: String,
+      pub content: String,
+  }
+
+  impl Summary for SocialPost {
+      fn summarize_author(&self) -> String {
+          format!("@{}", self.username)
+      }
+  }
+
+  pub struct Notice {
+      pub text: String,
+  }
+
+  impl Summary for Notice {
+      fn summarize_author(&self) -> String {
+          String::from("the management")
+      }
+
+      fn summarize(&self) -> String {
+          format!("NOTICE: {}", self.text)
+      }
+  }
+
+  fn main() {
+      let post = SocialPost {
+          username: String::from("horse_ebooks"),
+          content: String::from("of course, as you probably already know, people"),
+      };
+      let notice = Notice { text: String::from("The pool is closed.") };
+
+      println!("1 new post: {}", post.summarize());
+      println!("{} (from {})", notice.summarize(), notice.summarize_author());
+  }
+expected_output: |
+  1 new post: (Read more from @horse_ebooks...)
+  NOTICE: The pool is closed. (from the management)
+explanation: |
+  The default body in the trait. SocialPost uses it; Notice overrides it
+  with its own summarize. A default cannot be called from an override of
+  itself: once overridden, it is gone for that type.

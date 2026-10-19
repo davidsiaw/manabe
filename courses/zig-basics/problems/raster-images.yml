@@ -1,0 +1,34 @@
+id: raster-images
+title: "How Digital Images Work"
+type: multiple_choice
+body: |
+  The fourth project is an image filter, which turns a colour image into
+  shades of grey.
+
+  A raster image, such as a PNG or a JPEG, is a grid of pixels. Each pixel
+  is a colour, made of three numbers from 0 to 255: how much red, green
+  and blue light to mix, the RGB model. (255, 0, 0) is pure red, (0, 0, 0)
+  black and (255, 255, 255) white.
+
+  Many PNG files add a fourth number, alpha, for how opaque the pixel is:
+  the RGBA model. In memory, the image is then one long array of u8, four
+  per pixel:
+
+      r g b a r g b a r g b a ...
+
+  so an image of width w and height h takes w * h * 4 bytes.
+question: How many bytes does a 1200 by 800 RGBA image take in memory?
+choices:
+  - id: a
+    text: "3,840,000"
+    correct: true
+  - id: b
+    text: "960,000"
+  - id: c
+    text: "2,880,000"
+  - id: d
+    text: "9,600"
+explanation: |
+  1200 * 800 pixels, 4 bytes each. As RGB without alpha, it would be
+  2,880,000. A PNG file is much smaller, because it is compressed: that is
+  why it has to be decoded before the pixels can be worked on.

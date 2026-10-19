@@ -1,0 +1,53 @@
+id: auto-hashmap
+title: "Hash Maps"
+type: code
+language: zig
+body: |
+  A hash map stores values under keys, and finds a value by its key
+  quickly, however many there are. AutoHashMap(K, V) works out how to hash
+  keys of most types by itself:
+
+      var ages = std.AutoHashMap(u32, u8).init(allocator);
+      defer ages.deinit();
+      try ages.put(1001, 42);
+      const age = ages.get(1001);      // an optional: null if missing
+
+  put replaces the value of a key that is already there; remove returns
+  whether there was one to remove; count() is the number of entries.
+  Unlike ArrayList, a hash map keeps its allocator, so its methods do not
+  take one.
+question: "Count the stock: add the deliveries to it, then remove what sold out, so that it prints as below."
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      var stock = std.AutoHashMap(u32, u32).init(allocator);
+      defer stock.deinit();
+      try stock.put(101, 5);
+      try stock.put(102, 0);
+      try stock.put(103, 12);
+
+      // A delivery of 3 more of product 101, and 4 of a new product, 104.
+
+      // Product 102 has sold out: take it off the list.
+
+      std.debug.print("{d} products\n", .{stock.count()});
+      for ([_]u32{ 101, 102, 103, 104 }) |id| {
+          std.debug.print("{d}: {?d}\n", .{ id, stock.get(id) });
+      }
+  }
+expected_output: |
+  3 products
+  101: 8
+  102: null
+  103: 12
+  104: 4
+explanation: |
+  put(101, stock.get(101).? + 3) replaces the 5 with 8; .? is safe, as 101
+  was put in just before. getPtr(101) would give a pointer to change the
+  value in place: stock.getPtr(101).?.* += 3. remove returns a bool, which
+  must be used or discarded with _ =.

@@ -1,0 +1,62 @@
+id: pub-struct-fields
+title: Public Structs, Private Fields
+type: code
+language: rust
+run: local
+body: |
+  pub on a struct makes the struct public, but not its fields: each field
+  is public only if it is marked pub too.
+
+    pub struct Breakfast {
+        pub toast: String,          // anyone can read and change it
+        seasonal_fruit: String,     // only code in the module can
+    }
+
+  Code outside the module cannot write a struct with a private field, so it
+  cannot make one with the usual Breakfast { ... }. The module has to
+  provide a public associated function that does, such as Breakfast::summer.
+  That is how a module keeps control: here, the kitchen picks the fruit.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0451]: field `seasonal_fruit` of struct `Breakfast` is private
+question: Make the breakfast with Breakfast::summer, with rye toast, and keep the change to wheat. Run it and paste what it printed.
+starter_code: |
+  mod back_of_house {
+      pub struct Breakfast {
+          pub toast: String,
+          seasonal_fruit: String,
+      }
+
+      impl Breakfast {
+          pub fn summer(toast: &str) -> Breakfast {
+              Breakfast {
+                  toast: String::from(toast),
+                  seasonal_fruit: String::from("peaches"),
+              }
+          }
+
+          pub fn fruit(&self) -> &str {
+              &self.seasonal_fruit
+          }
+      }
+  }
+
+  fn main() {
+      let mut meal = back_of_house::Breakfast {
+          toast: String::from("Rye"),
+          seasonal_fruit: String::from("blueberries"),
+      };
+      // Changed our mind about the bread.
+      meal.toast = String::from("Wheat");
+      println!("I'd like {} toast please", meal.toast);
+      println!("It comes with {}", meal.fruit());
+  }
+expected_output: |
+  I'd like Wheat toast please
+  It comes with peaches
+explanation: |
+  let mut meal = back_of_house::Breakfast::summer("Rye");. toast is public,
+  so main can still change it; seasonal_fruit is not, so main can only read
+  it through the public fruit method. meal.seasonal_fruit would not
+  compile.

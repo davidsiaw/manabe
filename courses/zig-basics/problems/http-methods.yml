@@ -1,0 +1,39 @@
+id: http-methods
+title: "Enums for the Methods"
+type: code
+language: zig
+body: |
+  The server keeps the method as an enum, not as text: a value from a
+  fixed list, which a switch can check is fully handled.
+
+      const Method = enum { GET, POST };
+      const m = Method.GET;
+
+  Using a name that is not in the enum does not compile. @tagName gives a
+  value's name as a string.
+
+  Run the program and read the error.
+question: Add the methods the program uses to Method, so that it prints what is below.
+starter_code: |
+  const std = @import("std");
+
+  const Method = enum { GET };
+
+  pub fn main() void {
+      const methods = [_]Method{ .GET, .POST, .DELETE };
+      for (methods) |method| {
+          const safe = switch (method) {
+              .GET => "only reads",
+              .POST, .DELETE => "changes things",
+          };
+          std.debug.print("{s} {s}\n", .{ @tagName(method), safe });
+      }
+  }
+expected_output: |
+  GET only reads
+  POST changes things
+  DELETE changes things
+explanation: |
+  enum { GET, POST, DELETE }. The compiler said "enum 'main.Method' has no
+  member named 'POST'". The switch needs no else: it covers every value
+  of the enum, and adding a method would make the compiler point at it.

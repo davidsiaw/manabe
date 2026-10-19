@@ -1,0 +1,83 @@
+id: config-iterator
+title: "minigrep: Config from an Iterator"
+type: code
+language: rust
+run: local
+body: |
+  Back to minigrep, which can now lose some clumsiness. Config::build takes
+  a slice of Strings, and clones the two it keeps, as it does not own them.
+  env::args() is an iterator of owned Strings, so build can take it
+  directly, and move the Strings out, one next() at a time:
+
+    fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str>
+
+  The first item is the program's name, which build skips with a call to
+  next. A missing argument is then a None, with an error to say which.
+
+  Replace src/main.rs in your minigrep project with the program below, which
+  already calls Config::build(env::args()), keeping src/lib.rs and poem.txt.
+  It does not compile yet:
+
+    error[E0308]: mismatched types
+question: Change build to take the iterator, with no clone and no indexing. Run cargo run -- frog and paste what it printed.
+starter_code: |
+  use std::env;
+  use std::error::Error;
+  use std::fs;
+  use std::process;
+
+  use minigrep::{search, search_case_insensitive};
+
+  fn main() {
+      let config = Config::build(env::args()).unwrap_or_else(|err| {
+          eprintln!("Problem parsing arguments: {err}");
+          process::exit(1);
+      });
+
+      if let Err(e) = run(config) {
+          eprintln!("Application error: {e}");
+          process::exit(1);
+      }
+  }
+
+  struct Config {
+      query: String,
+      file_path: String,
+      ignore_case: bool,
+  }
+
+  impl Config {
+      fn build(args: &[String]) -> Result<Config, &'static str> {
+          if args.len() < 3 {
+              return Err("not enough arguments");
+          }
+
+          let query = args[1].clone();
+          let file_path = args[2].clone();
+          let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+          Ok(Config { query, file_path, ignore_case })
+      }
+  }
+
+  fn run(config: Config) -> Result<(), Box<dyn Error>> {
+      let contents = fs::read_to_string(config.file_path)?;
+
+      let results = if config.ignore_case {
+          search_case_insensitive(&config.query, &contents)
+      } else {
+          search(&config.query, &contents)
+      };
+
+      for line in results {
+          println!("{line}");
+      }
+
+      Ok(())
+  }
+expected_output: |
+  Problem parsing arguments: Didn't get a file path
+explanation: |
+  args.next() to skip the name, and a match for each argument, returning a
+  specific error when one is missing. mut args, as next changes the
+  iterator. The Strings are moved into Config: nothing is copied.

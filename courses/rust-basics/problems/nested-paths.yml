@@ -1,0 +1,37 @@
+id: nested-paths
+title: Nested Paths and Globs
+type: multiple_choice
+body: |
+  Several uses with the same start can be merged into one, with the parts
+  that differ in curly brackets:
+
+    use std::cmp::Ordering;
+    use std::io;
+    // the same as:
+    use std::{cmp::Ordering, io};
+
+  self in the list means the path itself:
+
+    use std::io::{self, Write};     // std::io, and std::io::Write
+
+  And * brings in every public item of a module, the glob operator:
+
+    use std::collections::*;
+
+  Use globs with care: they make it hard to tell what is in scope, and
+  where a name came from. They are mostly used in tests, and for preludes,
+  modules made to be brought in whole, like rand::prelude::*.
+question: Which single use is the same as use std::io; and use std::io::Write;?
+choices:
+  - id: a
+    text: use std::io::{self, Write};
+    correct: true
+  - id: b
+    text: use std::io::{io, Write};
+  - id: c
+    text: use std::{io, Write};
+  - id: d
+    text: use std::io::*;
+explanation: |
+  self stands for std::io itself. use std::io::*; would bring in Write, and
+  everything else in std::io, but not the name io.

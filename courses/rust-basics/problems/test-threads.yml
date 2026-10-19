@@ -1,0 +1,30 @@
+id: test-threads
+title: Tests Run in Parallel
+type: multiple_choice
+body: |
+  By default, the test runner runs tests in parallel, in several threads,
+  so that they finish sooner. That means tests must not depend on each
+  other, or on shared state, such as the same file: two tests writing
+  test-output.txt at the same time can make each other fail.
+
+  --test-threads=1 runs them one at a time:
+
+    cargo test -- --test-threads=1
+
+  The -- separates Cargo's arguments from the test runner's: cargo test
+  --help lists the first kind, and cargo test -- --help the second.
+question: Two tests sometimes fail, and pass when run one at a time. What is the likely cause?
+choices:
+  - id: a
+    text: They share state, such as a file, and interfere when run in parallel
+    correct: true
+  - id: b
+    text: The compiler optimises them differently in parallel
+  - id: c
+    text: Tests cannot use files
+  - id: d
+    text: "--test-threads=1 turns off the checks"
+explanation: |
+  Failures that come and go are often a sign of shared state. The better
+  fix is to make each test use its own file, so that they can still run in
+  parallel.

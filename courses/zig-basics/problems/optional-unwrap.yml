@@ -1,0 +1,24 @@
+id: optional-unwrap
+title: "Unwrapping with .?"
+type: multiple_choice
+body: |
+  When a value cannot be null unless the program has a bug, .? unwraps it
+  directly. It is short for orelse unreachable: if the value is null after
+  all, Debug builds stop the program with a panic.
+
+      const y: ?i32 = returnNull(5);
+      std.debug.print("{d}\n", .{y.?});
+question: returnNull(5) returns null. What does the code above do?
+choices:
+  - id: a
+    text: "Panics: attempt to use null value"
+    correct: true
+  - id: b
+    text: "Prints null"
+  - id: c
+    text: "Prints 0"
+  - id: d
+    text: "Does not compile"
+explanation: |
+  .? is a promise that the value is there. It is right when null would be
+  a bug; when null is a normal case, use if or orelse.

@@ -1,0 +1,30 @@
+id: yield-now
+title: Letting Other Futures Run
+type: multiple_choice
+body: |
+  A future only gives way to others at an .await. Code that computes for a
+  long time without awaiting holds the thread, and every other future on it
+  waits, however urgent:
+
+    let a = async {
+        slow_computation();          // no .await inside: nothing else runs
+        trpl::yield_now().await;     // a chance for the others to run
+        more_slow_computation();
+    };
+
+  trpl::yield_now hands control back to the runtime, which can then run
+  other futures before continuing this one.
+question: Why can a long loop with no .await in it make a whole async program stall?
+choices:
+  - id: a
+    text: Futures only switch at .await points, so nothing else runs until it ends
+    correct: true
+  - id: b
+    text: The runtime cancels futures that take too long
+  - id: c
+    text: Loops are not allowed in async code
+  - id: d
+    text: "It cannot: the runtime interrupts it"
+explanation: |
+  Async is cooperative: each future decides when to give way. Heavy
+  computation belongs in a thread, or should yield now and then.

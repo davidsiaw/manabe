@@ -1,0 +1,49 @@
+id: macro-rules
+title: Declarative Macros
+type: code
+language: rust
+run: local
+body: |
+  macro_rules! defines a macro by patterns, like a match on code. This is a
+  simplified vec!:
+
+    #[macro_export]
+    macro_rules! vec {
+        ( $( $x:expr ),* ) => {
+            {
+                let mut temp_vec = Vec::new();
+                $(
+                    temp_vec.push($x);
+                )*
+                temp_vec
+            }
+        };
+    }
+
+  $x:expr matches any expression, and names it $x. $( ... ),* matches it
+  any number of times, separated by commas, and $( ... )* in the expansion
+  repeats the push once for each.
+
+  Copy the program into src/main.rs in your hello project and run it: the macro is missing.
+question: Write hashmap!, which builds a HashMap from key => value pairs. Run it and paste what it printed.
+starter_code: |
+  use std::collections::HashMap;
+
+  fn main() {
+      let ages: HashMap<&str, u32> = hashmap!("Ana" => 34, "Ben" => 27, "Cy" => 41);
+
+      let mut names: Vec<_> = ages.keys().collect();
+      names.sort();
+      for name in names {
+          println!("{name} is {}", ages[name]);
+      }
+  }
+expected_output: |
+  Ana is 34
+  Ben is 27
+  Cy is 41
+explanation: |
+  The pattern $( $key:expr => $value:expr ),*, and an expansion that
+  inserts each pair. The double braces make the expansion a block, so that
+  map stays local to it. The macro must be defined above its use in the
+  file.

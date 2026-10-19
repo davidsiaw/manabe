@@ -1,0 +1,59 @@
+id: inline-modules
+title: Writing Modules
+type: code
+language: rust
+run: local
+body: |
+  A module is mod, its name, and its contents in curly brackets. Code
+  outside a module reaches what is inside by its path, the module's name, a
+  double colon, and the item's name:
+
+    mod kitchen {
+        pub fn cook() {}
+    }
+
+    fn main() {
+        kitchen::cook();
+    }
+
+  The pub in front of fn is needed for main to call it; more about that in
+  the next section. For now, put pub in front of every function in a
+  module.
+
+  Copy the program into src/main.rs in your hello project and run it. main
+  calls functions in modules that do not exist yet:
+
+    error[E0433]: cannot find module or crate `hosting` in this scope
+question: Group the functions into two modules, hosting and serving, so that main's paths work. Run it and paste what it printed.
+starter_code: |
+  fn add_to_waitlist() {
+      println!("added to the waitlist");
+  }
+
+  fn seat_at_table() {
+      println!("seated at a table");
+  }
+
+  fn take_order() {
+      println!("order taken");
+  }
+
+  fn serve_order() {
+      println!("order served");
+  }
+
+  fn main() {
+      hosting::add_to_waitlist();
+      hosting::seat_at_table();
+      serving::take_order();
+      serving::serve_order();
+  }
+expected_output: |
+  added to the waitlist
+  seated at a table
+  order taken
+  order served
+explanation: |
+  mod hosting { ... } around the first two functions and mod serving { ...
+  } around the others, with pub in front of each fn. Without pub, the
+  error would be "function `add_to_waitlist` is private".

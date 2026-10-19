@@ -139,7 +139,15 @@ expected_output: |
 ```
 
 Learners can paste everything `cargo run` showed: what Cargo prints up to its
-`Running` line is left out before comparing. The course has to teach the
+`Running` line is left out before comparing, and so is the `error: process
+didn't exit successfully` line Cargo adds when the program exits with an error
+code. For `cargo test`, which prints a `Running` line per test binary,
+everything before the first one (the build, and any compiler warnings),
+Cargo's indented status lines (`Compiling`, `Finished`, `Running`,
+`Doc-tests`), each with the blank line after it, and the `; finished in
+0.00s` at the end of each `test result:` line are left out instead. Ask for `cargo test -- --test-threads=1`, so that the
+tests are listed in the same order every time; `rust-basics/first-cargo-test`
+shows the expected output for a library crate, doc-tests summary included. The course has to teach the
 setup first; `rust-basics/install-rust` does, and checks it by asking for the
 output of the project `cargo new` makes. Write `expected_output` by running
 the solution with a real toolchain, and check that the starter code does not

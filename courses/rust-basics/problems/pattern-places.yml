@@ -1,0 +1,31 @@
+id: pattern-places
+title: Where Patterns Appear
+type: multiple_choice
+body: |
+  Patterns are everywhere in Rust, not only in match:
+
+    match value { Some(x) => ..., None => ... }
+    if let Some(color) = favorite_color { ... }
+    while let Some(top) = stack.pop() { ... }
+    for (index, value) in v.iter().enumerate() { ... }
+    let (x, y, z) = (1, 2, 3);
+    fn print_coordinates(&(x, y): &(i32, i32)) { ... }
+
+  let itself takes a pattern: let x = 5; binds the whole value to the
+  pattern x, and let (x, y, z) takes a tuple apart. Function parameters are
+  patterns too.
+question: In for (index, value) in v.iter().enumerate(), what is (index, value)?
+choices:
+  - id: a
+    text: A pattern that takes each (index, item) tuple apart
+    correct: true
+  - id: b
+    text: A tuple being built
+  - id: c
+    text: Two separate loops
+  - id: d
+    text: A type annotation
+explanation: |
+  enumerate gives tuples; the pattern names their two parts. Each of these
+  places accepts the same pattern syntax, which the rest of this chapter
+  covers.

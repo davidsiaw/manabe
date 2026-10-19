@@ -1,0 +1,35 @@
+id: string-kinds
+title: String and &str
+type: multiple_choice
+body: |
+  Rust's core language has one string type, the string slice str, usually
+  seen borrowed as &str: a reference to some UTF-8 text stored somewhere
+  else. String literals are &str, stored in the program itself.
+
+  String, from the standard library, is a string you own: growable,
+  changeable, UTF-8 text on the heap. Underneath, it is a vector of bytes,
+  a Vec<u8>, with a guarantee that the bytes are valid UTF-8.
+
+  A String is made from a literal with String::from or to_string, which do
+  the same thing:
+
+    let s = String::from("initial contents");
+    let s = "initial contents".to_string();
+
+  UTF-8 can hold text in any language: "Здравствуйте", "こんにちは" and
+  "नमस्ते" are all valid strings.
+question: Which of these is true?
+choices:
+  - id: a
+    text: A String owns its text and can grow; a &str borrows text stored elsewhere
+    correct: true
+  - id: b
+    text: String and &str are two names for the same type
+  - id: c
+    text: A &str can grow, but a String cannot
+  - id: d
+    text: Strings can only hold ASCII; other text needs a special type
+explanation: |
+  String is to &str what Vec<T> is to a slice &[T]: the owner, and a view
+  into it. Functions that only read text usually take a &str, so that they
+  accept both.

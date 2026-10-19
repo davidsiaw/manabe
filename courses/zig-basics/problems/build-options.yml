@@ -1,0 +1,61 @@
+id: build-options
+title: "Options from the Command Line"
+type: code
+language: zig
+run: local
+body: |
+  A build script can declare options of its own, set with -D:
+
+      const name = b.option([]const u8, "name", "Who to greet") orelse "world";
+
+  b.option returns null when the option is not given, hence orelse.
+  To pass an option on to the program, put it in an options module,
+  which the program imports like any other:
+
+      const options = b.addOptions();
+      options.addOption([]const u8, "name", name);
+      exe.root_module.addOptions("config", options);
+
+  and in the program, @import("config").name is the value.
+
+  In a new project folder, put the program below in src/main.zig, and
+  the script in build.zig:
+
+      const std = @import("std");
+      const config = @import("config");
+
+      pub fn main() void {
+          std.debug.print("Hello, {s}!\n", .{config.name});
+      }
+
+  zig build run fails, as there is no config module yet:
+
+      error: no module named 'config' available within module 'root'
+
+  and zig build run -Dname=Ziggy fails sooner: invalid option: "name".
+question: Add the name option and the config module to build.zig. Run zig build run -Dname=Ziggy, and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  pub fn build(b: *std.Build) void {
+      const exe = b.addExecutable(.{
+          .name = "greet",
+          .root_module = b.createModule(.{
+              .root_source_file = b.path("src/main.zig"),
+              .target = b.graph.host,
+          }),
+      });
+      b.installArtifact(exe);
+
+      const run_step = b.step("run", "Run the program");
+      const run_exe = b.addRunArtifact(exe);
+      run_step.dependOn(&run_exe.step);
+  }
+expected_output: |
+  Hello, Ziggy!
+explanation: |
+  b.option for the name, addOptions and addOption to make the module, and
+  exe.root_module.addOptions("config", options) to give it to the
+  program. Without -Dname it prints Hello, world!. The value is fixed
+  while compiling: config.name is a constant in the program, not read when
+  it runs.

@@ -1,0 +1,34 @@
+id: debug-overflow
+title: "Putting It Together: A Crash to Explain"
+type: code
+language: zig
+body: |
+  This program averages some sensor readings, and crashes. Debug mode's
+  safety checks stopped it, and the panic says what went wrong, but not
+  why. Use what this chapter showed: print the values in the loop, and the
+  types involved, until it makes sense. Then fix it.
+
+  @divFloor divides two integers, rounding down.
+question: Fix the program so that it prints the average, as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const readings = [_]u8{ 120, 95, 130, 101 };
+
+      var total: u8 = 0;
+      for (readings) |reading| {
+          total += reading;
+      }
+      const average = @divFloor(total, readings.len);
+      std.debug.print("average {d}\n", .{average});
+  }
+expected_output: |
+  average 111
+explanation: |
+  total is a u8, like the readings, and a u8 holds at most 255: after 120
+  and 95 it is 215, and adding 130 panics with "integer overflow". A u32
+  total holds the sum; each reading converts to u32 by itself, as every
+  u8 value fits. In ReleaseFast, the overflow would not be caught at all:
+  the program would carry on with a wrong total, and most likely print a
+  wrong average, with no sign of why.

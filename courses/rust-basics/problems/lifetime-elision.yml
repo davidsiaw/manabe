@@ -1,0 +1,34 @@
+id: lifetime-elision
+title: Lifetime Elision
+type: multiple_choice
+body: |
+  first_word, from chapter 4, takes and returns references, with no
+  annotations:
+
+    fn first_word(s: &str) -> &str
+
+  Early Rust required them. Then the patterns that kept coming up were
+  built into the compiler, as the lifetime elision rules:
+
+  1. Each reference parameter gets its own lifetime.
+  2. If there is exactly one input lifetime, the output references get it.
+  3. If one of the parameters is &self or &mut self, the output references
+     get self's lifetime.
+
+  If the rules leave an output reference without a lifetime, annotations
+  are required: that was longest's case.
+question: "Why does longest(x: &str, y: &str) -> &str need annotations, when first_word does not?"
+choices:
+  - id: a
+    text: It has two input lifetimes, so rule 2 cannot pick one for the output
+    correct: true
+  - id: b
+    text: Because it compares lengths
+  - id: c
+    text: Because it returns a String
+  - id: d
+    text: Functions with if need annotations
+explanation: |
+  Rule 1 gives x and y a lifetime each, rule 2 does not apply with two,
+  and rule 3 only applies to methods. So the output is left without a
+  lifetime, and the compiler asks.

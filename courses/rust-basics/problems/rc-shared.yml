@@ -1,0 +1,56 @@
+id: rc-shared
+title: Rc and Shared Ownership
+type: code
+language: rust
+run: local
+body: |
+  A value usually has one owner. Sometimes several parts of a program
+  need to own the same data, and none of them knows which will finish with
+  it last: two lists that share a tail, say.
+
+    b = 3 -> 5 -> 10 -> Nil
+    c = 4 ---^
+
+  Rc<T>, a reference-counted pointer, allows that. Rc::clone(&a) does not
+  copy the data: it makes another pointer to it, and adds one to the
+  count of owners. When an Rc is dropped, the count goes down, and the data
+  is dropped when it reaches zero. Rc::strong_count gives the count.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: use of moved value: `a`
+question: Share a between b and c with Rc. Print a's strong count after creating a, b and c, as below, and make c in an inner block, with one more count after it. Run it and paste what it printed.
+starter_code: |
+  enum List {
+      Cons(i32, Box<List>),
+      Nil,
+  }
+
+  use List::{Cons, Nil};
+
+  fn sum(list: &List) -> i32 {
+      match list {
+          Cons(value, rest) => value + sum(rest),
+          Nil => 0,
+      }
+  }
+
+  fn main() {
+      let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
+      let b = Cons(3, Box::new(a));
+      let c = Cons(4, Box::new(a));
+      println!("b {} c {}", sum(&b), sum(&c));
+  }
+expected_output: |
+  count after creating a = 1
+  count after creating b = 2
+  count after creating c = 3
+  b 18 c 19
+  count after c goes out of scope = 2
+explanation: |
+  Cons holds an Rc<List>, a is made with Rc::new, and b and c share it with
+  Rc::clone(&a). Print the count with Rc::strong_count(&a) after each step,
+  and make c in an inner block, so that it is dropped before the last
+  line. Rc::clone is the convention, rather than a.clone(), to show that
+  it is a cheap count, not a deep copy. Rc is for one thread only; Arc,
+  in chapter 16, is the thread-safe version.

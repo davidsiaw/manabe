@@ -1,0 +1,47 @@
+id: grayscale-filter
+title: "The Grayscale Filter"
+type: code
+language: zig
+body: |
+  A grey pixel has the same amount of red, green and blue. To turn a
+  colour into grey, work out how bright it looks, and use that for all
+  three. The eye is most sensitive to green and least to blue, so the
+  usual formula, the linear luminance, weighs them:
+
+      grey = 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+  The bytes are integers, so convert each to a float with
+  @floatFromInt, and the result back with @intFromFloat, which drops the
+  fraction. Alpha stays as it is.
+question: Write applyFilter, which changes each pixel of the buffer to its grey, in place.
+starter_code: |
+  const std = @import("std");
+
+  fn applyFilter(buffer: []u8) void {
+      _ = buffer;
+  }
+
+  pub fn main() void {
+      var image = [_]u8{
+          255, 0, 0, 255,     0, 255, 0, 255,     0, 0, 255, 255,
+          255, 255, 255, 255, 0, 0, 0, 255,       128, 64, 32, 128,
+      };
+      applyFilter(&image);
+
+      var i: usize = 0;
+      while (i < image.len) : (i += 4) {
+          std.debug.print("{any}\n", .{image[i .. i + 4]});
+      }
+  }
+expected_output: |
+  { 54, 54, 54, 255 }
+  { 182, 182, 182, 255 }
+  { 18, 18, 18, 255 }
+  { 255, 255, 255, 255 }
+  { 0, 0, 0, 255 }
+  { 75, 75, 75, 128 }
+explanation: |
+  A loop over the pixels, four bytes at a time, writing the grey into r, g
+  and b. Pure green comes out brightest, 182, and pure blue darkest, 18,
+  though both are as strong as they can be: that is the eye's sensitivity.
+  The weights add up to 1, so white stays 255.

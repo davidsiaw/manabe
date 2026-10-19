@@ -1,0 +1,31 @@
+id: whats-next
+title: Where to Go from Here
+type: multiple_choice
+body: |
+  That is the end of the book, and of this course. A few directions from
+  here:
+
+  - The standard library's documentation, at doc.rust-lang.org/std, for
+    everything this course only touched.
+  - Rust by Example, and the Rustlings exercises, for more practice.
+  - Crates for real programs: serde for serialisation, tokio for async,
+    clap for command lines, and many more on crates.io.
+  - The Rustonomicon, for the details of unsafe Rust.
+
+  And the book's own appendices: keywords, operators, derivable traits and
+  editions.
+question: Which crate would you reach for to parse command-line arguments?
+choices:
+  - id: a
+    text: clap
+    correct: true
+  - id: b
+    text: serde
+  - id: c
+    text: tokio
+  - id: d
+    text: rand
+explanation: |
+  minigrep parsed its arguments by hand; clap generates the parsing, help
+  text and error messages from a struct's definition. Congratulations on
+  getting to the end.

@@ -1,0 +1,41 @@
+id: standard-streams
+title: "stdin, stdout and stderr"
+type: multiple_choice
+body: |
+  Every program starts with three streams open:
+
+  - standard input, stdin: what the user types, or what is piped in
+  - standard output, stdout: the results
+  - standard error, stderr: messages about errors, and debugging
+
+  std.Io.File.stdin(), stdout() and stderr() give them as files, and
+  each gets a reader or a writer with a buffer:
+
+      var stdin_buffer: [1024]u8 = undefined;
+      var stdin_reader = std.Io.File.stdin().reader(io, &stdin_buffer);
+      const stdin = &stdin_reader.interface;
+
+      const name = try stdin.takeDelimiter('\n');
+
+  takeDelimiter reads up to the delimiter, here the end of the line, and
+  returns what it read without the delimiter, or null at the end of the
+  input.
+
+  Programs in this course run in the browser, where there is no keyboard
+  to read from: stdin is always empty, and reading from it returns null
+  at once.
+question: Why does a writer for stdout need flush, but std.debug.print does not?
+choices:
+  - id: a
+    text: "The writer collects output in its buffer; std.debug.print writes to stderr straight away"
+    correct: true
+  - id: b
+    text: "stdout is slower than stderr"
+  - id: c
+    text: "flush is only needed in Debug builds"
+  - id: d
+    text: "std.debug.print flushes the stdout buffer"
+explanation: |
+  Buffering saves time, as each write to the operating system costs a
+  system call, whichever the size. The first chapter's flush problem
+  showed what happens without the flush.

@@ -1,0 +1,118 @@
+id: two-approvals
+title: "Putting It Together: Two Approvals"
+type: code
+language: rust
+run: local
+body: |
+  One of the book's suggested changes to the state pattern version: a post
+  needs two approvals before it is published. The first approval of a
+  pending post leaves it pending, but remembers it; the second publishes it.
+
+  Only PendingReview's approve changes: it can keep a count in its struct,
+  and return a new PendingReview with the count increased, or a Published.
+
+  Copy the program into src/main.rs in your hello project and run it: one approval publishes the post.
+question: Make PendingReview require two calls to approve. Run it and paste what it printed.
+starter_code: |
+  pub struct Post {
+      state: Option<Box<dyn State>>,
+      content: String,
+  }
+
+  impl Post {
+      pub fn new() -> Post {
+          Post {
+              state: Some(Box::new(Draft {})),
+              content: String::new(),
+          }
+      }
+
+      pub fn add_text(&mut self, text: &str) {
+          self.content.push_str(text);
+      }
+
+      pub fn content(&self) -> &str {
+          self.state.as_ref().unwrap().content(self)
+      }
+
+      pub fn request_review(&mut self) {
+          if let Some(s) = self.state.take() {
+              self.state = Some(s.request_review())
+          }
+      }
+
+      pub fn approve(&mut self) {
+          if let Some(s) = self.state.take() {
+              self.state = Some(s.approve())
+          }
+      }
+  }
+
+  trait State {
+      fn request_review(self: Box<Self>) -> Box<dyn State>;
+      fn approve(self: Box<Self>) -> Box<dyn State>;
+      fn content<'a>(&self, _post: &'a Post) -> &'a str {
+          ""
+      }
+  }
+
+  struct Draft {}
+
+  impl State for Draft {
+      fn request_review(self: Box<Self>) -> Box<dyn State> {
+          Box::new(PendingReview {})
+      }
+
+      fn approve(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+  }
+
+  struct PendingReview {}
+
+  impl State for PendingReview {
+      fn request_review(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+
+      fn approve(self: Box<Self>) -> Box<dyn State> {
+          Box::new(Published {})
+      }
+  }
+
+  struct Published {}
+
+  impl State for Published {
+      fn request_review(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+
+      fn approve(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+
+      fn content<'a>(&self, post: &'a Post) -> &'a str {
+          &post.content
+      }
+  }
+
+  fn main() {
+      let mut post = Post::new();
+      post.add_text("I ate a salad for lunch today");
+      post.request_review();
+
+      post.approve();
+      println!("after one approval: {:?}", post.content());
+
+      post.approve();
+      println!("after two approvals: {:?}", post.content());
+  }
+expected_output: |
+  after one approval: ""
+  after two approvals: "I ate a salad for lunch today"
+explanation: |
+  PendingReview gets an approvals field, starting at 0 in Draft's
+  request_review, and its approve returns either Published or a
+  PendingReview with one more approval. Post itself did not change. In the
+  types-as-states version, the same rule would need a type for "pending,
+  approved once".

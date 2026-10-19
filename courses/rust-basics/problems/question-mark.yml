@@ -1,0 +1,44 @@
+id: question-mark
+title: The ? Operator
+type: code
+language: rust
+run: local
+body: |
+  ? after a Result does what each of those matches did: if it is Ok, it
+  gives the value inside; if it is Err, it returns the Err from the
+  function, at once.
+
+    let x: i32 = x_text.parse()?;
+
+  It can only be used in a function that returns a Result (or an Option,
+  in the next problem), as that is where the error goes.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+question: Give total the return type it needs, so that its ? works, and make main handle what it returns. Run it and paste what it printed.
+starter_code: |
+  use std::num::ParseIntError;
+
+  // Adds up a list of numbers such as "1 2 3".
+  fn total(text: &str) -> i32 {
+      let mut sum = 0;
+      for word in text.split_whitespace() {
+          let n: i32 = word.parse()?;
+          sum += n;
+      }
+      sum
+  }
+
+  fn main() {
+      for text in ["1 2 3", "10 x 30"] {
+          println!("{text}: {}", total(text));
+      }
+  }
+expected_output: |
+  1 2 3: Ok(6)
+  10 x 30: Err(ParseIntError { kind: InvalidDigit })
+explanation: |
+  The return type Result<i32, ParseIntError>, Ok(sum) at the end, and
+  {:?} in main to print the Result. The x stops the loop: ? returned the
+  error before 30 was reached.

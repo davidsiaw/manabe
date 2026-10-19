@@ -1,0 +1,54 @@
+id: static-mut
+title: Mutable Static Variables
+type: code
+language: rust
+run: local
+body: |
+  A static is a global variable, with a fixed address, valid for the whole
+  program. Reading an immutable static is safe. A static mut can be
+  changed, and using it is unsafe: two threads changing it at once would be
+  a data race, which the compiler cannot rule out.
+
+    static mut COUNTER: u32 = 0;
+
+    /// SAFETY: calling this from more than a single thread at a time is
+    /// undefined behavior, so you *must* guarantee you only call it from a
+    /// single thread at a time.
+    unsafe fn add_to_count(inc: u32) {
+        unsafe {
+            COUNTER += inc;
+        }
+    }
+
+  A SAFETY comment says what the caller must make sure of. Taking a
+  reference to a static mut is not allowed at all; copy its value instead.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0133]: use of mutable static is unsafe and requires unsafe block
+question: Use unsafe blocks where needed, so that the program compiles. Run it and paste what it printed.
+starter_code: |
+  static HELLO_WORLD: &str = "Hello, world!";
+  static mut COUNTER: u32 = 0;
+
+  /// SAFETY: calling this from more than a single thread at a time is
+  /// undefined behavior.
+  unsafe fn add_to_count(inc: u32) {
+      COUNTER += inc;
+  }
+
+  fn main() {
+      println!("{HELLO_WORLD}");
+      add_to_count(3);
+      add_to_count(4);
+      let count = COUNTER;
+      println!("COUNTER: {count}");
+  }
+expected_output: |
+  Hello, world!
+  COUNTER: 7
+explanation: |
+  An unsafe block inside add_to_count (in the 2024 edition, an unsafe fn's
+  body is not automatically unsafe), one around the calls, and one to read
+  COUNTER. The counters and atomics of chapter 16 are almost always the
+  better choice.

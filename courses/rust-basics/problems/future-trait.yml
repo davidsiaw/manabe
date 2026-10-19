@@ -1,0 +1,33 @@
+id: future-trait
+title: The Future Trait
+type: multiple_choice
+body: |
+  .await works through the Future trait:
+
+    pub trait Future {
+        type Output;
+        fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
+    }
+
+  The runtime calls poll. It returns Poll::Ready(value) when the future has
+  finished, or Poll::Pending when it has to wait, after arranging, through
+  cx, to be woken when it can make progress. The compiler turns each async
+  block into a state machine whose poll runs from one .await to the next.
+
+  Pin is there because those state machines can hold references into
+  themselves, so they must not be moved once polled. Most code never meets
+  Pin; it shows up when storing futures in collections, with Box::pin.
+question: What does poll return when the future must wait for data?
+choices:
+  - id: a
+    text: Poll::Pending
+    correct: true
+  - id: b
+    text: Poll::Ready(None)
+  - id: c
+    text: An error
+  - id: d
+    text: It blocks until the data arrives
+explanation: |
+  The runtime then polls other futures, and comes back to this one when it
+  is woken. That is how one thread keeps thousands of futures going.

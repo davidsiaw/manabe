@@ -1,0 +1,39 @@
+id: base64-encode-length
+title: "How Long the Output Is"
+type: code
+language: zig
+body: |
+  The encoder must allocate its output before filling it, so it first
+  works out how long it is: 4 characters for every window of 3 bytes,
+  counting a short last window as a whole one, as it is padded.
+
+  That is a division rounded up. std.math.divCeil does it:
+
+      const windows = try std.math.divCeil(usize, 7, 3);   // 3
+
+  It needs try because it fails, with error.DivisionByZero, when dividing
+  by zero.
+question: Write encodeLength, the length of the Base64 for len bytes.
+starter_code: |
+  const std = @import("std");
+
+  fn encodeLength(len: usize) !usize {
+      return len;
+  }
+
+  pub fn main() !void {
+      for ([_][]const u8{ "", "a", "Hi", "Man", "Hello", "Testing some more stuff" }) |text| {
+          std.debug.print("{d} bytes: {d}\n", .{ text.len, try encodeLength(text.len) });
+      }
+  }
+expected_output: |
+  0 bytes: 0
+  1 bytes: 4
+  2 bytes: 4
+  3 bytes: 4
+  5 bytes: 8
+  23 bytes: 32
+explanation: |
+  try std.math.divCeil(usize, len, 3) * 4, in one line or two. The
+  division by 3 can never fail, but divCeil cannot know that, so the
+  function still returns an error union.

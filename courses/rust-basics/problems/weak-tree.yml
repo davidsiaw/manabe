@@ -1,0 +1,69 @@
+id: weak-tree
+title: "Weak References: A Tree"
+type: code
+language: rust
+run: local
+body: |
+  Rc::downgrade(&rc) makes a Weak<T>: a pointer that does not own the
+  value, and does not keep it alive. Its upgrade() returns an
+  Option<Rc<T>>: Some while the value is still there, None once it has been
+  dropped. Rc::weak_count counts them, apart from the strong count.
+
+  A tree shows where each kind belongs: a parent owns its children, with
+  Rc, and a child refers to its parent, with Weak, so that there is no
+  cycle.
+
+    struct Node {
+        value: i32,
+        parent: RefCell<Weak<Node>>,
+        children: RefCell<Vec<Rc<Node>>>,
+    }
+
+  Copy the program into src/main.rs in your hello project and run it: the leaf does not know its parent yet.
+question: Set leaf's parent to branch, with Rc::downgrade. Run it and paste what it printed.
+starter_code: |
+  use std::cell::RefCell;
+  use std::rc::{Rc, Weak};
+
+  #[derive(Debug)]
+  struct Node {
+      value: i32,
+      parent: RefCell<Weak<Node>>,
+      children: RefCell<Vec<Rc<Node>>>,
+  }
+
+  fn main() {
+      let leaf = Rc::new(Node {
+          value: 3,
+          parent: RefCell::new(Weak::new()),
+          children: RefCell::new(vec![]),
+      });
+
+      {
+          let branch = Rc::new(Node {
+              value: 5,
+              parent: RefCell::new(Weak::new()),
+              children: RefCell::new(vec![Rc::clone(&leaf)]),
+          });
+
+          // Set leaf's parent here.
+
+          let parent = leaf.parent.borrow().upgrade().map(|p| p.value);
+          println!("leaf parent = {parent:?}");
+          println!("branch strong = {}, weak = {}", Rc::strong_count(&branch), Rc::weak_count(&branch));
+      }
+
+      let parent = leaf.parent.borrow().upgrade().map(|p| p.value);
+      println!("leaf parent = {parent:?}");
+      println!("leaf strong = {}, weak = {}", Rc::strong_count(&leaf), Rc::weak_count(&leaf));
+  }
+expected_output: |
+  leaf parent = Some(5)
+  branch strong = 1, weak = 1
+  leaf parent = None
+  leaf strong = 1, weak = 0
+explanation: |
+  *leaf.parent.borrow_mut() = Rc::downgrade(&branch);. When the block ends,
+  branch's strong count goes to 0, so it is dropped, weak reference or not,
+  and upgrade then gives None. Dropping branch also dropped its Rc to leaf,
+  so leaf's strong count is back to 1, held by the leaf variable alone.

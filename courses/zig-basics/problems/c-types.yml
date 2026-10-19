@@ -1,0 +1,30 @@
+id: c-types
+title: "C Types in Zig"
+type: multiple_choice
+body: |
+  C's types appear in Zig under their own names, as their sizes depend on
+  the target: c_int, c_uint, c_long, c_char and so on. Some C types are
+  Zig types already: uint64_t is u64, float is f32, double is f64.
+
+  Translated headers use C pointers, [*c]T, for C's pointers, as a C
+  pointer could be one item or many, and could be null. Zig values convert
+  into them where that is safe: a string literal becomes a [*c]const u8, a
+  number literal becomes a c_int.
+
+  Slices are not C types: a slice is a pointer and a length, and C has no
+  such thing.
+question: A function takes a C string. Which can be passed to it?
+choices:
+  - id: a
+    text: "\"hello\", or the .ptr of a [:0]const u8"
+    correct: true
+  - id: b
+    text: "Any []const u8"
+  - id: c
+    text: "A u8 array without a 0 at the end"
+  - id: d
+    text: "Only C strings made by C code"
+explanation: |
+  C finds a string's end by looking for the 0. The .ptr of a plain
+  []const u8 compiles, but if no 0 follows the bytes, C reads past them.
+  [:0]const u8 promises the 0 is there.

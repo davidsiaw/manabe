@@ -1,0 +1,39 @@
+id: test-blocks
+title: "test Blocks"
+type: multiple_choice
+body: |
+  Zig's unit tests are written in test blocks: test, a name, and code in
+  curly brackets.
+
+      const std = @import("std");
+      const expect = std.testing.expect;
+
+      test "testing simple sum" {
+          const a: u8 = 2;
+          const b: u8 = 2;
+          try expect((a + b) == 4);
+      }
+
+  std.testing.expect returns error.TestUnexpectedResult when its condition
+  is false, and the try makes the test fail with it.
+
+  test blocks usually sit in the same file as the code they test; the
+  standard library is written that way. The compiler ignores them when
+  building a program, and only zig test compiles and runs them:
+
+      zig test simple_sum.zig
+question: A file has a function and three test blocks. What does zig build-exe put in the program?
+choices:
+  - id: a
+    text: "The function, and none of the tests"
+    correct: true
+  - id: b
+    text: "The function and the tests, which run before main"
+  - id: c
+    text: "Only the tests"
+  - id: d
+    text: "Nothing: a file with tests cannot be built as a program"
+explanation: |
+  Tests cost the program nothing. In this course, programs are built with
+  build-exe, so the next problems call the testing functions from main
+  instead; they work the same way anywhere.

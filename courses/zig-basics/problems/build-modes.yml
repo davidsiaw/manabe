@@ -1,0 +1,35 @@
+id: build-modes
+title: "Build Modes"
+type: multiple_choice
+body: |
+  Zig compiles in one of four modes, chosen with -O:
+
+  - Debug, the default: no optimisation, safety checks on, and all the
+    information a debugger needs.
+  - ReleaseSafe: optimised, with safety checks still on.
+  - ReleaseFast: optimised for speed, with safety checks off.
+  - ReleaseSmall: optimised for size, with safety checks off.
+
+  Safety checks are what catch an index out of bounds or an integer
+  overflow, and stop the program with a panic. With them off, the same
+  mistakes are undefined behaviour: the program carries on, doing who
+  knows what.
+
+  To work through a program in a debugger, compile it in Debug: the
+  release modes strip out what the debugger relies on, such as which line
+  each instruction came from. This course compiles everything in Debug.
+question: Which mode keeps the safety checks, but optimises the program?
+choices:
+  - id: a
+    text: "ReleaseSafe"
+    correct: true
+  - id: b
+    text: "Debug"
+  - id: c
+    text: "ReleaseFast"
+  - id: d
+    text: "ReleaseSmall"
+explanation: |
+  ReleaseSafe is a common choice for programs that go out to users: a bit
+  slower than ReleaseFast, but a mistake stops the program instead of
+  quietly corrupting its data.

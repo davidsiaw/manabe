@@ -1,0 +1,61 @@
+id: generic-methods
+title: Methods on Generic Types
+type: code
+language: rust
+run: local
+body: |
+  Methods of a generic struct are written in an impl with the type
+  parameter, impl<T> Point<T>, and work for every Point:
+
+    impl<T> Point<T> {
+        fn x(&self) -> &T {
+            &self.x
+        }
+    }
+
+  An impl can also be for one particular type only. These methods exist
+  for Point<f32> and no other Point:
+
+    impl Point<f32> {
+        fn distance_from_origin(&self) -> f32 {
+            (self.x.powi(2) + self.y.powi(2)).sqrt()
+        }
+    }
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0599]: no method named `distance_from_origin` found for struct `Point<{integer}>` in the current scope
+question: Change the second point so that it is a Point<f32>, with the same values, and the program compiles. Run it and paste what it printed.
+starter_code: |
+  struct Point<T> {
+      x: T,
+      y: T,
+  }
+
+  impl<T> Point<T> {
+      fn x(&self) -> &T {
+          &self.x
+      }
+  }
+
+  impl Point<f32> {
+      fn distance_from_origin(&self) -> f32 {
+          (self.x.powi(2) + self.y.powi(2)).sqrt()
+      }
+  }
+
+  fn main() {
+      let p = Point { x: 5, y: 10 };
+      println!("p.x = {}", p.x());
+
+      let q = Point { x: 3, y: 4 };
+      println!("q is {} from the origin", q.distance_from_origin());
+  }
+expected_output: |
+  p.x = 5
+  q is 5 from the origin
+explanation: |
+  Point { x: 3.0, y: 4.0 } with the type Point<f32> (or 3.0_f32), as
+  floats would otherwise default to f64. An f32 of exactly 5 prints as 5.
+  powi and sqrt only exist for floating-point types, which is why the impl
+  is for Point<f32> alone.

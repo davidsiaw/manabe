@@ -1,0 +1,31 @@
+id: vec-borrow
+title: Borrowing an Element
+type: code
+language: rust
+run: local
+body: |
+  The borrowing rules apply to vectors: while a reference to an element
+  exists, the vector cannot be changed. This program takes a reference to
+  the first element, pushes, and then uses the reference.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
+question: Move one line, so that the reference is no longer in use when the push happens. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut v = vec![1, 2, 3, 4, 5];
+
+      let first = &v[0];
+
+      v.push(6);
+
+      println!("The first element is: {first}");
+      println!("All of them: {v:?}");
+  }
+expected_output: |
+  The first element is: 1
+  All of them: [1, 2, 3, 4, 5, 6]
+explanation: |
+  Printing first before the push. The reference is last used there, so it
+  no longer counts at the push.

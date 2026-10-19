@@ -1,0 +1,112 @@
+id: graceful-shutdown
+title: Graceful Shutdown
+type: code
+language: rust
+run: local
+body: |
+  When the pool is dropped, the workers' threads should finish their jobs
+  and stop, rather than be cut off when main ends. Drop for ThreadPool can
+  do it in two steps:
+
+  1. drop the sender, which closes the channel, so that each worker's recv
+     returns an Err once the jobs are gone, and the worker's loop breaks
+  2. join every worker's thread
+
+  sender is an Option so that drop can take it out: drop(self.sender.take()).
+  self.workers.drain(..) moves the workers out of the vector, to join each.
+
+  Replace src/main.rs with the program below, and remove ThreadPool's Drop
+  from src/lib.rs. Run it: the pool is dropped before the jobs finish, and
+  their lines never appear.
+
+    use std::{thread, time::Duration};
+    use hello_server::ThreadPool;
+
+    fn main() {
+        {
+            let pool = ThreadPool::new(4);
+            for n in 1..=4u64 {
+                pool.execute(move || {
+                    thread::sleep(Duration::from_millis(n * 100));
+                    println!("job {n} done");
+                });
+            }
+            println!("all jobs sent");
+        }
+        println!("pool dropped");
+    }
+question: Write Drop for ThreadPool, so that dropping the pool waits for the jobs. Run cargo run and paste what it printed.
+starter_code: |
+  use std::{
+      sync::{Arc, Mutex, mpsc},
+      thread,
+  };
+
+  pub struct ThreadPool {
+      workers: Vec<Worker>,
+      sender: Option<mpsc::Sender<Job>>,
+  }
+
+  type Job = Box<dyn FnOnce() + Send + 'static>;
+
+  impl ThreadPool {
+      /// Creates a new ThreadPool. `size` is the number of threads.
+      ///
+      /// # Panics
+      ///
+      /// `new` panics if the size is zero.
+      pub fn new(size: usize) -> ThreadPool {
+          assert!(size > 0);
+
+          let (sender, receiver) = mpsc::channel();
+          let receiver = Arc::new(Mutex::new(receiver));
+
+          let mut workers = Vec::with_capacity(size);
+          for id in 0..size {
+              workers.push(Worker::new(id, Arc::clone(&receiver)));
+          }
+
+          ThreadPool { workers, sender: Some(sender) }
+      }
+
+      pub fn execute<F>(&self, f: F)
+      where
+          F: FnOnce() + Send + 'static,
+      {
+          let job = Box::new(f);
+          self.sender.as_ref().unwrap().send(job).unwrap();
+      }
+  }
+
+  struct Worker {
+      id: usize,
+      thread: thread::JoinHandle<()>,
+  }
+
+  impl Worker {
+      fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
+          let thread = thread::spawn(move || {
+              loop {
+                  let message = receiver.lock().unwrap().recv();
+
+                  match message {
+                      Ok(job) => job(),
+                      Err(_) => break,
+                  }
+              }
+          });
+
+          Worker { id, thread }
+      }
+  }
+expected_output: |
+  all jobs sent
+  job 1 done
+  job 2 done
+  job 3 done
+  job 4 done
+  pool dropped
+explanation: |
+  The impl Drop above. Dropping the sender first matters: joining a worker
+  that is still waiting on recv would wait forever. The jobs sleep for
+  different times, so they finish in order.

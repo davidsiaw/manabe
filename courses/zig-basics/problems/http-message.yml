@@ -1,0 +1,37 @@
+id: http-message
+title: "The Shape of a Request"
+type: multiple_choice
+body: |
+  An HTTP request is text, in lines that end with \r\n, a carriage
+  return and a new line:
+
+      GET /users/list HTTP/1.1          the request line
+      Host: localhost:3490              headers, one per line
+      Accept: */*
+                                        an empty line ends the headers
+      ...                               the body, if there is one
+
+  The request line has three parts, separated by spaces:
+
+  - the method, what the client wants done: GET to fetch something, POST
+    to send data, and a few more
+  - the URI, the path of what it wants
+  - the version of HTTP
+
+  A response is made the same way, with a status line, such as
+  HTTP/1.1 200 OK, in place of the request line, and the content in the
+  body.
+question: In the request above, what is the URI?
+choices:
+  - id: a
+    text: "/users/list"
+    correct: true
+  - id: b
+    text: "GET"
+  - id: c
+    text: "localhost:3490"
+  - id: d
+    text: "HTTP/1.1"
+explanation: |
+  The URI is the middle part of the request line. Host is a header that
+  says which site the client wants, as one server can host several.

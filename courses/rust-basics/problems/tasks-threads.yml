@@ -1,0 +1,29 @@
+id: tasks-threads
+title: Futures, Tasks and Threads
+type: multiple_choice
+body: |
+  A runtime runs futures as tasks: trpl::spawn_task(future) starts one,
+  as thread::spawn starts a thread, and returns a handle to await. A runtime
+  may run many tasks on each of several threads, and move them between
+  threads: async and threads work together, not against each other.
+
+  Roughly:
+
+  - lots of waiting, such as network connections: async tasks, which are
+    cheap, so a program can have hundreds of thousands of them
+  - heavy computation: threads, which run truly in parallel, and are not
+    held up by code that does not await
+question: A program handles 50,000 open network connections that are mostly idle. Which fits best?
+choices:
+  - id: a
+    text: An async task per connection
+    correct: true
+  - id: b
+    text: A thread per connection
+  - id: c
+    text: One thread that handles connections one after another
+  - id: d
+    text: A process per connection
+explanation: |
+  50,000 threads would each need their own stack, megabytes of memory
+  apiece. Tasks are small, and idle ones cost almost nothing.

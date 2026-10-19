@@ -1,0 +1,43 @@
+id: module-files
+title: Modules in Their Own Files
+type: code
+language: rust
+run: local
+body: |
+  When modules grow, they move into files of their own. In place of the
+  module's contents in curly brackets, its declaration ends with a
+  semicolon, and the compiler loads the contents from a file whose path
+  follows the module tree:
+
+    src/main.rs                    mod garden;
+    src/garden.rs                  pub mod vegetables;
+    src/garden/vegetables.rs       pub struct Asparagus {}
+
+  mod is not an include: a module is declared with mod once, in its parent,
+  and the rest of the crate refers to it by its path.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0583]: file not found for module `garden`
+question: |
+  Make the two files: src/garden.rs, which declares a public module
+  vegetables, and src/garden/vegetables.rs, which defines Asparagus as below.
+  Run it and paste what it printed.
+
+    #[derive(Debug)]
+    pub struct Asparagus {}
+starter_code: |
+  use crate::garden::vegetables::Asparagus;
+
+  pub mod garden;
+
+  fn main() {
+      let plant = Asparagus {};
+      println!("I'm growing {plant:?}!");
+  }
+expected_output: |
+  I'm growing Asparagus!
+explanation: |
+  src/garden.rs holds the single line pub mod vegetables;, and
+  src/garden/vegetables.rs the struct. Nothing else changed: the paths are
+  the same as when the modules were inline.

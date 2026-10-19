@@ -1,0 +1,33 @@
+id: fn-traits
+title: Fn, FnMut and FnOnce
+type: multiple_choice
+body: |
+  What a closure does with what it captured decides which of three traits
+  it implements, and so where it can be used:
+
+  - FnOnce: can be called at least once. Every closure is FnOnce. One that
+    moves a captured value out of its body is only FnOnce: it can only be
+    called once, as the value is gone after that.
+  - FnMut: does not move captured values out, but may change them. Can be
+    called many times.
+  - Fn: neither moves nor changes what it captured. Can be called many
+    times, even at the same time.
+
+  Functions that take closures say which they need. unwrap_or_else calls
+  its closure at most once, so it takes an FnOnce. sort_by_key calls its
+  closure for each comparison, so it needs FnMut.
+question: A closure pushes a captured String into a vector, moving it. Which traits does it implement?
+choices:
+  - id: a
+    text: Only FnOnce
+    correct: true
+  - id: b
+    text: FnMut and FnOnce
+  - id: c
+    text: All three
+  - id: d
+    text: None
+explanation: |
+  After the first call, the String belongs to the vector, so there is
+  nothing to push the second time. sort_by_key would refuse it, as the next
+  problem shows.

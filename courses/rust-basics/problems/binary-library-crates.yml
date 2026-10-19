@@ -1,0 +1,33 @@
+id: binary-library-crates
+title: Binary and Library Crates
+type: multiple_choice
+body: |
+  As a program grows, it needs organising: into modules, files and, in the
+  end, separate packages. This chapter is about Rust's module system, which
+  does that.
+
+  A crate is the smallest piece of code the compiler considers at a time.
+  Even a single file passed to rustc is a crate. A crate comes in one of two
+  forms:
+
+  - A binary crate is a program: it compiles to an executable you can run,
+    and it has a main function, where the program starts.
+  - A library crate has no main and is not run by itself. It provides code
+    for other crates to use, like the rand crate from the guessing game.
+
+  When Rust programmers say "crate", they usually mean a library crate, and
+  use it like "library".
+question: Which of these is a library crate?
+choices:
+  - id: a
+    text: rand, which other programs use to make random numbers
+    correct: true
+  - id: b
+    text: The guessing game, which you run with cargo run
+  - id: c
+    text: Any crate with a main function
+  - id: d
+    text: Cargo.toml
+explanation: |
+  rand has no main: it is code for other crates. The guessing game is a
+  binary crate, and it uses the rand library crate.

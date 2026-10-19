@@ -1,0 +1,35 @@
+id: dyn-vs-generics
+title: Trait Objects or Generics?
+type: multiple_choice
+body: |
+  Screen could also be generic:
+
+    pub struct Screen<T: Draw> {
+        pub components: Vec<T>,
+    }
+
+  Both work, but differently:
+
+  - The generic Screen<T> holds components of one type only, T: all
+    Buttons, or all SelectBoxes. In return, each call to draw is resolved
+    while compiling, as monomorphization makes a copy of the code for each
+    type: static dispatch.
+  - Vec<Box<dyn Draw>> can mix types. Each call to draw is looked up while
+    running, through a table of the type's methods that the trait object
+    carries: dynamic dispatch, a little slower, and harder for the compiler
+    to optimise.
+question: A screen needs a Button and a SelectBox in the same list. Which works?
+choices:
+  - id: a
+    text: Vec<Box<dyn Draw>>
+    correct: true
+  - id: b
+    text: "Screen<T: Draw> with Vec<T>"
+  - id: c
+    text: Both
+  - id: d
+    text: "Neither: lists hold one type"
+explanation: |
+  A Vec<T> holds one type; with trait objects, the one type is Box<dyn
+  Draw>. When every element is the same type, generics are the faster
+  choice.

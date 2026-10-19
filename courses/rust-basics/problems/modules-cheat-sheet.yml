@@ -1,0 +1,35 @@
+id: modules-cheat-sheet
+title: "Modules: a Cheat Sheet"
+type: multiple_choice
+body: |
+  How the module system finds code, in short:
+
+  - The compiler starts from the crate root: src/main.rs or src/lib.rs.
+  - In the crate root, mod garden; declares a module called garden. The
+    compiler looks for its code inline, in curly brackets in place of the
+    semicolon, or in src/garden.rs, or in src/garden/mod.rs.
+  - In any other file, a mod declares a submodule. mod vegetables; in
+    src/garden.rs is looked for inline, or in src/garden/vegetables.rs, or
+    in src/garden/vegetables/mod.rs.
+  - Code in a module is reached by its path:
+    crate::garden::vegetables::Asparagus.
+  - Code in a module is private to it unless declared pub, and so is the
+    module itself.
+  - use creates a shortcut to a path:
+    use crate::garden::vegetables::Asparagus; and then just Asparagus.
+
+  The next problems go through each of these.
+question: src/main.rs says mod garden; and nothing else about it. Where can the compiler find garden's code?
+choices:
+  - id: a
+    text: In src/garden.rs or src/garden/mod.rs
+    correct: true
+  - id: b
+    text: "Anywhere in the project: it searches every file"
+  - id: c
+    text: Only in Cargo.toml, which lists every module
+  - id: d
+    text: "Nowhere: a module must be written inline"
+explanation: |
+  A module's place in the files follows its place in the module tree, so
+  the compiler knows exactly where to look, and you do too.

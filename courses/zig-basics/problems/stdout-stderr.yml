@@ -1,0 +1,33 @@
+id: stdout-stderr
+title: "stdout and stderr"
+type: multiple_choice
+body: |
+  A program has two output streams. stdout, standard output, is for its
+  results; stderr, standard error, for messages about how it is going:
+  errors, warnings and debugging. Both usually show in the terminal, but
+  they can be sent to different places.
+
+  - stdout.print writes to stdout, through a buffer that must be flushed,
+    and can fail, hence try.
+  - std.debug.print writes to stderr, straight away, without a buffer, and
+    cannot fail. That makes it the handy one for debugging.
+
+  A shell can send a program's stdout into a file:
+
+      ./report > report.txt
+question: report prints its results with stdout.print, and debugging messages with std.debug.print. Run as above, where do the debugging messages go?
+choices:
+  - id: a
+    text: "To the terminal: only stdout goes into report.txt"
+    correct: true
+  - id: b
+    text: "Into report.txt, mixed with the results"
+  - id: c
+    text: "Nowhere: std.debug.print only prints in Debug builds"
+  - id: d
+    text: "Into a separate file, report.err"
+explanation: |
+  > only redirects stdout. That is the point of having two streams: the
+  results go where they are wanted, and the messages still reach you.
+  std.debug.print does print in every build mode. (In this course, both
+  show together in the output box.)

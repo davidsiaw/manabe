@@ -1,0 +1,36 @@
+id: http-intro
+title: "What an HTTP Server Does"
+type: multiple_choice
+body: |
+  The second project is a small web server, written from scratch.
+
+  The web works by requests and responses. A client, such as a web
+  browser, connects to a server and sends a request: "give me the page
+  /index.html". The server sends back a response: a status, such as 200
+  OK or 404 Not Found, and the content. HTTP is the protocol, the agreed
+  format, that both sides use for these messages.
+
+  The messages travel over a TCP connection, made through sockets. A
+  server's socket has an address and a port, such as 127.0.0.1 and 3490:
+  127.0.0.1 is always the computer itself, and the port picks out one
+  program on it.
+
+  A server then repeats:
+
+  - listen on its socket, waiting for a client to connect
+  - accept a connection
+  - read the request, work out the response, and send it
+question: Which side sends the request?
+choices:
+  - id: a
+    text: "The client, such as a web browser"
+    correct: true
+  - id: b
+    text: "The server"
+  - id: c
+    text: "Both, at the same time"
+  - id: d
+    text: "Neither: the socket does"
+explanation: |
+  The client always speaks first, and the server answers. A server that
+  gets no requests sends nothing at all.

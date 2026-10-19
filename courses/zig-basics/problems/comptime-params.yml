@@ -1,0 +1,38 @@
+id: comptime-params
+title: "comptime Parameters"
+type: code
+language: zig
+body: |
+  The third project, a stack, is also the place to meet comptime, which
+  lets code run while compiling, and with it, generics.
+
+  A parameter marked comptime must be known while compiling. Its value is
+  then a constant inside the function, so it can be used wherever a
+  constant is needed, such as an array's length:
+
+      fn zeros(comptime n: usize) [n]u8 {
+          return [_]u8{0} ** n;
+      }
+
+  The compiler makes a version of the function for each value it is
+  called with. Run the program: n is a variable.
+question: Make the program compile, so that it prints 42.
+starter_code: |
+  const std = @import("std");
+
+  fn twice(comptime num: u32) u32 {
+      return num * 2;
+  }
+
+  pub fn main() void {
+      var n: u32 = 21;
+      _ = &n;
+      std.debug.print("{d}\n", .{twice(n)});
+  }
+expected_output: |
+  42
+explanation: |
+  const n, a value known while compiling, or twice(21). The error said
+  "unable to resolve comptime value", with the note "argument to comptime
+  parameter must be comptime-known". Removing comptime from num works
+  too: twice does not need it.

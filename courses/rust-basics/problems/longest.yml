@@ -1,0 +1,45 @@
+id: longest
+title: Lifetime Annotations
+type: code
+language: rust
+run: local
+body: |
+  longest returns the longer of two string slices. But which one it
+  returns depends on the values, so the compiler cannot tell whether the
+  result borrows from x or from y, and so how long it is valid.
+
+  A lifetime annotation says how the lifetimes relate. Lifetime names
+  start with an apostrophe, and are short, usually 'a. They are declared
+  like type parameters, in angle brackets:
+
+    fn longest<'a>(x: &'a str, y: &'a str) -> &'a str
+
+  This says: for some lifetime 'a, both parameters live at least as long as
+  'a, and so does the result. In practice, the result is valid as long as
+  the shorter-lived of x and y. Annotations change nothing about how long
+  anything lives; they describe it, so that the borrow checker can check
+  each call.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0106]: missing lifetime specifier
+question: Add the lifetime annotations. Run it and paste what it printed.
+starter_code: |
+  fn longest(x: &str, y: &str) -> &str {
+      if x.len() > y.len() { x } else { y }
+  }
+
+  fn main() {
+      let string1 = String::from("abcd");
+      let string2 = "xyz";
+
+      let result = longest(string1.as_str(), string2);
+      println!("The longest string is {result}");
+  }
+expected_output: |
+  The longest string is abcd
+explanation: |
+  <'a> after the name, and 'a on all three references. The compiler's help
+  suggested exactly that: "this function's return type contains a
+  borrowed value, but the signature does not say whether it is borrowed
+  from `x` or `y`".

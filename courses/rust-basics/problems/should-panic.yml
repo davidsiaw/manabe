@@ -1,0 +1,69 @@
+id: should-panic
+title: Testing for Panics
+type: code
+language: rust
+run: local
+body: |
+  Sometimes the right behaviour is to panic. #[should_panic] marks a test
+  that passes when the code panics, and fails when it does not:
+
+    #[test]
+    #[should_panic(expected = "less than or equal to 100")]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+
+  expected makes it stricter: the panic message has to contain that text,
+  so that the test does not pass because of some other panic.
+
+  Replace src/lib.rs in your adder project with the code below, and run cargo test -- --test-threads=1. One test FAILED: "note: test did not panic as expected".
+question: Fix Guess::new, so that both tests pass. Run the tests and paste everything cargo test printed.
+starter_code: |
+  pub struct Guess {
+      value: i32,
+  }
+
+  impl Guess {
+      pub fn new(value: i32) -> Guess {
+          if value < 1 {
+              panic!("Guess value must be greater than or equal to 1, got {value}.");
+          }
+          Guess { value }
+      }
+
+      pub fn value(&self) -> i32 {
+          self.value
+      }
+  }
+
+  #[cfg(test)]
+  mod tests {
+      use super::*;
+
+      #[test]
+      #[should_panic(expected = "less than or equal to 100")]
+      fn greater_than_100() {
+          Guess::new(200);
+      }
+
+      #[test]
+      #[should_panic(expected = "greater than or equal to 1")]
+      fn less_than_1() {
+          Guess::new(0);
+      }
+  }
+expected_output: |
+  running 2 tests
+  test tests::greater_than_100 - should panic ... ok
+  test tests::less_than_1 - should panic ... ok
+
+  test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+  running 0 tests
+
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+explanation: |
+  A second check, for value > 100, with a message containing the expected
+  text. The runner marks these tests "- should panic". Had the message
+  said "at most 100", the test would still fail: the panic would not
+  contain the expected text.

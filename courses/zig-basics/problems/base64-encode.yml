@@ -1,0 +1,81 @@
+id: base64-encode
+title: "The Encoder"
+type: code
+language: zig
+body: |
+  The encoder, as a struct with the table and methods, like the book's.
+  encode goes through the input one byte at a time, collecting them in buf;
+  each time it has three, it writes four characters and starts over.
+
+  When the loop ends, count says how many bytes are left in buf, in a short
+  last window: 0, 1 or 2. With 1 byte, the groups are:
+
+      a >> 2,  (a & 0x03) << 4,  '=',  '='
+
+  and with 2 bytes:
+
+      a >> 2,  ((a & 0x03) << 4) + (b >> 4),  (b & 0x0f) << 2,  '='
+
+  The output is filled with ? first, so that the characters the encoder
+  has not written yet show. Run it: the short windows come out as ????.
+question: Handle the short last window, so that every text is encoded in full.
+starter_code: |
+  const std = @import("std");
+
+  const Base64 = struct {
+      table: *const [64]u8,
+
+      pub fn init() Base64 {
+          return .{ .table = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ++ "abcdefghijklmnopqrstuvwxyz" ++ "0123456789+/" };
+      }
+
+      fn charAt(self: Base64, index: u8) u8 {
+          return self.table[index];
+      }
+
+      pub fn encode(self: Base64, allocator: std.mem.Allocator, input: []const u8) ![]u8 {
+          const out = try allocator.alloc(u8, try std.math.divCeil(usize, input.len, 3) * 4);
+          @memset(out, '?');
+
+          var buf = [3]u8{ 0, 0, 0 };
+          var count: usize = 0;
+          var iout: usize = 0;
+          for (input) |byte| {
+              buf[count] = byte;
+              count += 1;
+              if (count == 3) {
+                  out[iout] = self.charAt(buf[0] >> 2);
+                  out[iout + 1] = self.charAt(((buf[0] & 0x03) << 4) + (buf[1] >> 4));
+                  out[iout + 2] = self.charAt(((buf[1] & 0x0f) << 2) + (buf[2] >> 6));
+                  out[iout + 3] = self.charAt(buf[2] & 0x3f);
+                  iout += 4;
+                  count = 0;
+              }
+          }
+          // The short last window, if there is one, goes here.
+
+          return out;
+      }
+  };
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      const base64 = Base64.init();
+      for ([_][]const u8{ "Man", "Hi", "0", "Testing some more stuff" }) |text| {
+          const encoded = try base64.encode(allocator, text);
+          defer allocator.free(encoded);
+          std.debug.print("{s} -> {s}\n", .{ text, encoded });
+      }
+  }
+expected_output: |
+  Man -> TWFu
+  Hi -> SGk=
+  0 -> MA==
+  Testing some more stuff -> VGVzdGluZyBzb21lIG1vcmUgc3R1ZmY=
+explanation: |
+  Two ifs after the loop, one for count == 1 and one for count == 2, each
+  writing the groups listed above. A switch (count) with a branch for 1, a
+  branch for 2 and else => {} works as well.

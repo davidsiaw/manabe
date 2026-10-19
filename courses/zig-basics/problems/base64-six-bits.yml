@@ -1,0 +1,43 @@
+id: base64-six-bits
+title: "Four Groups of Six Bits"
+type: code
+language: zig
+body: |
+  Here is how a full window of three bytes, a, b and c, becomes four
+  indexes:
+
+  - the first is the top 6 bits of a: a >> 2
+  - the second is the last 2 bits of a, moved up, plus the top 4 bits of
+    b: ((a & 0x03) << 4) + (b >> 4)
+  - the third is the last 4 bits of b, moved up, plus the top 2 bits of
+    c: ((b & 0x0f) << 2) + (c >> 6)
+  - the fourth is the last 6 bits of c: c & 0x3f
+
+  Each part is moved to where it belongs in its group, and + puts the two
+  parts together; as they have no 1 bits in the same place, | would do the
+  same.
+question: Work out the last three indexes for the window "Man", so that it prints as below.
+starter_code: |
+  const std = @import("std");
+
+  const table: *const [64]u8 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ++ "abcdefghijklmnopqrstuvwxyz" ++ "0123456789+/";
+
+  pub fn main() void {
+      const window = "Man";
+      const a = window[0];
+      const b = window[1];
+      const c = window[2];
+      _ = .{ b, c };
+
+      const indexes = [4]u8{ a >> 2, 0, 0, 0 };
+      std.debug.print("{any}\n", .{indexes});
+      for (indexes) |index| std.debug.print("{c}", .{table[index]});
+      std.debug.print("\n", .{});
+  }
+expected_output: |
+  { 19, 22, 5, 46 }
+  TWFu
+explanation: |
+  The four expressions from the list, in order. The _ = .{ b, c }; line
+  can go: it was only there because Zig refuses to compile a program with
+  an unused local constant, and b and c were unused until now.

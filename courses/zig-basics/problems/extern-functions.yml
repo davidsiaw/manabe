@@ -1,0 +1,39 @@
+id: extern-functions
+title: "Declaring C Functions"
+type: code
+language: zig
+run: local
+body: |
+  The simplest way to call C is to declare the function in Zig yourself,
+  with extern, and the types C uses:
+
+      extern "c" fn abs(x: c_int) c_int;
+
+  "c" says the function is in the C standard library, libc, which then
+  has to be linked: -lc on the command line. c_int is C's int, whatever
+  size that is on the target.
+
+  C strings are pointers to bytes ending in a 0. In Zig that is
+  [*:0]const u8, a many-item pointer with a 0 sentinel at the end; string
+  literals have one, so they can be passed directly.
+
+  C programs need a C library, which the browser does not have, so this
+  one runs on your computer. Save it as libc.zig, and run
+
+      zig run libc.zig -lc
+question: Declare strlen, which takes a C string and returns a usize, so that the program compiles. Run it, and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  extern "c" fn abs(x: c_int) c_int;
+
+  pub fn main() void {
+      std.debug.print("{d} {d}\n", .{ abs(-42), strlen("hello") });
+  }
+expected_output: |
+  42 5
+explanation: |
+  extern "c" fn strlen(s: [*:0]const u8) usize;. In C it is size_t
+  strlen(const char *s), and Zig's usize is the same as size_t. The
+  compiler trusts the declaration: get a type wrong, and the call does the
+  wrong thing at run time.

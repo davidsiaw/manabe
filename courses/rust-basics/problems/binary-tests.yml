@@ -1,0 +1,25 @@
+id: binary-tests
+title: Integration Tests for Binary Crates
+type: multiple_choice
+body: |
+  Integration tests use a library through use. A project with only
+  src/main.rs, a binary crate, has no library to use, so it cannot have
+  integration tests of its own code.
+
+  That is one reason Rust programs are often split: the logic in
+  src/lib.rs, and a small src/main.rs that calls it. The library can then
+  be tested from tests, and main is too small to need it.
+question: A project has only src/main.rs. What can its integration tests use from it?
+choices:
+  - id: a
+    text: "Nothing: only library crates expose functions for tests to use"
+    correct: true
+  - id: b
+    text: Every pub function in main.rs
+  - id: c
+    text: main, by calling it
+  - id: d
+    text: Everything, as tests can see private items
+explanation: |
+  Unit tests inside main.rs still work. The next chapter's project is
+  built in this split style from the start.

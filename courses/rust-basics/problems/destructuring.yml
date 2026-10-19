@@ -1,0 +1,62 @@
+id: destructuring
+title: Destructuring
+type: code
+language: rust
+run: local
+body: |
+  Patterns take structs, enums and tuples apart, however deeply they are
+  nested:
+
+    let Point { x, y } = p;                     // fields into variables
+    let Point { x: a, y: b } = p;               // into other names
+    match p {
+        Point { x: 0, y } => ...,               // with a literal
+        ...
+    }
+
+    Message::ChangeColor(Color::Hsv(h, s, v)) => ...
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write describe with a match that takes each message apart, as below. Run it and paste what it printed.
+starter_code: |
+  enum Color {
+      Rgb(i32, i32, i32),
+      Hsv(i32, i32, i32),
+  }
+
+  enum Message {
+      Quit,
+      Move { x: i32, y: i32 },
+      Write(String),
+      ChangeColor(Color),
+  }
+
+  fn describe(msg: &Message) -> String {
+      todo!()
+  }
+
+  fn main() {
+      let messages = [
+          Message::Move { x: 0, y: 7 },
+          Message::Move { x: 3, y: -1 },
+          Message::Write(String::from("hello")),
+          Message::ChangeColor(Color::Rgb(255, 160, 0)),
+          Message::ChangeColor(Color::Hsv(0, 160, 255)),
+          Message::Quit,
+      ];
+      for msg in &messages {
+          println!("{}", describe(msg));
+      }
+  }
+expected_output: |
+  move along the y axis to 7
+  move to 3, -1
+  text: hello
+  red 255, green 160, blue 0
+  hue 0, saturation 160, value 255
+  quit
+explanation: |
+  One arm per shape, the nested Color inside ChangeColor's pattern. msg is a
+  reference, and matching it against these patterns binds the parts as
+  references, x as a &i32 and text as a &String, which format! is happy to
+  print.

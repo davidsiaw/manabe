@@ -1,0 +1,34 @@
+id: result-tests
+title: Tests That Return Result
+type: multiple_choice
+body: |
+  A test can also return a Result<(), E>, and fail by returning an Err
+  instead of panicking:
+
+    #[test]
+    fn it_works() -> Result<(), String> {
+        let result = add(2, 2);
+        if result == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+
+  This lets the test use ? on functions that return a Result: any error
+  ends the test, as a failure.
+question: Which cannot be used on a test that returns a Result?
+choices:
+  - id: a
+    text: "#[should_panic]"
+    correct: true
+  - id: b
+    text: The ? operator
+  - id: c
+    text: assert_eq!
+  - id: d
+    text: use super::*
+explanation: |
+  Such a test reports failure by returning Err, not by panicking, so
+  #[should_panic] does not fit. To check that something returns an error,
+  write assert!(value.is_err()) instead.

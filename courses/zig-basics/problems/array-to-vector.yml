@@ -1,0 +1,38 @@
+id: array-to-vector
+title: "Vectors from Slices"
+type: code
+language: zig
+body: |
+  Arrays convert to vectors by assignment, and slices of a length known
+  while compiling do too, with .* to get the array behind the slice:
+
+      const v: @Vector(2, u32) = a[1..3].*;
+      data[i..][0..8].* = result;          // and back again
+
+  That is how long arrays are processed a piece at a time: a vector of
+  eight from position i, worked on, and written back.
+
+  +| is saturating addition: instead of overflowing, it stops at the
+  largest value the type can hold, which is what brightening a pixel
+  needs. It works on vectors too.
+question: Brighten the image by 50, eight bytes at a time, with saturating addition.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      var image = [_]u8{ 10, 200, 250, 0, 100, 128, 255, 5, 30, 60, 90, 120, 150, 180, 210, 240 };
+      const brighter: @Vector(8, u8) = @splat(50);
+      _ = .{ brighter, &image };
+
+      var i: usize = 0;
+      while (i < image.len) : (i += 8) {
+      }
+      std.debug.print("{any}\n", .{image});
+  }
+expected_output: |
+  { 60, 250, 255, 50, 150, 178, 255, 55, 80, 110, 140, 170, 200, 230, 255, 255 }
+explanation: |
+  image[i..][0..8].* reads eight bytes as a vector, and the same writes
+  them back. With + instead of +|, 250 + 50 would panic with integer
+  overflow. An image whose length is not a multiple of eight needs the
+  last few bytes handled one at a time.

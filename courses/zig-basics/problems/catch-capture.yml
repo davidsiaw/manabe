@@ -1,0 +1,49 @@
+id: catch-capture
+title: "catch with the Error"
+type: code
+language: zig
+body: |
+  catch can also capture the error, and run a block with it. The block can
+  log it and pass it on, or give a value instead:
+
+      const file = openFile(path) catch |err| {
+          std.debug.print("could not open {s}: {s}\n", .{ path, @errorName(err) });
+          return err;
+      };
+
+  A switch on the error handles each one differently:
+
+      const n = parse(text) catch |err| switch (err) {
+          error.Overflow => 255,
+          error.InvalidCharacter => return err,
+      };
+
+  parseInt's errors are Overflow, for a number too large for the type,
+  and InvalidCharacter, for anything that is not a digit.
+question: "Write volume: a number too large becomes 100, and anything else that is not a number is passed on, after printing which text was wrong."
+starter_code: |
+  const std = @import("std");
+
+  fn volume(text: []const u8) !u8 {
+      return std.fmt.parseInt(u8, text, 10);
+  }
+
+  pub fn main() void {
+      for ([_][]const u8{ "30", "4000", "loud", "7" }) |text| {
+          if (volume(text)) |v| {
+              std.debug.print("volume {d}\n", .{v});
+          } else |err| {
+              std.debug.print("error {s}\n", .{@errorName(err)});
+          }
+      }
+  }
+expected_output: |
+  volume 30
+  volume 100
+  not a volume: loud
+  error InvalidCharacter
+  volume 7
+explanation: |
+  catch |err| switch (err) with a branch for each error. The switch needs
+  no else: it covers parseInt's whole error set, and a new error added to
+  it later would make the compiler point here.

@@ -1,0 +1,54 @@
+id: longest-announcement
+title: "Putting It Together: Generics, Traits and Lifetimes"
+type: code
+language: rust
+run: local
+body: |
+  All three in one signature: a generic type with a trait bound, and a
+  lifetime. Lifetimes and type parameters go in the same angle brackets,
+  lifetimes first:
+
+    fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+    where
+        T: Display,
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: "Write the function: it prints \"Announcement!\" and ann, then returns the longer of x and y. Use it with each kind of announcement in main. Run it and paste what it printed."
+starter_code: |
+  use std::fmt::Display;
+
+  struct Countdown(u32);
+
+  impl Display for Countdown {
+      fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+          write!(f, "{} seconds to go", self.0)
+      }
+  }
+
+  fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+  where
+      T: Display,
+  {
+      todo!()
+  }
+
+  fn main() {
+      let first = String::from("rocket");
+      let second = String::from("spaceship");
+
+      println!("{}", longest_with_an_announcement(&first, &second, "Launch day"));
+      println!("{}", longest_with_an_announcement(&first, "ufo", 42));
+      println!("{}", longest_with_an_announcement(&second, &first, Countdown(10)));
+  }
+expected_output: |
+  Announcement! Launch day
+  spaceship
+  Announcement! 42
+  rocket
+  Announcement! 10 seconds to go
+  spaceship
+explanation: |
+  The println! and longest's if. One generic function serves a &str, an
+  i32 and a Countdown, as each implements Display; monomorphization makes
+  three copies of it. The lifetime ties the result to x and y, and not to
+  ann, which is moved in and dropped at the end.

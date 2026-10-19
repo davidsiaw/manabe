@@ -1,0 +1,33 @@
+id: bare-unions
+title: "Unions"
+type: multiple_choice
+body: |
+  A union holds one of several possible fields at a time, all in the same
+  memory: a value that is one of a few types.
+
+      const LakeTarget = union {
+          azure: AzureBlob,
+          amazon: AmazonS3,
+          google: GoogleGCP,
+      };
+
+      var target = LakeTarget{ .azure = AzureBlob.init() };
+
+  Only the field that was set, the active one, can be used. A bare union
+  like this one does not record which field that is, except in Debug
+  builds, where it is checked.
+question: target was made with .azure. What does reading target.google do in Debug?
+choices:
+  - id: a
+    text: "Panics: access of union field 'google' while field 'azure' is active"
+    correct: true
+  - id: b
+    text: "Returns a GoogleGCP made of azure's bytes"
+  - id: c
+    text: "Returns null"
+  - id: d
+    text: "Does not compile"
+explanation: |
+  In ReleaseFast, it would read azure's memory as if it were a GoogleGCP:
+  undefined behaviour. Code that needs to ask which field is active uses
+  a tagged union, the next problem.

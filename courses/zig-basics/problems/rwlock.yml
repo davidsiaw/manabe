@@ -1,0 +1,31 @@
+id: rwlock
+title: "Read/Write Locks"
+type: multiple_choice
+body: |
+  A mutex lets one thread in at a time, even when all of them only read,
+  which is safe to do at the same time. A read/write lock has two kinds
+  of lock:
+
+  - a shared lock, for reading: any number of threads can hold one at once
+  - an exclusive lock, for writing: only one thread, and no readers
+
+      var lock: std.Io.RwLock = .init;
+
+      try lock.lockShared(io);       // readers
+      defer lock.unlockShared(io);
+
+      try lock.lock(io);             // the writer
+      defer lock.unlock(io);
+question: Data is read by many threads and changed rarely. What does an RwLock gain over a mutex?
+choices:
+  - id: a
+    text: "The readers no longer wait for each other, only for writers"
+    correct: true
+  - id: b
+    text: "Writers no longer need to lock"
+  - id: c
+    text: "Nothing: it is a mutex with another name"
+  - id: d
+    text: "It removes the need to join threads"
+explanation: |
+  For data that is mostly written, a plain mutex is simpler, and as fast.

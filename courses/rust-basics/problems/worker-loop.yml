@@ -1,0 +1,36 @@
+id: worker-loop
+title: Why the Lock Is Released
+type: multiple_choice
+body: |
+  The worker's loop is written:
+
+    loop {
+        let message = receiver.lock().unwrap().recv();
+        match message { ... }
+    }
+
+  and not:
+
+    while let Ok(job) = receiver.lock().unwrap().recv() {
+        job();
+    }
+
+  The lock is a MutexGuard, a temporary value. In a let statement,
+  temporaries are dropped at the end of the statement, so the lock is
+  released before the job runs. In a while let, they live until the end
+  of the loop's body.
+question: With the while let version, what happens to the other workers while one runs a slow job?
+choices:
+  - id: a
+    text: They wait for the lock, so only one job runs at a time
+    correct: true
+  - id: b
+    text: They run their jobs as usual
+  - id: c
+    text: They crash
+  - id: d
+    text: "Nothing changes: the two are the same"
+explanation: |
+  The code compiles and looks fine, but the pool would run one job at a
+  time, and be no better than one thread. Rust's rules for when temporaries
+  are dropped matter for locks.

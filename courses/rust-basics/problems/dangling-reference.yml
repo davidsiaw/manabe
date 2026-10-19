@@ -1,0 +1,34 @@
+id: dangling-reference
+title: Lifetimes Prevent Dangling References
+type: multiple_choice
+body: |
+  Every reference has a lifetime: the part of the program where it is
+  valid. Usually the compiler works lifetimes out, as it works out types.
+
+  Their purpose is to prevent dangling references, which point to data
+  that is gone:
+
+    let r;
+    {
+        let x = 5;
+        r = &x;
+    }
+    println!("r: {r}");
+
+  The borrow checker compares scopes: r lives until the println!, but x,
+  which r refers to, only until the inner closing bracket.
+question: What happens?
+choices:
+  - id: a
+    text: "It does not compile: `x` does not live long enough"
+    correct: true
+  - id: b
+    text: "It prints r: 5"
+  - id: c
+    text: It prints a random number
+  - id: d
+    text: It compiles, and panics
+explanation: |
+  The data must live at least as long as the reference to it. Here it does
+  not, so the compiler refuses, and says where x is dropped while still
+  borrowed.

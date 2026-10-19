@@ -1,0 +1,32 @@
+id: oop-features
+title: Is Rust Object-Oriented?
+type: multiple_choice
+body: |
+  There is no single definition of object-oriented programming, but three
+  features come up again and again:
+
+  - objects: data together with the behaviour that works on it. Rust's
+    structs and enums with impl blocks are that.
+  - encapsulation: hiding how an object works, so that code outside can only
+    use its public interface. Rust has pub.
+  - inheritance: a type taking on another type's data and behaviour. Rust
+    has none: a struct cannot inherit from another.
+
+  Inheritance is mostly used for two things: reusing code, which Rust does
+  with traits' default methods, and polymorphism, using different types
+  through one interface, which Rust does with generics and trait objects.
+question: How does Rust let a type reuse behaviour it does not write itself?
+choices:
+  - id: a
+    text: Through default method implementations in traits
+    correct: true
+  - id: b
+    text: Through inheritance from a parent struct
+  - id: c
+    text: It cannot
+  - id: d
+    text: By copying the parent's impl block with a macro
+explanation: |
+  Many languages are moving away from inheritance anyway: it shares more
+  than is often wanted, and ties types together tightly. Traits share
+  exactly the behaviour listed in them.

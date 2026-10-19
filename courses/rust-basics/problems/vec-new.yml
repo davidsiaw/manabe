@@ -1,0 +1,41 @@
+id: vec-new
+title: Making a Vector
+type: code
+language: rust
+run: local
+body: |
+  The standard library's collections hold any number of values, on the
+  heap, so they can grow and shrink while the program runs. This chapter
+  covers the three used most: vectors, strings and hash maps.
+
+  A vector, Vec<T>, holds values of one type, T, next to each other in
+  memory. There are two ways to make one:
+
+    let v: Vec<i32> = Vec::new();   // empty
+    let v = vec![1, 2, 3];          // with values, using the vec! macro
+
+  With vec!, Rust works out the type from the values: Vec<i32> here, as
+  i32 is the default integer type. An empty Vec::new() has no values to
+  tell it, so unless the code goes on to add some, the type must be given.
+
+  push adds a value at the end; the vector must be mut to change:
+
+    let mut v = Vec::new();
+    v.push(5);                      // now Rust knows: a Vec<i32>
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0282]: type annotations needed for `Vec<_>`
+question: Push 5, 6, 7 and 8 onto the vector, so that it prints as below. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let numbers = Vec::new();
+
+      println!("{numbers:?}");
+  }
+expected_output: |
+  [5, 6, 7, 8]
+explanation: |
+  let mut numbers, and four pushes. The pushes tell Rust it is a
+  Vec<i32>, so no annotation is needed. vec![5, 6, 7, 8] would make the
+  same vector in one go.

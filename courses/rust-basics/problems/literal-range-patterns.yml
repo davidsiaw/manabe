@@ -1,0 +1,53 @@
+id: literal-range-patterns
+title: Literals, Ranges and |
+type: code
+language: rust
+run: local
+body: |
+  Patterns can be literals, several patterns joined with |, or ranges
+  with ..=, which work for numbers and chars:
+
+    match x {
+        1 | 2 => println!("one or two"),
+        3..=5 => println!("three to five"),
+        _ => println!("anything"),
+    }
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write classify with a match, using | and ranges. Run it and paste what it printed.
+starter_code: |
+  // A grade for a score from 0 to 100: A for 90 and up, B for 80 to 89,
+  // C for 70 to 79, "pass" for 50 to 69, and "fail" below 50. 100 and 0
+  // are also called "perfect" and "zero".
+  fn classify(score: u32) -> &'static str {
+      todo!()
+  }
+
+  fn letter(c: char) -> &'static str {
+      match c {
+          'a' | 'e' | 'i' | 'o' | 'u' => "vowel",
+          'a'..='z' => "consonant",
+          _ => "other",
+      }
+  }
+
+  fn main() {
+      for score in [100, 95, 81, 70, 55, 12, 0] {
+          println!("{score}: {}", classify(score));
+      }
+      println!("{} {} {}", letter('e'), letter('k'), letter('7'));
+  }
+expected_output: |
+  100: perfect
+  95: A
+  81: B
+  70: C
+  55: pass
+  12: fail
+  0: zero
+  vowel consonant other
+explanation: |
+  Arms are tried in order, so 100 and 0 come first, before the ranges that
+  would also match them. The last arm could be 1..=49, but then the match
+  would not be exhaustive for scores over 100, so _ is simpler. In letter,
+  the vowels arm comes before 'a'..='z', which includes them.

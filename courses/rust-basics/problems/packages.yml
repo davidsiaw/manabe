@@ -1,0 +1,33 @@
+id: packages
+title: Packages
+type: multiple_choice
+body: |
+  A package is one or more crates, with a Cargo.toml that says how to build
+  them. cargo new makes a package:
+
+    $ cargo new my-project
+    $ ls my-project/src
+    main.rs
+
+  Cargo.toml does not mention src/main.rs. Cargo follows a convention
+  instead: src/main.rs is the crate root of a binary crate with the
+  package's name, and src/lib.rs, if there is one, is the crate root of a
+  library crate with the same name. The crate root is the file the compiler
+  starts from.
+
+  A package can hold any number of binary crates, each as a file in
+  src/bin, but at most one library crate.
+question: A package called restaurant has src/main.rs and src/lib.rs. What does it contain?
+choices:
+  - id: a
+    text: Two crates, a binary and a library, both called restaurant
+    correct: true
+  - id: b
+    text: One crate, made of both files
+  - id: c
+    text: Two packages
+  - id: d
+    text: "Nothing that builds: a package has either main.rs or lib.rs"
+explanation: |
+  Each file is the root of its own crate. This is common: the library holds
+  the code, and the binary is a small program that uses it.

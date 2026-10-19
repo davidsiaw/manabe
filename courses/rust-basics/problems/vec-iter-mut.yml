@@ -1,0 +1,35 @@
+id: vec-iter-mut
+title: Changing Every Element
+type: code
+language: rust
+run: local
+body: |
+  A for loop goes through a vector's elements. Over &v, each is an
+  immutable reference; over &mut v, a mutable one, through which the
+  element can be changed. To change the value a reference points to, use
+  the dereference operator, *:
+
+    for i in &mut v {
+        *i += 50;
+    }
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0368]: binary assignment operation `+=` cannot be applied to type `&{integer}`
+question: Add 50 to every element. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let v = vec![100, 32, 57];
+
+      for i in &v {
+          i += 50;
+      }
+
+      println!("{v:?}");
+  }
+expected_output: |
+  [150, 82, 107]
+explanation: |
+  let mut v, for i in &mut v, and *i += 50. The loop holds a reference
+  to the vector the whole time, so the borrow checker would refuse a push
+  or a remove inside it.

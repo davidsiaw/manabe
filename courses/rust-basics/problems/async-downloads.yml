@@ -1,0 +1,53 @@
+id: async-downloads
+title: "Putting It Together: Downloads"
+type: code
+language: rust
+run: local
+body: |
+  A pretend download manager: each download takes a different time,
+  simulated with sleep. Start them all at once with trpl::join_all, which
+  takes a vector of futures and returns a vector of their results, in the
+  same order. All the downloads together should take about as long as the
+  slowest one, not as long as all of them added up.
+
+  join_all needs the futures to be of one type, and every call to the same
+  async fn returns the same type, so a Vec of download(...) calls works.
+
+  Copy the program into src/main.rs in your hello project and run it; it downloads one at a time, and takes over a second.
+question: Download everything concurrently with join_all, keeping the results in order. Run it and paste what it printed.
+starter_code: |
+  use std::time::{Duration, Instant};
+
+  async fn download(name: &str, ms: u64) -> String {
+      trpl::sleep(Duration::from_millis(ms)).await;
+      format!("{name} ({ms} ms)")
+  }
+
+  fn main() {
+      trpl::run(async {
+          let files = [("photo.jpg", 300), ("notes.txt", 100), ("song.mp3", 500), ("book.pdf", 200)];
+          let start = Instant::now();
+
+          let mut results = Vec::new();
+          for (name, ms) in files {
+              results.push(download(name, ms).await);
+          }
+
+          for result in &results {
+              println!("downloaded {result}");
+          }
+          let took = start.elapsed().as_millis();
+          println!("under 700 ms: {}", took < 700);
+      });
+  }
+expected_output: |
+  downloaded photo.jpg (300 ms)
+  downloaded notes.txt (100 ms)
+  downloaded song.mp3 (500 ms)
+  downloaded book.pdf (200 ms)
+  under 700 ms: true
+explanation: |
+  Collect the futures, without awaiting them, then await join_all once.
+  The starter took 1100 ms, the sum; join_all takes about 500, the
+  slowest. The results come back in the order of the futures, not the order
+  they finished in.

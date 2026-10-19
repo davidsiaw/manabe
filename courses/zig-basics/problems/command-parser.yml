@@ -1,0 +1,68 @@
+id: command-parser
+title: "Putting It Together: Commands"
+type: code
+language: zig
+body: |
+  A small calculator reads commands such as "add 5", and keeps a total.
+  Each line becomes a Command, a tagged union, or an error:
+
+  - error.UnknownCommand for a word that is not add, mul or print
+  - error.MissingNumber when add or mul has no number
+  - parseInt's errors, passed on, when the number is not one
+
+  run then carries the commands out, and reports the bad lines without
+  stopping.
+question: Write parse. run and main are done.
+starter_code: |
+  const std = @import("std");
+
+  const Command = union(enum) {
+      add: i64,
+      mul: i64,
+      print,
+  };
+
+  const ParseError = error{ UnknownCommand, MissingNumber } || std.fmt.ParseIntError;
+
+  fn parse(line: []const u8) ParseError!Command {
+      _ = line;
+      return error.UnknownCommand;
+  }
+
+  fn run(lines: []const []const u8) void {
+      var total: i64 = 0;
+      for (lines) |line| {
+          const command = parse(line) catch |err| {
+              std.debug.print("{s}: {s}\n", .{ line, @errorName(err) });
+              continue;
+          };
+          switch (command) {
+              .add => |n| total += n,
+              .mul => |n| total *= n,
+              .print => std.debug.print("total {d}\n", .{total}),
+          }
+      }
+  }
+
+  pub fn main() void {
+      run(&.{ "add 5", "mul 4", "print", "sub 3", "add", "add x", "add -6", "print" });
+  }
+expected_output: |
+  total 20
+  sub 3: UnknownCommand
+  add: MissingNumber
+  add x: InvalidCharacter
+  total 14
+explanation: |
+  Take the first word, return .print for print, then the number, with
+  orelse for a missing one and try for parseInt's errors, then the
+  command. Two things are new here:
+
+  - || merges two error sets: ParseError is our two errors plus
+    parseInt's.
+  - print has no type: a union field with no value, whose tag is all
+    there is.
+
+  tokenizeScalar, unlike splitScalar, skips repeated spaces. Note that
+  "sub 3" is UnknownCommand only after its number is parsed, which is
+  why "sub x" would report InvalidCharacter instead.

@@ -1,0 +1,37 @@
+id: map-collect
+title: map and collect
+type: code
+language: rust
+run: local
+body: |
+  Iterator adapters make a new iterator out of an old one, without
+  consuming it. map calls a closure on each item, and gives what it
+  returns:
+
+    let plus_one = v1.iter().map(|x| x + 1);
+
+  The result is lazy too; collect consumes it, and gathers the items into a
+  collection, often a Vec:
+
+    let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+
+  Vec<_> says to collect into a vector, and leaves the item type for Rust
+  to work out.
+
+  Copy the program into src/main.rs in your hello project and run it; it prints nothing.
+question: Make the program build the new vector, with each word's length. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let words = vec!["apple", "fig", "banana"];
+
+      let lengths: Vec<usize> = Vec::new();
+      words.iter().map(|w| w.len());
+
+      println!("{lengths:?}");
+  }
+expected_output: |
+  [5, 3, 6]
+explanation: |
+  words.iter().map(|w| w.len()).collect(). The starter's map was never
+  consumed: the compiler warned "unused `Map` that must be used", and the
+  vector stayed empty.

@@ -1,0 +1,33 @@
+id: absolute-relative
+title: Absolute and Relative Paths
+type: multiple_choice
+body: |
+  A path names an item in the module tree, with its parts separated by
+  double colons. It comes in two forms:
+
+  - An absolute path starts from the crate root, with the literal word
+    crate (or, for an item in another crate, that crate's name):
+    crate::front_of_house::hosting::add_to_waitlist().
+  - A relative path starts from the current module, with the name of
+    something in it, or with self or super:
+    front_of_house::hosting::add_to_waitlist().
+
+  Which to use depends on what is likely to move. Absolute paths keep
+  working when the code that uses them moves; relative ones keep working
+  when the code moves together with what it uses. Rust programmers
+  generally prefer absolute paths.
+question: eat_at_restaurant is in the crate root, next to mod front_of_house. Which call is a relative path?
+choices:
+  - id: a
+    text: front_of_house::hosting::add_to_waitlist();
+    correct: true
+  - id: b
+    text: crate::front_of_house::hosting::add_to_waitlist();
+  - id: c
+    text: Both
+  - id: d
+    text: Neither
+explanation: |
+  It starts with front_of_house, a name in the current module, so it is
+  relative. The other starts with crate, so it is absolute. Both reach the
+  same function.

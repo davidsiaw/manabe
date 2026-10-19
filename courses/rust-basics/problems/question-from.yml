@@ -1,0 +1,35 @@
+id: question-from
+title: "? Converts Errors"
+type: multiple_choice
+body: |
+  One difference between ? and a match with return Err(e): ? passes the
+  error through the From trait, which can convert it into the error type
+  the function returns. A function returning Result<T, MyError> can use ?
+  on calls with other error types, as long as MyError says how to make
+  itself from them (traits are chapter 10).
+
+  The widest error type is Box<dyn Error>: "any kind of error". Every
+  standard error converts into it, so a function that returns
+  Result<T, Box<dyn Error>> can use ? on anything that fails.
+
+    use std::error::Error;
+
+    fn load() -> Result<u32, Box<dyn Error>> {
+        let text = std::fs::read_to_string("count.txt")?;   // io::Error
+        let count: u32 = text.trim().parse()?;              // ParseIntError
+        Ok(count)
+    }
+question: Why can load use ? on both calls, although they fail with different error types?
+choices:
+  - id: a
+    text: "? converts each error into a Box<dyn Error>, the function's error type"
+    correct: true
+  - id: b
+    text: "? ignores the type of the error"
+  - id: c
+    text: io::Error and ParseIntError are the same type
+  - id: d
+    text: "It cannot: it does not compile"
+explanation: |
+  With ParseIntError as load's error type instead, the first ? would fail
+  to compile, as an io::Error cannot become a ParseIntError.

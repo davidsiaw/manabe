@@ -1,0 +1,34 @@
+id: generic-enums
+title: Generic Enums
+type: multiple_choice
+body: |
+  Two enums you have used are generic:
+
+    enum Option<T> {
+        Some(T),
+        None,
+    }
+
+    enum Result<T, E> {
+        Ok(T),
+        Err(E),
+    }
+
+  Option<T> is generic over the type of its value, so it works for any
+  type: Option<i32>, Option<String> and so on. Result is generic over two:
+  the value's type and the error's.
+question: What is the type of the value that "5".parse::<u8>() returns?
+choices:
+  - id: a
+    text: Result<u8, ParseIntError>
+    correct: true
+  - id: b
+    text: Result<ParseIntError, u8>
+  - id: c
+    text: Option<u8>
+  - id: d
+    text: u8
+explanation: |
+  T is u8, the value in Ok, and E is ParseIntError, the error in Err. When
+  two types or functions differ only in the types they hold, generics let
+  one definition serve them all.

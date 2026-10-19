@@ -1,0 +1,34 @@
+id: pub-enums
+title: Public Enums
+type: multiple_choice
+body: |
+  Enums are the other way round from structs: when an enum is pub, all of
+  its variants are public too.
+
+    mod back_of_house {
+        pub enum Appetizer {
+            Soup,
+            Salad,
+        }
+    }
+
+    let order1 = back_of_house::Appetizer::Soup;
+
+  An enum whose variants could not be used would not be much use, and
+  writing pub on every variant would be tedious, so that is the default.
+  Struct fields are often fine private, so for them private is the default.
+question: Which is true?
+choices:
+  - id: a
+    text: A pub enum's variants are all public; a pub struct's fields are public only when marked pub
+    correct: true
+  - id: b
+    text: Variants and fields are both private until marked pub
+  - id: c
+    text: Variants and fields are both public when the type is pub
+  - id: d
+    text: A pub enum's variants are private until each is marked pub
+explanation: |
+  The defaults follow how the two are used: you match on an enum's
+  variants, so they must be visible; a struct can keep its fields to
+  itself.

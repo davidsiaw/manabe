@@ -1,0 +1,25 @@
+id: show-output
+title: Showing Output
+type: multiple_choice
+body: |
+  The runner captures what tests print. For a test that passes, the
+  output is not shown at all; for a test that fails, it is shown with the
+  failure, where it can help explain what went wrong.
+
+  To see the output of passing tests too:
+
+    cargo test -- --show-output
+question: A passing test calls println!("I got the value 4"). What does plain cargo test show of it?
+choices:
+  - id: a
+    text: "Nothing: the output of passing tests is captured"
+    correct: true
+  - id: b
+    text: The line, among the test results
+  - id: c
+    text: The line, at the end
+  - id: d
+    text: "An error: tests cannot print"
+explanation: |
+  With --show-output, it appears under "successes", in a section of its
+  own after the results.

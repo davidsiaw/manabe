@@ -1,0 +1,28 @@
+id: inner-doc-comments
+title: Documenting the Crate
+type: multiple_choice
+body: |
+  //! documents the item that contains the comment, rather than the one
+  after it. At the top of src/lib.rs, that is the crate itself:
+
+    //! # My Crate
+    //!
+    //! `my_crate` is a collection of utilities to make performing certain
+    //! calculations more convenient.
+
+  cargo doc shows it on the crate's front page, above the list of what the
+  crate contains. Inside a mod, //! documents the module.
+question: What does //! at the top of src/lib.rs document?
+choices:
+  - id: a
+    text: The crate as a whole
+    correct: true
+  - id: b
+    text: The first function in the file
+  - id: c
+    text: "Nothing: it is an ordinary comment"
+  - id: d
+    text: The Cargo.toml file
+explanation: |
+  /// is for the item that follows, //! for the item around. A crate's front
+  page usually says what it is for and how to start using it.

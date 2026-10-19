@@ -1,0 +1,41 @@
+id: catch-default
+title: "catch with a Default"
+type: code
+language: zig
+body: |
+  catch handles an error where it happens. In its simplest form, it gives
+  a value to use instead:
+
+      const number = std.fmt.parseInt(u64, text, 10) catch 13;
+
+  If the call succeeds, number is its result; if it fails, number is 13,
+  and the error is gone. That is the right choice when there is a
+  sensible default; it hides the error otherwise.
+
+  The program below reads settings, some of which are not numbers, and
+  stops at the first bad one. Run it.
+question: Use catch to fall back to a width of 80 and a height of 24 when a setting is not a number.
+starter_code: |
+  const std = @import("std");
+
+  fn width(text: []const u8) !u32 {
+      return try std.fmt.parseInt(u32, text, 10);
+  }
+
+  fn height(text: []const u8) !u32 {
+      return try std.fmt.parseInt(u32, text, 10);
+  }
+
+  pub fn main() !void {
+      std.debug.print("{d}x{d}\n", .{ try width("120"), try height("40") });
+      std.debug.print("{d}x{d}\n", .{ try width("wide"), try height("40") });
+      std.debug.print("{d}x{d}\n", .{ try width("100"), try height("") });
+  }
+expected_output: |
+  120x40
+  80x40
+  100x24
+explanation: |
+  catch 80 and catch 24 in place of try. The functions can then no longer
+  fail, so their return types lose the !, and main's calls lose their try:
+  try on something that cannot fail does not compile.

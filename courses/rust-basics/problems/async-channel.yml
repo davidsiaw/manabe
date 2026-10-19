@@ -1,0 +1,54 @@
+id: async-channel
+title: Async Channels
+type: code
+language: rust
+run: local
+body: |
+  trpl::channel works like std::sync::mpsc::channel, but its recv is async:
+  it waits without blocking the thread. while let goes through the messages
+  until recv returns None, which happens once the sender is dropped:
+
+    while let Some(value) = rx.recv().await {
+        println!("received '{value}'");
+    }
+
+  The sending future must take ownership of tx, with async move, so that tx
+  is dropped when that future ends. Otherwise tx lives as long as the outer
+  block, the loop never ends, and the program waits forever.
+
+  Copy the program into src/main.rs in your hello project and run it: it prints the messages, and then hangs. Stop it with Ctrl-C.
+question: Make the sender an async move block, so that the program ends. Run it and paste what it printed.
+starter_code: |
+  use std::time::Duration;
+
+  fn main() {
+      trpl::run(async {
+          let (tx, mut rx) = trpl::channel();
+
+          let tx_fut = async {
+              for word in ["hi", "from", "the", "future"] {
+                  tx.send(String::from(word)).unwrap();
+                  trpl::sleep(Duration::from_millis(50)).await;
+              }
+          };
+
+          let rx_fut = async {
+              while let Some(value) = rx.recv().await {
+                  println!("received '{value}'");
+              }
+              println!("channel closed");
+          };
+
+          trpl::join(tx_fut, rx_fut).await;
+      });
+  }
+expected_output: |
+  received 'hi'
+  received 'from'
+  received 'the'
+  received 'future'
+  channel closed
+explanation: |
+  async move { ... } for the sender. Ownership works for async blocks as it
+  does for closures. Senders can be cloned for several producers, as with
+  threads.

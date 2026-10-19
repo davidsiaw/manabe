@@ -1,0 +1,31 @@
+id: arraylist-insert
+title: "Inserting"
+type: code
+language: zig
+body: |
+  insert(allocator, i, value) puts a value at index i, moving the
+  elements from i onwards up one place; insertSlice does the same with a
+  whole slice.
+
+      try list.insert(allocator, 0, '>');      // at the front
+question: Insert into the list, so that it prints the sentence below. Do not change the appends.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      var text: std.ArrayList(u8) = .empty;
+      defer text.deinit(allocator);
+      try text.appendSlice(allocator, "My is Pedro");
+
+      std.debug.print("{s}\n", .{text.items});
+  }
+expected_output: |
+  Hi! My name is Pedro
+explanation: |
+  insertSlice at 2 for " name", then at 0 for "Hi! ". Doing them the other
+  way round needs the second index moved up by four, as everything after
+  the first insert shifts.

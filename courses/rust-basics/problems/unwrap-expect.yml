@@ -1,0 +1,33 @@
+id: unwrap-expect
+title: unwrap and expect
+type: multiple_choice
+body: |
+  When failure would be a bug, matching is a lot of code for nothing.
+  Result has shortcuts that panic on Err:
+
+    let n: u8 = "42".parse().unwrap();
+    let n: u8 = "42".parse().expect("the setting should be a number");
+
+  unwrap returns the value inside Ok, and on Err panics with the error:
+
+    called `Result::unwrap()` on an `Err` value: ParseIntError { kind: InvalidDigit }
+
+  expect does the same, but panics with your message, followed by the
+  error:
+
+    the setting should be a number: ParseIntError { kind: InvalidDigit }
+question: Why do most Rust programmers prefer expect to unwrap?
+choices:
+  - id: a
+    text: Its message says what the code expected, which helps whoever reads the panic
+    correct: true
+  - id: b
+    text: expect does not panic
+  - id: c
+    text: unwrap is slower
+  - id: d
+    text: unwrap only works on Option
+explanation: |
+  Write the message as what should have been true: "the setting should be
+  a number". Whoever sees the panic then knows what assumption broke.
+  Both work on Option too, panicking on None.

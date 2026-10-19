@@ -1,0 +1,30 @@
+id: atomics
+title: "Atomic Operations"
+type: multiple_choice
+body: |
+  For a single number, there is a lighter tool than a mutex: an atomic
+  operation, which the processor carries out in one indivisible step, so
+  no other thread can come in between the read and the write.
+
+      var counter = std.atomic.Value(u64).init(0);
+      _ = counter.fetchAdd(1, .monotonic);
+      const now = counter.load(.monotonic);
+
+  The second argument, the memory ordering, says what the operation
+  guarantees about other memory around it; .monotonic only guarantees the
+  operation itself, which is enough for a counter.
+question: Why does fetchAdd fix the lost updates of counter += 1?
+choices:
+  - id: a
+    text: "It reads, adds and writes as one step that no other thread can interrupt"
+    correct: true
+  - id: b
+    text: "It makes the other threads wait for a lock"
+  - id: c
+    text: "It gives each thread its own copy of the counter"
+  - id: d
+    text: "It runs the addition while compiling"
+explanation: |
+  Atomics are fast, but only cover one value at a time. Changing several
+  values together, so that other threads never see them half changed,
+  needs a mutex.

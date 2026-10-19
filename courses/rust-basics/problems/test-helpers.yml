@@ -1,0 +1,25 @@
+id: test-helpers
+title: Shared Code in Integration Tests
+type: multiple_choice
+body: |
+  Each file in tests is a separate test crate, so a file of helpers for
+  several of them, tests/common.rs, would be run as a test crate too, and
+  show up in the results with running 0 tests.
+
+  The way out is the older module file style: tests/common/mod.rs. Files
+  in subfolders of tests are not compiled as test crates, and each test
+  file uses it with mod common;.
+question: Where should a setup function shared by several integration test files go?
+choices:
+  - id: a
+    text: tests/common/mod.rs, with mod common; in each test file
+    correct: true
+  - id: b
+    text: tests/common.rs
+  - id: c
+    text: src/main.rs
+  - id: d
+    text: Cargo.toml
+explanation: |
+  tests/common.rs would work too, but clutter the results with an empty
+  test crate; the subfolder is the convention.

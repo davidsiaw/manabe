@@ -1,0 +1,29 @@
+id: threads-intro
+title: "Threads"
+type: multiple_choice
+body: |
+  A thread is a sequence of instructions that runs on its own. A program
+  starts with one, the main thread, and can start more, which then run at
+  the same time, on different processor cores when there are several.
+  That is how a program does more work at once: a web server handles each
+  connection in a thread, a game renders while it reads the controller.
+
+  Threads of a program share its memory, unlike processes, separate
+  programs, which each have their own. Sharing makes it cheap for threads
+  to work on the same data, and makes it easy for them to get in each
+  other's way, which most of this chapter is about.
+question: What do the threads of one program share?
+choices:
+  - id: a
+    text: "The program's memory: its global variables and its heap"
+    correct: true
+  - id: b
+    text: "Nothing: each thread has its own copy of everything"
+  - id: c
+    text: "Only the stack"
+  - id: d
+    text: "Only what is sent through files"
+explanation: |
+  Each thread does have its own stack, for its own function calls and
+  local variables. A pointer to a local variable, passed to another
+  thread, lets that thread reach into it too.

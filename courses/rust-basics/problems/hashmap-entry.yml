@@ -1,0 +1,44 @@
+id: hashmap-entry
+title: Insert Only If Missing
+type: code
+language: rust
+run: local
+body: |
+  Inserting a key that is already there replaces its value. Often you only
+  want to insert when the key is missing. entry gives you the key's spot in
+  the map, whether it is filled or not, and or_insert fills it only if it
+  is empty:
+
+    scores.entry(String::from("Blue")).or_insert(50);
+
+  or_insert returns a mutable reference to the value, the one that was
+  there or the one just inserted.
+
+  The program below records each runner's first time, but insert keeps
+  the last one. Copy the program into src/main.rs in your hello project and run it.
+question: Use entry and or_insert, so that only each runner's first time is kept. Run it and paste what it printed.
+starter_code: |
+  use std::collections::HashMap;
+
+  fn main() {
+      let laps = [("Ana", 61), ("Ben", 58), ("Ana", 59), ("Cy", 64), ("Ben", 57)];
+
+      let mut first_lap = HashMap::new();
+      for (runner, time) in laps {
+          first_lap.insert(runner, time);
+      }
+
+      let mut runners: Vec<_> = first_lap.keys().collect();
+      runners.sort();
+      for runner in runners {
+          println!("{runner}: {}", first_lap[runner]);
+      }
+  }
+expected_output: |
+  Ana: 61
+  Ben: 58
+  Cy: 64
+explanation: |
+  first_lap.entry(runner).or_insert(time);. The end of main takes the keys
+  into a vector and sorts them, as a hash map's own order is random;
+  first_lap[runner] reads a value by key, and panics if it is missing.

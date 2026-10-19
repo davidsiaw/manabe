@@ -1,0 +1,43 @@
+id: main-result
+title: main Can Return a Result
+type: code
+language: rust
+run: local
+body: |
+  main can return a Result<(), E> too, which lets it use ?:
+
+    use std::error::Error;
+
+    fn main() -> Result<(), Box<dyn Error>> {
+        let text = std::fs::read_to_string("notes.txt")?;
+        // ...
+        Ok(())
+    }
+
+  When main returns Ok(()), the program exits with 0, which means success.
+  When it returns an Err, Rust prints it, as "Error: " and the error, and
+  exits with 1, which says to the shell that it failed.
+
+  The program below writes a file in your hello project, notes.txt, and
+  reads it back. Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+question: Make main return a Result, so that the program compiles. Run it and paste what it printed.
+starter_code: |
+  use std::error::Error;
+  use std::fs;
+
+  fn main() {
+      fs::write("notes.txt", "milk\neggs\nbread\n")?;
+
+      let text = fs::read_to_string("notes.txt")?;
+      let count = text.lines().count();
+      println!("{count} things to buy, starting with {}", text.lines().next().unwrap_or("nothing"));
+  }
+expected_output: |
+  3 things to buy, starting with milk
+explanation: |
+  -> Result<(), Box<dyn Error>>, and Ok(()) at the end. If the file could
+  not be written, say because the folder is read-only, the program would
+  print "Error: " and the error, and exit with 1. You can delete notes.txt
+  now.

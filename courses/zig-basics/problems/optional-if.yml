@@ -1,0 +1,39 @@
+id: optional-if
+title: "Unwrapping with if"
+type: code
+language: zig
+body: |
+  An optional cannot be used as if it were its value: the code has to deal
+  with null first. An if with a capture does both at once:
+
+      if (maybe_number) |number| {
+          // number is the value, not an optional
+      } else {
+          // it was null
+      }
+
+  Run the program: the compiler refuses to add to an optional.
+question: Use an if to print the price, or "not on the menu".
+starter_code: |
+  const std = @import("std");
+
+  fn price(item: []const u8) ?u32 {
+      if (std.mem.eql(u8, item, "tea")) return 3;
+      if (std.mem.eql(u8, item, "cake")) return 5;
+      return null;
+  }
+
+  pub fn main() void {
+      for ([_][]const u8{ "tea", "soup", "cake" }) |item| {
+          const p = price(item);
+          std.debug.print("{s}: {d} with tax\n", .{ item, p + 1 });
+      }
+  }
+expected_output: |
+  tea: 4 with tax
+  soup: not on the menu
+  cake: 6 with tax
+explanation: |
+  if (price(item)) |p| { ... } else { ... }. Inside the first block, p is
+  a u32. Writing if (p != null) and then p + 1 does not work: the type of
+  p is still ?u32 there.

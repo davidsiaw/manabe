@@ -1,0 +1,36 @@
+id: futures-lazy
+title: Futures Are Lazy
+type: multiple_choice
+body: |
+  A future does nothing until it is awaited, or polled by a runtime. Calling
+  an async fn and dropping the future means its code never runs:
+
+    async fn hello() {
+        println!("hi");
+    }
+
+    trpl::run(async {
+        hello();
+    });
+
+  The compiler warns: "unused implementer of `Future` that must be used",
+  with the note "futures do nothing unless you `.await` or poll them".
+
+  main cannot be async itself: "`main` function is not allowed to be
+  `async`". Something synchronous has to start the runtime, which is what
+  trpl::run is for, or the #[tokio::main] attribute in programs that use
+  the Tokio runtime directly.
+question: What does the program above print?
+choices:
+  - id: a
+    text: "Nothing: the future is never awaited"
+    correct: true
+  - id: b
+    text: hi
+  - id: c
+    text: hi, twice
+  - id: d
+    text: It does not compile
+explanation: |
+  Iterators are lazy in the same way. Laziness lets a future be built, passed
+  around and combined with others before it starts.

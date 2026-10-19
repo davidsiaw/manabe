@@ -142,6 +142,35 @@ RSpec.describe CourseCatalog do
         answers = [pasted, "1\n2", "Running\n1\n2"]
         expect(answers.map { |a| problem.output_correct?(a) }).to eq [true, true, false]
       end
+
+      it 'leaves out the line cargo adds when the program exits with an error' do
+        pasted = ['     Running `target/debug/hello`', '1', '2',
+                  "error: process didn't exit successfully: `target/debug/hello` (exit status: 1)"].join("\n")
+        expect(catalog.find('demo').problem('p2').output_correct?(pasted)).to be true
+      end
+    end
+
+    context 'when it asks for what cargo test printed' do
+      let(:summary) { 'test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out' }
+      let(:code) do
+        empty = summary.sub('1 passed', '0 passed')
+        expected = "running 1 test\ntest tests::it_works ... ok\n\n#{summary}\n\nrunning 0 tests\n\n#{empty}\n"
+        super().merge('language' => 'rust', 'run' => 'local', 'expected_output' => expected)
+      end
+
+      it 'leaves out cargo\'s status lines and how long the tests took' do
+        pasted = ['   Compiling adder v0.1.0 (/tmp/adder)', 'warning: unused variable: `x`', ' --> src/lib.rs:2:9', '',
+                  '    Finished `test` profile in 0.31s',
+                  '     Running unittests src/lib.rs (target/debug/deps/adder-1f9b6d5c)', '', 'running 1 test',
+                  'test tests::it_works ... ok', '', "#{summary}; finished in 0.00s", '',
+                  '   Doc-tests adder', '', 'running 0 tests', '',
+                  "#{summary.sub('1 passed', '0 passed')}; finished in 0.00s",
+                  'all doctests ran in 0.13s; merged doctests compilation took 0.12s', ''].join("\n")
+        problem = catalog.find('demo').problem('p2')
+        failed = pasted.sub('it_works ... ok', 'it_works ... FAILED')
+        answers = [pasted, failed, problem.expected_output]
+        expect(answers.map { |a| problem.output_correct?(a) }).to eq [true, false, true]
+      end
     end
 
     context 'with a run that is neither browser nor local' do

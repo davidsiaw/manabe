@@ -1,0 +1,46 @@
+id: filter-closure
+title: filter, with a Captured Value
+type: code
+language: rust
+run: local
+body: |
+  filter keeps the items for which its closure returns true. The closure
+  gets a reference to each item, and can capture variables around it, such
+  as the size to look for:
+
+    shoes.into_iter().filter(|s| s.size == shoe_size).collect()
+
+  into_iter takes ownership of the vector, so the shoes themselves are
+  collected, not references to them.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write shoes_in_size, with into_iter, filter and collect. Run it and paste what it printed.
+starter_code: |
+  #[derive(PartialEq, Debug)]
+  struct Shoe {
+      size: u32,
+      style: String,
+  }
+
+  fn shoes_in_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+      todo!()
+  }
+
+  fn main() {
+      let shoes = vec![
+          Shoe { size: 10, style: String::from("sneaker") },
+          Shoe { size: 13, style: String::from("sandal") },
+          Shoe { size: 10, style: String::from("boot") },
+      ];
+
+      for shoe in shoes_in_size(shoes, 10) {
+          println!("{} in size {}", shoe.style, shoe.size);
+      }
+  }
+expected_output: |
+  sneaker in size 10
+  boot in size 10
+explanation: |
+  The closure captures shoe_size from the function's parameters. With
+  iter() instead of into_iter(), it would collect &Shoe references, and the
+  return type would have to say so.

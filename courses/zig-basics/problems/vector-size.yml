@@ -1,0 +1,28 @@
+id: vector-size
+title: "Vectors That Are Too Big"
+type: multiple_choice
+body: |
+  A vector can have any length, but the hardware's SIMD registers hold
+  only so much: 128, 256 or 512 bits, depending on the processor, so
+  eight to sixteen u32 values at a time. A longer vector is split up by
+  the compiler, and a very long one is just a large value on the stack:
+
+      const v: @Vector(1000000, u32) = @splat(16);
+
+  takes 4 MB of stack, and the program crashes with a stack overflow.
+  std.simd.suggestVectorLength(T) gives a good length for the target the
+  program is compiled for.
+question: What length of vector suits most processors, for u32 values?
+choices:
+  - id: a
+    text: "A small one, such as 4, 8 or 16"
+    correct: true
+  - id: b
+    text: "As long as the data, so that it is done in one go"
+  - id: c
+    text: "1,000,000"
+  - id: d
+    text: "The length does not matter for speed"
+explanation: |
+  Vectors are for the inner loop over small pieces of data, as in the
+  last problem; arrays and slices hold the data itself.

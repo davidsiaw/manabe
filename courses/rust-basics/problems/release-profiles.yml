@@ -1,0 +1,35 @@
+id: release-profiles
+title: Release Profiles
+type: multiple_choice
+body: |
+  Cargo builds with profiles: sets of settings for the compiler. There are
+  two main ones:
+
+  - dev, used by cargo build and cargo run: fast to compile, slow to run,
+    with debug information
+  - release, used by cargo build --release: slow to compile, fast to run
+
+  Each has defaults, which Cargo.toml can override:
+
+    [profile.dev]
+    opt-level = 0
+
+    [profile.release]
+    opt-level = 3
+
+  opt-level goes from 0, no optimisation, to 3, the most.
+question: Where does cargo build --release put the program?
+choices:
+  - id: a
+    text: target/release
+    correct: true
+  - id: b
+    text: target/debug
+  - id: c
+    text: next to Cargo.toml
+  - id: d
+    text: ~/.cargo/bin
+explanation: |
+  Debug builds go in target/debug, release builds in target/release. Use
+  release builds to measure speed, and for the program you ship; during
+  development, the dev profile's quick builds matter more.

@@ -1,0 +1,56 @@
+id: first-cargo-test
+title: Your First Test
+type: code
+language: rust
+run: local
+body: |
+  Tests check that code does what it should. In Rust, a test is a function
+  marked with the #[test] attribute; cargo test builds a test runner that
+  calls every such function, and reports which passed and which failed.
+
+  Make a new library project, as tests are most often written for
+  libraries:
+
+    cargo new adder --lib
+
+  Its src/lib.rs already has a function, add, and a test for it. Run its
+  tests in the adder folder:
+
+    cargo test -- --test-threads=1
+
+  Arguments after -- go to the test runner rather than to Cargo:
+  --test-threads=1 runs the tests one at a time, so that they are listed in
+  the same order every time. The output lists each test, then a summary.
+  The second summary is for documentation tests, examples in comments,
+  which this project has none of.
+question: Rename the test it_works to exploration, and add a second test, also_works, that checks that add(10, 5) is 15. Run the tests and paste everything cargo test printed.
+starter_code: |
+  pub fn add(left: u64, right: u64) -> u64 {
+      left + right
+  }
+
+  #[cfg(test)]
+  mod tests {
+      use super::*;
+
+      #[test]
+      fn it_works() {
+          let result = add(2, 2);
+          assert_eq!(result, 4);
+      }
+  }
+expected_output: |
+  running 2 tests
+  test tests::also_works ... ok
+  test tests::exploration ... ok
+
+  test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+  running 0 tests
+
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+explanation: |
+  Each test is a function with #[test] above it. The runner lists them in
+  alphabetical order, with the module they are in, tests::. Cargo's own
+  lines and the time it took are left out when your answer is checked, so
+  you can paste everything.

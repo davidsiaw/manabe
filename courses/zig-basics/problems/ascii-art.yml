@@ -1,0 +1,68 @@
+id: ascii-art
+title: "Putting It Together: Images as Text"
+type: code
+language: zig
+body: |
+  A program in the browser cannot show a picture, but it can draw one with
+  characters: darker characters for darker pixels.
+
+      const ramp = ".:-=+*#%@";      // from light to dark
+
+  Turn each pixel to grey, then pick a character from the ramp by its
+  grey: 255 is the first, 0 the last. That is
+
+      ramp[(255 - grey) * (ramp.len - 1) / 255]
+
+  The image below is made by code: a dark spot in the middle, fading to
+  white at the edges.
+question: Write the loop that prints the image, a row per line, one character per pixel, using the filter's grey value.
+starter_code: |
+  const std = @import("std");
+
+  const width = 16;
+  const height = 8;
+  const ramp = ".:-=+*#%@";
+
+  fn grey(r: u8, g: u8, b: u8) u8 {
+      const rf: f32 = @floatFromInt(r);
+      const gf: f32 = @floatFromInt(g);
+      const bf: f32 = @floatFromInt(b);
+      return @intFromFloat(0.2126 * rf + 0.7152 * gf + 0.0722 * bf);
+  }
+
+  // Draws a dark spot, fading to white, into an RGBA buffer.
+  fn draw(pixels: []u8) void {
+      for (0..height) |y| {
+          for (0..width) |x| {
+              const dx = @as(f32, @floatFromInt(x)) - 7.5;
+              const dy = (@as(f32, @floatFromInt(y)) - 3.5) * 2;
+              const distance = @sqrt(dx * dx + dy * dy);
+              const light: u8 = if (distance > 8) 255 else @intFromFloat(distance * 30);
+              const i = (y * width + x) * 4;
+              pixels[i] = light;
+              pixels[i + 1] = light;
+              pixels[i + 2] = 255;
+              pixels[i + 3] = 255;
+          }
+      }
+  }
+
+  pub fn main() void {
+      var pixels: [width * height * 4]u8 = undefined;
+      draw(&pixels);
+      _ = grey;
+  }
+expected_output: |
+  ......::::......
+  ...:---==---:...
+  .:--=++++++=--:.
+  .:-=+**##**+=-:.
+  .:-=+**##**+=-:.
+  .:--=++++++=--:.
+  ...:---==---:...
+  ......::::......
+explanation: |
+  For each row, a character per pixel, from the pixel's grey, collected in
+  a line and printed. g is a usize, so that (255 - g) * 8 does not
+  overflow a u8. The white edges map to the lightest character, and the
+  middle to the darkest that its grey reaches.

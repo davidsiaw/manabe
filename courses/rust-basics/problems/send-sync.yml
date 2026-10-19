@@ -1,0 +1,31 @@
+id: send-sync
+title: Send and Sync
+type: multiple_choice
+body: |
+  Two marker traits, with no methods, are behind those errors:
+
+  - Send: a value of the type can be moved to another thread. Almost every
+    type is Send; Rc<T> is not, as two threads changing its count at once
+    would corrupt it.
+  - Sync: a reference to the type, &T, can be sent to another thread, so
+    the type can be used from several threads at once. Mutex<T> is Sync;
+    RefCell<T> is not, as its borrow counting is not thread-safe.
+
+  Types made of Send and Sync parts are Send and Sync themselves,
+  automatically. thread::spawn requires its closure to be Send, which is
+  how the compiler finds the mistakes.
+question: Why does Arc<RefCell<i32>> not work between threads, when Arc<Mutex<i32>> does?
+choices:
+  - id: a
+    text: "RefCell is not Sync: its borrow checks are not safe from several threads"
+    correct: true
+  - id: b
+    text: Arc only works with Mutex
+  - id: c
+    text: RefCell cannot hold numbers
+  - id: d
+    text: It works; RefCell is the faster choice
+explanation: |
+  Mutex is the thread-safe counterpart of RefCell, and Arc of Rc. The
+  pattern is the same, Arc<Mutex<T>> in place of Rc<RefCell<T>>, and the
+  compiler insists on the thread-safe versions.

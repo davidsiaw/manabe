@@ -1,0 +1,49 @@
+id: test-leak
+title: "Putting It Together: Tests and Leaks"
+type: code
+language: zig
+run: local
+body: |
+  A function that joins words with a separator, returning memory the
+  caller frees, and three tests for it. Save it as join.zig and run zig
+  test join.zig. One test fails. Another passes its check, but leaks: the
+  allocator reports the leak, and after the summary zig test adds "1 tests
+  leaked memory", and counts the run as failed.
+
+  std.mem.join(allocator, separator, words) does the joining.
+question: Fix the function and the tests, so that all three pass. Run zig test join.zig and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  pub fn joinWords(allocator: std.mem.Allocator, words: []const []const u8) ![]u8 {
+      return std.mem.join(allocator, " ", words);
+  }
+
+  test "joins words with spaces" {
+      const text = try joinWords(std.testing.allocator, &.{ "hello", "there" });
+      defer std.testing.allocator.free(text);
+      try std.testing.expectEqualStrings("hello there", text);
+  }
+
+  test "a single word" {
+      const text = try joinWords(std.testing.allocator, &.{"hello"});
+      try std.testing.expectEqualStrings("hello", text);
+  }
+
+  test "no words" {
+      const text = try joinWords(std.testing.allocator, &.{});
+      defer std.testing.allocator.free(text);
+      try std.testing.expectEqualStrings("(none)", text);
+  }
+expected_output: |
+  1/3 join.test.joins words with spaces...OK
+  2/3 join.test.a single word...OK
+  3/3 join.test.no words...OK
+  All 3 tests passed.
+explanation: |
+  - "a single word" forgot its defer, so its text leaked: the test
+    passed its check, and the run still failed.
+  - "no words" expects "(none)" for no words, and std.mem.join gives an
+    empty string. allocator.dupe copies "(none)" into new memory, so that
+    the caller can free it like any other result: returning the literal
+    itself would make the free in the test crash.

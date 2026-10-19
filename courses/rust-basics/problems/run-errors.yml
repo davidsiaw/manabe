@@ -1,0 +1,31 @@
+id: run-errors
+title: Errors from run
+type: multiple_choice
+body: |
+  run returns Result<(), Box<dyn Error>>: nothing when it worked, or any
+  kind of error, such as the io::Error from reading the file, which ?
+  passes on. main handles it with if let:
+
+    if let Err(e) = run(config) {
+        eprintln!("Application error: {e}");
+        process::exit(1);
+    }
+
+  Config::build used unwrap_or_else, as main needs the Config it returns.
+  run returns nothing worth keeping, (), so there is nothing to unwrap:
+  only the error matters.
+question: cargo run -- the missing.txt, a file that does not exist. What happens?
+choices:
+  - id: a
+    text: "It prints Application error: and the error, and exits with 1"
+    correct: true
+  - id: b
+    text: It panics
+  - id: c
+    text: It prints nothing, and exits with 0
+  - id: d
+    text: It creates missing.txt
+explanation: |
+  The error message comes from the operating system, so it varies:
+  "No such file or directory (os error 2)" on Linux and macOS. Either way,
+  the user gets a clear message, not a panic.

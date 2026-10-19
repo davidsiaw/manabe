@@ -1,0 +1,44 @@
+id: build-scripts
+title: "Build Scripts"
+type: multiple_choice
+body: |
+  So far, each program has been one file, compiled with one command. Real
+  projects have many files, tests, libraries and settings, and Zig builds
+  them with a build script: a file called build.zig, written in Zig, with
+  a build function:
+
+      const std = @import("std");
+
+      pub fn build(b: *std.Build) void {
+          const exe = b.addExecutable(.{
+              .name = "hello",
+              .root_module = b.createModule(.{
+                  .root_source_file = b.path("hello.zig"),
+                  .target = b.graph.host,
+              }),
+          });
+          b.installArtifact(exe);
+      }
+
+  zig build compiles build.zig and runs its build function, which
+  describes what to build: here, a program called hello, from hello.zig,
+  for the computer it is built on, b.graph.host. installArtifact puts the
+  result in zig-out/bin.
+
+  zig init makes a new project with a build.zig, a src/main.zig and a
+  build.zig.zon, which lists the project's dependencies.
+question: After zig build with the script above, where is the program?
+choices:
+  - id: a
+    text: "zig-out/bin/hello"
+    correct: true
+  - id: b
+    text: "hello, next to hello.zig"
+  - id: c
+    text: "Nowhere: zig build only checks the code"
+  - id: d
+    text: "In build.zig.zon"
+explanation: |
+  zig-out is the install prefix: binaries go in its bin folder, and
+  libraries in lib. The build function only describes the steps; zig
+  build then carries them out, and skips what is already up to date.

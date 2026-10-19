@@ -1,0 +1,35 @@
+id: web-server-intro
+title: Building a Web Server
+type: multiple_choice
+body: |
+  The book ends with a project: a web server, single-threaded at first,
+  then with a pool of threads. It brings together much of the book: TCP
+  connections from the standard library, ownership across threads,
+  channels, Arc and Mutex, trait objects, and Drop.
+
+  The two protocols involved, as in the Zig course's server: TCP carries
+  the bytes from one computer to another, and HTTP, on top of it, defines
+  requests and responses as text:
+
+    GET / HTTP/1.1                 the request line: method, URI, version
+    Host: 127.0.0.1:7878           headers
+                                   an empty line
+
+    HTTP/1.1 200 OK                the status line
+    Content-Length: 15             headers
+                                   an empty line
+    <h1>Hello!</h1>                the body
+question: In HTTP/1.1 200 OK, what is 200?
+choices:
+  - id: a
+    text: "The status code: the request worked"
+    correct: true
+  - id: b
+    text: The length of the body
+  - id: c
+    text: The port
+  - id: d
+    text: The version of HTTP
+explanation: |
+  404 means not found, and 500 that the server failed. Real servers use
+  libraries for HTTP; writing one by hand shows what they do.

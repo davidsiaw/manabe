@@ -1,0 +1,32 @@
+id: vec-index-get
+title: Indexing or get
+type: multiple_choice
+body: |
+  There are two ways to read an element:
+
+    let v = vec![1, 2, 3, 4, 5];
+
+    let third: &i32 = &v[2];          // indexing, from 0
+    let third: Option<&i32> = v.get(2);
+
+  They differ when the index is past the end. Indexing panics, which
+  stops the program. get returns an Option: Some with a reference to the
+  element, or None.
+
+  So indexing suits an index that should always be valid, where a bad one
+  is a bug. get suits an index that may well be out of range, such as a
+  number a user typed, where the program should carry on and say so.
+question: v has 5 elements. What does v.get(100) do?
+choices:
+  - id: a
+    text: Returns None
+    correct: true
+  - id: b
+    text: "Panics: index out of bounds"
+  - id: c
+    text: Returns Some(0)
+  - id: d
+    text: It does not compile, as the compiler knows v's length
+explanation: |
+  get never panics. &v[100] would panic, with "index out of bounds: the len
+  is 5 but the index is 100".

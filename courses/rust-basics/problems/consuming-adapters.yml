@@ -1,0 +1,34 @@
+id: consuming-adapters
+title: Methods That Consume the Iterator
+type: code
+language: rust
+run: local
+body: |
+  Methods that call next until the end use the iterator up: they are
+  consuming adapters. sum adds up the items, count counts them, max finds
+  the largest, and so on.
+
+    let total: i32 = v1_iter.sum();
+
+  They take ownership of the iterator, so it cannot be used afterwards.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: use of moved value: `numbers`
+question: Make the program count the items with a second iterator, so that it compiles. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let v1 = vec![1, 2, 3, 4];
+
+      let numbers = v1.iter();
+      let total: i32 = numbers.sum();
+      let count = numbers.count();
+
+      println!("{count} numbers adding up to {total}");
+  }
+expected_output: |
+  4 numbers adding up to 10
+explanation: |
+  A fresh v1.iter() for each, which is cheap: an iterator over a vector is
+  just a position in it. sum needs the type annotation, as it can produce
+  several types. v1.len() is the usual way to count a vector's elements.

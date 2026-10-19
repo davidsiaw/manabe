@@ -1,0 +1,52 @@
+id: http-response
+title: "Writing a Response"
+type: code
+language: zig
+body: |
+  A response has the same shape as a request: a status line, headers, an
+  empty line and the body.
+
+      HTTP/1.1 200 OK
+      Content-Length: 22
+      Content-Type: text/html
+
+      <h1>Hello, World!</h1>
+
+  Content-Length is the body's length in bytes, so that the client knows
+  when it has all of it. Rather than counting by hand, which goes wrong
+  as soon as the body changes, work it out from body.len.
+  std.fmt.bufPrint formats into a buffer, as print does to the terminal,
+  and returns the slice of the buffer it filled:
+
+      const text = try std.fmt.bufPrint(&buffer, "{d} bytes", .{body.len});
+
+  Run the program: its Content-Length is wrong for both bodies.
+question: Make response work out the Content-Length from the body.
+starter_code: |
+  const std = @import("std");
+
+  fn response(buffer: []u8, status: []const u8, body: []const u8) ![]u8 {
+      return std.fmt.bufPrint(buffer, "HTTP/1.1 {s}\r\nContent-Length: 48\r\nContent-Type: text/html\r\n\r\n{s}", .{ status, body });
+  }
+
+  pub fn main() !void {
+      var buffer: [512]u8 = undefined;
+      std.debug.print("{s}\n\n", .{try response(&buffer, "200 OK", "<h1>Hello, World!</h1>")});
+      std.debug.print("{s}\n", .{try response(&buffer, "404 Not Found", "<h1>File not found!</h1>")});
+  }
+expected_output: |
+  HTTP/1.1 200 OK
+  Content-Length: 22
+  Content-Type: text/html
+
+  <h1>Hello, World!</h1>
+
+  HTTP/1.1 404 Not Found
+  Content-Length: 24
+  Content-Type: text/html
+
+  <h1>File not found!</h1>
+explanation: |
+  {d} in place of 48, and body.len in the list. bufPrint fails with
+  error.NoSpaceLeft if the buffer is too small, hence the !. The same
+  buffer is used twice: the first response has been printed by then.

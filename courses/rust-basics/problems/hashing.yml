@@ -1,0 +1,25 @@
+id: hashing
+title: Hashing Functions
+type: multiple_choice
+body: |
+  By default, HashMap uses a hashing function called SipHash. It is not
+  the fastest there is, but it resists denial-of-service attacks: an
+  attacker cannot easily pick keys that all land in the same place in the
+  map, which would make every lookup slow.
+
+  For a program where that does not matter and speed does, a different
+  hasher can be plugged in, and crates.io has several.
+question: Why does HashMap use a hasher that is not the fastest?
+choices:
+  - id: a
+    text: To protect against attackers choosing keys that make the map slow
+    correct: true
+  - id: b
+    text: Faster hashers would lose data
+  - id: c
+    text: To keep the keys in sorted order
+  - id: d
+    text: A faster hasher would need unsafe code
+explanation: |
+  A map with keys that come from users, such as a web server's request
+  headers, is exactly the case SipHash is chosen for.

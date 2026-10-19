@@ -1,0 +1,45 @@
+id: returning-closures
+title: Returning Closures
+type: code
+language: rust
+run: local
+body: |
+  Each closure has a type of its own, which cannot be written down. A
+  function can return one with impl Fn:
+
+    fn returns_closure() -> impl Fn(i32) -> i32 {
+        |x| x + 1
+    }
+
+  But impl Fn means one hidden type, so two different closures cannot be
+  returned from the same function, nor put in one Vec. A trait object,
+  Box<dyn Fn(i32) -> i32>, can hold any of them.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0746]: return type cannot be a trait object without pointer indirection
+question: Return boxed trait objects, so that both closures fit in one vector. Run it and paste what it printed.
+starter_code: |
+  fn returns_closure() -> dyn Fn(i32) -> i32 {
+      |x| x + 1
+  }
+
+  fn returns_initialized_closure(init: i32) -> dyn Fn(i32) -> i32 {
+      move |x| x + init
+  }
+
+  fn main() {
+      let handlers = vec![returns_closure(), returns_initialized_closure(123)];
+      for handler in handlers {
+          let output = handler(5);
+          println!("{output}");
+      }
+  }
+expected_output: |
+  6
+  128
+explanation: |
+  Box<dyn Fn(i32) -> i32> as both return types, and Box::new around both
+  closures. With impl Fn, each function would compile, but the Vec would
+  not: two different hidden types. move lets the second closure keep init
+  after the function returns.

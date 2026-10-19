@@ -1,0 +1,36 @@
+id: associated-types
+title: Associated Types
+type: multiple_choice
+body: |
+  An associated type is a type placeholder in a trait, filled in by each
+  implementation:
+
+    pub trait Iterator {
+        type Item;
+        fn next(&mut self) -> Option<Self::Item>;
+    }
+
+    impl Iterator for Counter {
+        type Item = u32;
+        ...
+    }
+
+  A generic trait, Iterator<T>, would allow one type to implement it
+  several times, for several Ts, and every use would have to say which.
+  With an associated type, there is one implementation per type, and its
+  Item is fixed.
+question: Why is Iterator's item type an associated type, rather than a type parameter?
+choices:
+  - id: a
+    text: A type iterates over one kind of item, so one implementation per type is right
+    correct: true
+  - id: b
+    text: Associated types are faster
+  - id: c
+    text: Type parameters are not allowed on traits
+  - id: d
+    text: So that the item type can change during iteration
+explanation: |
+  With Iterator<T>, counter.next() could be ambiguous, needing
+  annotations everywhere. Add, in the next problem, uses a type parameter
+  instead, as adding different types to the same type makes sense.

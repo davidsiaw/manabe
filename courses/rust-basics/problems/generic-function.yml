@@ -1,0 +1,56 @@
+id: generic-function
+title: Generic Functions
+type: code
+language: rust
+run: local
+body: |
+  A largest for i32 and another for char would be the same code with a
+  different type. A generic function takes the type as a parameter, in
+  angle brackets after its name:
+
+    fn largest<T>(list: &[T]) -> &T
+
+  "largest is generic over some type T: it takes a slice of T, and returns
+  a reference to a T". T is the usual name, short for type.
+
+  But it does not compile: the function compares values with >, and not
+  every type can be compared. The compiler only allows what it knows works
+  for every possible T. A trait bound limits T to types that can do what
+  the code needs; here, std::cmp::PartialOrd, the trait for types that can
+  be ordered:
+
+    fn largest<T: PartialOrd>(list: &[T]) -> &T
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0369]: binary operation `>` cannot be applied to type `&T`
+question: Add the trait bound. Run it and paste what it printed.
+starter_code: |
+  fn largest<T>(list: &[T]) -> &T {
+      let mut largest = &list[0];
+      for item in list {
+          if item > largest {
+              largest = item;
+          }
+      }
+      largest
+  }
+
+  fn main() {
+      let number_list = vec![34, 50, 25, 100, 65];
+      println!("The largest number is {}", largest(&number_list));
+
+      let char_list = vec!['y', 'm', 'a', 'q'];
+      println!("The largest char is {}", largest(&char_list));
+
+      let word_list = vec!["pear", "apple", "zucchini", "kiwi"];
+      println!("The largest word is {}", largest(&word_list));
+  }
+expected_output: |
+  The largest number is 100
+  The largest char is y
+  The largest word is zucchini
+explanation: |
+  <T: PartialOrd>. The compiler suggested it: "consider restricting type
+  parameter `T` with trait `PartialOrd`". Strings compare in dictionary
+  order, so zucchini is the largest. Traits come later in this chapter.

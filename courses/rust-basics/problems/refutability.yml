@@ -1,0 +1,35 @@
+id: refutability
+title: Refutable and Irrefutable
+type: code
+language: rust
+run: local
+body: |
+  A pattern that matches any value is irrefutable: x, or (a, b) for a
+  pair. One that can fail to match is refutable: Some(x) does not match
+  None.
+
+  let, for and function parameters only accept irrefutable patterns, as
+  there is nothing they could do with a value that does not match. if let,
+  while let and let...else accept refutable ones: that is what they are
+  for. (An if let with an irrefutable pattern compiles, with a warning:
+  irrefutable `if let` pattern.)
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0005]: refutable pattern in local binding
+question: Use let...else, so that the function returns 0 when there is no value. Run it and paste what it printed.
+starter_code: |
+  fn double(value: Option<i32>) -> i32 {
+      let Some(x) = value;
+      x * 2
+  }
+
+  fn main() {
+      println!("{} {}", double(Some(21)), double(None));
+  }
+expected_output: |
+  42 0
+explanation: |
+  let Some(x) = value else { return 0; };. The compiler's note said exactly
+  that: "`let` bindings require an \"irrefutable pattern\"", and suggested
+  let...else. if let Some(x) = value { x * 2 } else { 0 } works too.

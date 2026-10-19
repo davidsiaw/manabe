@@ -1,0 +1,49 @@
+id: private-tests
+title: Testing Private Functions
+type: code
+language: rust
+run: local
+body: |
+  Tests go in two places. Unit tests, as so far, sit in a tests module next
+  to the code, and test each piece on its own. Integration tests sit in a
+  separate tests folder, and use the library the way other code would.
+
+  Rust's privacy rules let unit tests test private functions: the tests
+  module is a child of the module the function is in, and a child can see
+  its parent's private items. Whether private functions should be tested
+  is a matter of taste; Rust lets you.
+
+  Replace src/lib.rs in your adder project with the code below, and run cargo test -- --test-threads=1:
+
+    error[E0425]: cannot find function `internal_adder` in this scope
+question: Make the test find internal_adder. Run the tests and paste everything cargo test printed.
+starter_code: |
+  pub fn add_two(a: u64) -> u64 {
+      internal_adder(a, 2)
+  }
+
+  fn internal_adder(left: u64, right: u64) -> u64 {
+      left + right
+  }
+
+  #[cfg(test)]
+  mod tests {
+      #[test]
+      fn internal() {
+          let result = internal_adder(2, 2);
+          assert_eq!(result, 4);
+      }
+  }
+expected_output: |
+  running 1 test
+  test tests::internal ... ok
+
+  test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+  running 0 tests
+
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+explanation: |
+  use super::*; in the tests module, as cargo new's test had. A test
+  module is a module like any other: without the use, internal_adder is
+  only reachable as super::internal_adder.

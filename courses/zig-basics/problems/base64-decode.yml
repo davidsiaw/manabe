@@ -1,0 +1,82 @@
+id: base64-decode
+title: "The Decoder"
+type: code
+language: zig
+body: |
+  The decoder turns each window of 4 indexes, i0 to i3, back into 3 bytes,
+  by putting the groups of 6 bits back together:
+
+  - the first byte is i0 moved up 2, plus the top 2 bits of i1:
+    (i0 << 2) + (i1 >> 4)
+  - the second is i1 moved up 4, plus the top 4 bits of i2:
+    (i1 << 4) + (i2 >> 2)
+  - the third is i2 moved up 6, plus i3: (i2 << 6) + i3
+
+  Shifting a u8 left drops the bits pushed out of the top, and here that
+  is what is wanted: i1 << 4 keeps only i1's last 4 bits.
+
+  Where an index is 64, the character was =, and that byte is not part of
+  the data, so it is not written. The output is filled with ? first; run
+  the program to see which bytes are still missing.
+question: Write the second and third bytes of each window, leaving out those that are padding.
+starter_code: |
+  const std = @import("std");
+
+  const table: *const [64]u8 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ++ "abcdefghijklmnopqrstuvwxyz" ++ "0123456789+/";
+
+  fn charIndex(char: u8) u8 {
+      for (table, 0..) |c, i| {
+          if (c == char) return @intCast(i);
+      }
+      return 64;
+  }
+
+  fn decodeLength(input: []const u8) usize {
+      var len = input.len / 4 * 3;
+      var i = input.len;
+      while (i > 0 and input[i - 1] == '=') : (i -= 1) len -= 1;
+      return len;
+  }
+
+  fn decode(allocator: std.mem.Allocator, input: []const u8) ![]u8 {
+      const out = try allocator.alloc(u8, decodeLength(input));
+      @memset(out, '?');
+
+      var buf = [4]u8{ 0, 0, 0, 0 };
+      var count: usize = 0;
+      var iout: usize = 0;
+      for (input) |char| {
+          buf[count] = charIndex(char);
+          count += 1;
+          if (count == 4) {
+              out[iout] = (buf[0] << 2) + (buf[1] >> 4);
+              iout += 3;
+              count = 0;
+          }
+      }
+      return out;
+  }
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      for ([_][]const u8{ "TWFu", "SGk=", "MA==", "VGVzdGluZyBzb21lIG1vcmUgc3R1ZmY=" }) |encoded| {
+          const text = try decode(allocator, encoded);
+          defer allocator.free(text);
+          std.debug.print("{s} -> {s}\n", .{ encoded, text });
+      }
+  }
+expected_output: |
+  TWFu -> Man
+  SGk= -> Hi
+  MA== -> 0
+  VGVzdGluZyBzb21lIG1vcmUgc3R1ZmY= -> Testing some more stuff
+explanation: |
+  if (buf[2] != 64) out[iout + 1] = (buf[1] << 4) + (buf[2] >> 2);
+  if (buf[3] != 64) out[iout + 2] = (buf[2] << 6) + buf[3];
+
+  Without the ifs, the program panics with "index out of bounds" on SGk=:
+  the output is only 2 bytes long, so there is no out[2] to write the
+  padding to. Safety checks catch it before it writes past the end.

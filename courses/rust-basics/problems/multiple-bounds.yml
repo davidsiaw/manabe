@@ -1,0 +1,48 @@
+id: multiple-bounds
+title: Several Bounds, and where
+type: code
+language: rust
+run: local
+body: |
+  A type can be required to implement several traits, with +:
+
+    fn print_largest<T: PartialOrd + std::fmt::Display>(list: &[T])
+
+  With several type parameters and bounds, the signature gets hard to
+  read. A where clause moves the bounds after it:
+
+    fn some_function<T, U>(t: &T, u: &U) -> i32
+    where
+        T: Display + Clone,
+        U: Clone + Debug,
+    {
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0277]: `T` doesn't implement `std::fmt::Display`
+question: Add Display to T's bounds, using a where clause. Run it and paste what it printed.
+starter_code: |
+  use std::fmt::Display;
+
+  fn print_largest<T: PartialOrd>(label: &str, list: &[T]) {
+      let mut largest = &list[0];
+      for item in list {
+          if item > largest {
+              largest = item;
+          }
+      }
+      println!("{label}: {largest}");
+  }
+
+  fn main() {
+      print_largest("number", &[3, 9, 4]);
+      print_largest("word", &["kiwi", "pear", "fig"]);
+      print_largest("decimal", &[1.5, 0.25, 2.75]);
+  }
+expected_output: |
+  number: 9
+  word: pear
+  decimal: 2.75
+explanation: |
+  where T: PartialOrd + Display, between the signature and the body. {}
+  prints with Display, which is why it is needed; {:?} would need Debug.

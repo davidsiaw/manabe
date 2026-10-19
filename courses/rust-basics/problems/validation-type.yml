@@ -1,0 +1,60 @@
+id: validation-type
+title: Types That Check Their Values
+type: code
+language: rust
+run: local
+body: |
+  The guessing game took any number, though only 1 to 100 made sense.
+  Checking the range in every function that takes a guess would be
+  repetitive, and easy to forget. Instead, make a type that can only hold
+  valid values:
+
+    pub struct Guess {
+        value: i32,          // private: only Guess's own code can set it
+    }
+
+  If the only way to make a Guess is a function that checks the range, every
+  Guess in the program is valid, and functions that take one need not
+  check. The book's Guess::new panics on a bad value, for a caller that
+  should have checked; here, new returns a Result instead, for values that
+  come from users.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write Guess::new, which returns an error for values outside 1 to 100, and value. Run it and paste what it printed.
+starter_code: |
+  mod game {
+      pub struct Guess {
+          value: i32,
+      }
+
+      impl Guess {
+          pub fn new(value: i32) -> Result<Guess, String> {
+              todo!()
+          }
+
+          pub fn value(&self) -> i32 {
+              todo!()
+          }
+      }
+  }
+
+  use game::Guess;
+
+  fn main() {
+      for n in [50, 0, 101, 1] {
+          match Guess::new(n) {
+              Ok(guess) => println!("guessed {}", guess.value()),
+              Err(e) => println!("{e}"),
+          }
+      }
+  }
+expected_output: |
+  guessed 50
+  Guess value must be between 1 and 100, got 0.
+  Guess value must be between 1 and 100, got 101.
+  guessed 1
+explanation: |
+  The check, and Ok(Guess { value }). value is a getter: the field is
+  private, so code outside mod game can read it only through the method,
+  and can never write Guess { value: 500 }. That is what makes the check
+  impossible to skip.

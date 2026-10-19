@@ -1,0 +1,34 @@
+id: lifetime-scope
+title: Lifetimes at the Call Site
+type: code
+language: rust
+run: local
+body: |
+  With the annotations, the borrow checker checks each call to longest.
+  The result counts as borrowing from both arguments, so it can only be
+  used while both are still alive.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0597]: `string2` does not live long enough
+question: Move the println! so that result is only used while string2 is alive. Run it and paste what it printed.
+starter_code: |
+  fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+      if x.len() > y.len() { x } else { y }
+  }
+
+  fn main() {
+      let string1 = String::from("long string is long");
+      let result;
+      {
+          let string2 = String::from("xyz");
+          result = longest(string1.as_str(), string2.as_str());
+      }
+      println!("The longest string is {result}");
+  }
+expected_output: |
+  The longest string is long string is long
+explanation: |
+  The println! inside the inner block. You can see that result is string1,
+  which lives long enough, but the compiler goes by the signature, which
+  says the result may be either.

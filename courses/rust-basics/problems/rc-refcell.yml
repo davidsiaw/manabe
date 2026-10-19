@@ -1,0 +1,49 @@
+id: rc-refcell
+title: Rc and RefCell Together
+type: code
+language: rust
+run: local
+body: |
+  Rc<RefCell<T>> combines the two: several owners, each of which can
+  change the value. A shared value in a list, say:
+
+    let value = Rc::new(RefCell::new(5));
+    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+
+  *value.borrow_mut() += 10 then changes it for everyone who shares it.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Add 10 to the shared value, through value, and print the three lists. Run it and paste what it printed.
+starter_code: |
+  use std::cell::RefCell;
+  use std::rc::Rc;
+
+  #[derive(Debug)]
+  enum List {
+      Cons(Rc<RefCell<i32>>, Rc<List>),
+      Nil,
+  }
+
+  use List::{Cons, Nil};
+
+  fn main() {
+      let value = Rc::new(RefCell::new(5));
+
+      let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+      let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+      let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+
+      todo!();
+
+      println!("a after = {a:?}");
+      println!("b after = {b:?}");
+      println!("c after = {c:?}");
+  }
+expected_output: |
+  a after = Cons(RefCell { value: 15 }, Nil)
+  b after = Cons(RefCell { value: 3 }, Cons(RefCell { value: 15 }, Nil))
+  c after = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
+explanation: |
+  *value.borrow_mut() += 10. value, a, b and c all reach the same RefCell,
+  so all three lists show 15. The borrow_mut ends with that statement, so
+  printing, which borrows, does not panic.

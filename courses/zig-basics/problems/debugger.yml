@@ -1,0 +1,38 @@
+id: debugger
+title: "Using a Debugger"
+type: multiple_choice
+body: |
+  A debugger, such as LLDB or GDB, runs a program a step at a time, and
+  shows its variables at any point, without changing the code. Compile in
+  Debug, then start it:
+
+      zig build-exe add_program.zig
+      lldb add_program
+
+  The commands used most:
+
+  - b main: set a breakpoint, a place to stop, at the function main
+  - run: start the program, until it reaches a breakpoint
+  - n (next): run the current line, and stop at the next
+  - s (step): like n, but step into a function the line calls
+  - p n: print the variable n
+  - frame variable: print every variable of the current function
+
+  It shows the line it stopped at with an arrow:
+
+      -> 12       n = add_and_increment(n, n);
+question: The debugger is stopped at the line above. Which command goes inside add_and_increment, to follow it line by line?
+choices:
+  - id: a
+    text: "s"
+    correct: true
+  - id: b
+    text: "n"
+  - id: c
+    text: "p add_and_increment"
+  - id: d
+    text: "run"
+explanation: |
+  s steps into the call. n would run the whole call and stop at the line
+  after it. LLDB shows a u8 as a C unsigned char, so p n prints it as a
+  character, such as '\x06' for 6.

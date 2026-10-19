@@ -1,0 +1,51 @@
+id: if-error
+title: "if with an Error Union"
+type: code
+language: zig
+body: |
+  if works on error unions as it does on optionals, with the value
+  captured in the first block, and the error in the else:
+
+      if (parse(text)) |number| {
+          // use number
+      } else |err| {
+          // handle err
+      }
+
+  It suits code that does something different in each case, without
+  leaving the function. main in the last problem used it.
+
+  The program below processes orders, and an order that fails stops
+  everything. Run it.
+question: Use if and else to report each failed order, as below, and carry on with the next.
+starter_code: |
+  const std = @import("std");
+
+  const OrderError = error{ OutOfStock, InvalidQuantity };
+
+  fn place(item: []const u8, quantity: u32) OrderError!u32 {
+      if (quantity == 0) return error.InvalidQuantity;
+      if (std.mem.eql(u8, item, "kiwi")) return error.OutOfStock;
+      return quantity * 3;
+  }
+
+  pub fn main() !void {
+      const orders = [_]struct { []const u8, u32 }{ .{ "apple", 2 }, .{ "kiwi", 5 }, .{ "pear", 0 }, .{ "fig", 4 } };
+      var total: u32 = 0;
+      for (orders) |order| {
+          const cost = try place(order[0], order[1]);
+          std.debug.print("{s}: {d}\n", .{ order[0], cost });
+          total += cost;
+      }
+      std.debug.print("total {d}\n", .{total});
+  }
+expected_output: |
+  apple: 6
+  kiwi failed: OutOfStock
+  pear failed: InvalidQuantity
+  fig: 12
+  total 18
+explanation: |
+  if (place(order[0], order[1])) |cost| { ... } else |err| { ... }. The
+  orders are tuples, structs with unnamed fields, read as order[0] and
+  order[1]. main's ! is no longer needed, but does no harm.

@@ -1,0 +1,27 @@
+id: install-zig
+title: "Installing Zig"
+type: code
+language: shell
+run: local
+body: |
+  The server needs a real network, which the browser cannot give it, so
+  this one runs on your computer. You need Zig 0.17.0, the version used
+  here, as each Zig release still changes the standard library.
+
+  - Download Zig 0.17.0 for your system from ziglang.org/download, and
+    unpack it.
+  - Put the folder it unpacked to on your PATH, so that the zig command
+    works in a terminal. On macOS, Homebrew's brew install zig works
+    too, if it has 0.17.0.
+
+  Check it, in a new terminal:
+
+      zig version
+question: Run zig version and paste what it printed.
+starter_code: |
+  zig version
+expected_output: |
+  0.17.0
+explanation: |
+  If it printed another version, programs written for 0.17 may not
+  compile with it: the standard library's names change between releases.

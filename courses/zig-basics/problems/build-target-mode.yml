@@ -1,0 +1,37 @@
+id: build-target-mode
+title: "Targets and Build Modes"
+type: multiple_choice
+body: |
+  Two settings go into every module: the target, what computer and system
+  the program is for, and the build mode, Debug or one of the Release
+  modes. They can be fixed in the script:
+
+      .target = b.graph.host,          // this computer
+      .optimize = .ReleaseSafe,
+
+  or left to whoever runs zig build, which is what zig init's script does:
+
+      const target = b.standardTargetOptions(.{});
+      const optimize = b.standardOptimizeOption(.{});
+
+  Then zig build -Doptimize=ReleaseFast picks the mode, and
+  -Dtarget=x86_64-windows builds a Windows program, from any computer:
+  Zig cross-compiles out of the box.
+
+  Inside the code, @import("builtin").target.os.tag says which system it
+  is being compiled for, to do things differently on Windows, say.
+question: A script uses standardOptimizeOption. How do you build in ReleaseSmall?
+choices:
+  - id: a
+    text: "zig build -Doptimize=ReleaseSmall"
+    correct: true
+  - id: b
+    text: "zig build --release"
+  - id: c
+    text: "Edit build.zig to say ReleaseSmall"
+  - id: d
+    text: "You cannot: the script decides"
+explanation: |
+  -D sets a build option, and standardOptimizeOption declares one called
+  optimize. Without it, the default is Debug. This course's browser
+  compiler always builds in Debug.

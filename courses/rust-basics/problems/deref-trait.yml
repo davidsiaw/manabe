@@ -1,0 +1,46 @@
+id: deref-trait
+title: The Deref Trait
+type: code
+language: rust
+run: local
+body: |
+  * follows a reference to its value: with let y = &x;, *y is x. To make
+  * work on your own type, implement Deref, whose deref method returns a
+  reference to the inner value; *y then means *(y.deref()).
+
+    use std::ops::Deref;
+
+    impl<T> Deref for MyBox<T> {
+        type Target = T;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+
+  type Target is an associated type: what deref gives a reference to.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0614]: type `MyBox<{integer}>` cannot be dereferenced
+question: Implement Deref for MyBox. Run it and paste what it printed.
+starter_code: |
+  struct MyBox<T>(T);
+
+  impl<T> MyBox<T> {
+      fn new(x: T) -> MyBox<T> {
+          MyBox(x)
+      }
+  }
+
+  fn main() {
+      let x = 5;
+      let y = MyBox::new(x);
+
+      println!("{} {}", x == 5, *y == 5);
+  }
+expected_output: |
+  true true
+explanation: |
+  deref returns a reference, &self.0, not the value: returning the value
+  would move it out of the box. * then follows that reference.

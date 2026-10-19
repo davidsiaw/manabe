@@ -1,0 +1,33 @@
+id: testing-expect-equal
+title: "expectEqual"
+type: code
+language: zig
+body: |
+  std.testing.expectEqual(expected, actual) compares two values, and when
+  they differ, prints both before returning error.TestExpectedEqual:
+
+      expected 15, found 18
+
+  The expected value comes first. Run the program: celsius gives a wrong
+  answer, and the message shows which.
+question: Fix celsius, so that every check passes.
+starter_code: |
+  const std = @import("std");
+
+  fn celsius(fahrenheit: i32) i32 {
+      return @divTrunc(fahrenheit - 32 * 5, 9);
+  }
+
+  pub fn main() !void {
+      try std.testing.expectEqual(0, celsius(32));
+      try std.testing.expectEqual(100, celsius(212));
+      try std.testing.expectEqual(-40, celsius(-40));
+      std.debug.print("all checks passed\n", .{});
+  }
+expected_output: |
+  all checks passed
+explanation: |
+  (fahrenheit - 32) * 5: * comes before -, so 32 * 5 was worked out first.
+  The message said "expected 0, found -14". @divTrunc divides signed
+  integers, rounding towards zero; Zig makes you choose how, rather than
+  guess.

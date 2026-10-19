@@ -1,0 +1,54 @@
+id: error-coercion
+title: "One Error Set into Another"
+type: code
+language: zig
+body: |
+  An error from a smaller set can be used where a larger set is expected,
+  if every error in the smaller set is in the larger one too: the subset
+  coerces to the superset.
+
+      const A = error{ Timeout, NotFound, OutOfMemory };
+      const B = error{ OutOfMemory };
+
+      fn widen(err: B) A {
+          return err;          // fine: OutOfMemory is in A
+      }
+
+  Run the program: Busy is in Fetch's errors but not in AppError.
+question: Add the missing error to AppError, so that every Fetch error fits, and the program runs.
+starter_code: |
+  const std = @import("std");
+
+  const Fetch = error{ Timeout, Busy };
+  const AppError = error{ Timeout, NotFound };
+
+  fn fetch(attempt: u32) Fetch!u32 {
+      return switch (attempt) {
+          0 => error.Busy,
+          1 => error.Timeout,
+          else => 42,
+      };
+  }
+
+  fn load(attempt: u32) AppError!u32 {
+      return fetch(attempt);
+  }
+
+  pub fn main() void {
+      for (0..3) |attempt| {
+          if (load(@intCast(attempt))) |value| {
+              std.debug.print("got {d}\n", .{value});
+          } else |err| {
+              std.debug.print("failed: {s}\n", .{@errorName(err)});
+          }
+      }
+  }
+expected_output: |
+  failed: Busy
+  failed: Timeout
+  got 42
+explanation: |
+  error{ Timeout, NotFound, Busy }. The note said "'error.Busy' not a
+  member of destination error set". The order of the names does not
+  matter. Zig checks this while compiling, so an error can never turn up
+  in a function that says it cannot return it.

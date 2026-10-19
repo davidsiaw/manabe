@@ -1,0 +1,43 @@
+id: base64-std
+title: "Putting It Together: std.base64"
+type: code
+language: zig
+body: |
+  Writing an encoder is the best way to understand Base64, but a real
+  program uses the one in the standard library, std.base64. Its encoders
+  write into a buffer you give them, and calcSize says how big it must be:
+
+      const encoder = std.base64.standard.Encoder;
+      const encoded = encoder.encode(&buffer, text);   // a slice of buffer
+
+  The decoder works the same way. calcSizeForSlice works out the length
+  of the data, and fails if the text is not valid Base64; decode then
+  fills a slice of exactly that length, and can fail the same way:
+
+      const decoder = std.base64.standard.Decoder;
+      const len = try decoder.calcSizeForSlice(encoded);
+      try decoder.decode(destination[0..len], encoded);
+
+  Neither needs an allocator: buffers on the stack are enough here.
+question: Decode encoded back, into decoded_buffer, and print it as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      const text = "Zig, base64 and you";
+
+      var encoded_buffer: [64]u8 = undefined;
+      const encoded = std.base64.standard.Encoder.encode(&encoded_buffer, text);
+      std.debug.print("encoded: {s}\n", .{encoded});
+
+      var decoded_buffer: [64]u8 = undefined;
+      _ = &decoded_buffer;
+  }
+expected_output: |
+  encoded: WmlnLCBiYXNlNjQgYW5kIHlvdQ==
+  decoded: Zig, base64 and you
+explanation: |
+  const len = try decoder.calcSizeForSlice(encoded); then try
+  decoder.decode(decoded_buffer[0..len], encoded); and print
+  decoded_buffer[0..len]. The standard library also has url_safe, the
+  variant used in web addresses, with - and _ instead of + and /.

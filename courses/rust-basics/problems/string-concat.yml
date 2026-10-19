@@ -1,0 +1,43 @@
+id: string-concat
+title: "Joining Strings: + and format!"
+type: code
+language: rust
+run: local
+body: |
+  + joins two strings:
+
+    let s1 = String::from("Hello, ");
+    let s2 = String::from("world!");
+    let s3 = s1 + &s2;     // s1 is moved here, and can no longer be used
+
+  + calls a method, add, which takes ownership of the String on the left,
+  appends the right-hand side to it, and returns it. It takes a &str on the
+  right: that is why &s2, a &String, works, as Rust turns it into a &str.
+  So s1 is used up, and s2 is only borrowed.
+
+  For more than two strings, + gets hard to read. format! works like
+  println!, but returns a String, and takes no ownership at all:
+
+    let s = format!("{s1}-{s2}-{s3}");
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: borrow of moved value: `first`
+question: Build game with format! instead, so that first can still be printed. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let first = String::from("tic");
+      let second = String::from("tac");
+      let third = String::from("toe");
+
+      let game = first + "-" + &second + "-" + &third;
+
+      println!("{game}");
+      println!("it starts with {first}");
+  }
+expected_output: |
+  tic-tac-toe
+  it starts with tic
+explanation: |
+  format!("{first}-{second}-{third}"). It only borrows its arguments, so
+  all three Strings are still usable afterwards.

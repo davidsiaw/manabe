@@ -1,0 +1,45 @@
+id: arraylist-remove
+title: "Removing"
+type: code
+language: zig
+body: |
+  Three ways to take elements out:
+
+  - pop() removes the last element and returns it, as an optional: null
+    when the list is empty.
+  - orderedRemove(i) removes the element at index i, and moves every
+    element after it down one place, keeping their order.
+  - swapRemove(i) removes the element at i, and moves the last element
+    into its place: much faster for a long list, but the order changes.
+
+  Run the program: the queue comes out in the wrong order.
+question: Fix the removal, so that the queue is served in order, first come first served.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      var queue: std.ArrayList([]const u8) = .empty;
+      defer queue.deinit(allocator);
+      try queue.appendSlice(allocator, &.{ "Ana", "Ben", "Cy", "Dee" });
+
+      while (queue.items.len > 0) {
+          const next = queue.swapRemove(0);
+          std.debug.print("serving {s}, {d} waiting\n", .{ next, queue.items.len });
+      }
+      std.debug.print("{?s}\n", .{queue.pop()});
+  }
+expected_output: |
+  serving Ana, 3 waiting
+  serving Ben, 2 waiting
+  serving Cy, 1 waiting
+  serving Dee, 0 waiting
+  null
+explanation: |
+  orderedRemove(0). swapRemove(0) moved Dee to the front after serving
+  Ana. orderedRemove(0) copies the whole list each time, so for a long
+  queue, a structure that is cheap to remove from at both ends, such as
+  std.Deque, is the better choice.

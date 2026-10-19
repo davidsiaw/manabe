@@ -1,0 +1,39 @@
+id: panic-intro
+title: "Unrecoverable Errors: panic!"
+type: multiple_choice
+body: |
+  Rust divides errors into two kinds. Recoverable errors, such as a file
+  that is not there, are expected to happen sometimes, and the program
+  should deal with them: tell the user, try something else. Unrecoverable
+  errors are bugs, such as reading past the end of an array, and the
+  program cannot sensibly carry on.
+
+  Rust has no exceptions. Recoverable errors are values of the type
+  Result, the rest of this chapter. For unrecoverable ones there is the
+  panic! macro, which stops the program, printing where and why:
+
+    fn main() {
+        panic!("crash and burn");
+    }
+
+    thread 'main' panicked at src/main.rs:2:5:
+    crash and burn
+
+  Code panics either by calling panic! itself, or by doing something that
+  panics, such as indexing past the end of a vector.
+question: When does a program panic?
+choices:
+  - id: a
+    text: When it calls panic!, or does something that panics, such as an index out of bounds
+    correct: true
+  - id: b
+    text: Only when it calls panic! itself
+  - id: c
+    text: Whenever a function returns an error
+  - id: d
+    text: When it runs out of memory, and at no other time
+explanation: |
+  Indexing a vector past its end panics from inside the standard library:
+  continuing would read memory that is not part of the vector, which is
+  exactly the kind of bug that C programs suffer from, called a buffer
+  overread.

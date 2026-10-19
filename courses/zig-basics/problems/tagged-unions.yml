@@ -1,0 +1,58 @@
+id: tagged-unions
+title: "Tagged Unions"
+type: code
+language: zig
+body: |
+  A tagged union also records which field is active, as an enum, the tag.
+  union(enum) makes the enum from the field names:
+
+      const Shape = union(enum) {
+          circle: f32,            // the radius
+          square: f32,            // the side
+      };
+
+  A switch on a tagged union picks the branch for the active field, and
+  captures its value:
+
+      return switch (shape) {
+          .circle => |r| 3.14 * r * r,
+          .square => |side| side * side,
+      };
+
+  Like any switch on an enum, it must handle every field. Run the
+  program: rect was added to Shape, but not to area.
+question: Handle rect in area, so that the program prints every area.
+starter_code: |
+  const std = @import("std");
+
+  const Shape = union(enum) {
+      circle: f32,
+      square: f32,
+      rect: struct { w: f32, h: f32 },
+  };
+
+  fn area(shape: Shape) f32 {
+      return switch (shape) {
+          .circle => |r| 3 * r * r,
+          .square => |side| side * side,
+      };
+  }
+
+  pub fn main() void {
+      const shapes = [_]Shape{
+          .{ .circle = 2 },
+          .{ .square = 3 },
+          .{ .rect = .{ .w = 2, .h = 5 } },
+      };
+      for (shapes) |shape| {
+          std.debug.print("{s}: {d}\n", .{ @tagName(shape), area(shape) });
+      }
+  }
+expected_output: |
+  circle: 12
+  square: 9
+  rect: 10
+explanation: |
+  .rect => |rect| rect.w * rect.h. The compiler said "switch must handle
+  all possibilities" and named rect. (With pi as 3, to keep the numbers
+  round.) @tagName gives the active field's name.

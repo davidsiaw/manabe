@@ -1,0 +1,30 @@
+id: fearless-concurrency
+title: Fearless Concurrency
+type: multiple_choice
+body: |
+  Concurrent programming, parts of a program running at the same time, is
+  known for bugs that are hard to find: data races, deadlocks, and code
+  that works until the timing changes.
+
+  Rust's ownership and type system turn many of those bugs into compile
+  errors. Code that would let two threads change the same data without
+  synchronisation does not compile, so these mistakes are found while
+  writing the program, not in production. The Rust community calls this
+  fearless concurrency.
+
+  This chapter covers threads, passing messages between them, sharing
+  state with locks, and the Send and Sync traits that make it all safe.
+question: When are most of the concurrency bugs that Rust prevents found?
+choices:
+  - id: a
+    text: "While compiling: the code does not compile"
+    correct: true
+  - id: b
+    text: While testing, by a race detector
+  - id: c
+    text: While running, by a panic
+  - id: d
+    text: They are not found; Rust only makes them less likely
+explanation: |
+  Not every concurrency bug: deadlocks and logic errors can still happen.
+  But data races, the most common kind, cannot, in safe Rust.

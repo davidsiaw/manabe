@@ -1,0 +1,44 @@
+id: minigrep-args
+title: Reading the Arguments
+type: code
+language: rust
+run: local
+body: |
+  This chapter builds a project: minigrep, a small version of grep, the
+  command-line tool that searches files for text. It puts together much of
+  what came before, and adds command-line arguments, environment
+  variables and printing errors.
+
+    cargo run -- searchstring example-filename.txt
+
+  Make the project with cargo new minigrep. Arguments after -- go to the
+  program instead of to Cargo. std::env::args returns them as an
+  iterator, and collect turns it into a vector:
+
+    let args: Vec<String> = env::args().collect();
+
+  The first value, args[0], is the program's own name, as in C; the
+  arguments come after it.
+
+  Copy the program into src/main.rs, and run cargo run -- test sample.txt.
+  It prints the wrong values.
+question: Fix the indexes, so that it prints the query and the file path. Run cargo run -- test sample.txt again and paste what it printed.
+starter_code: |
+  use std::env;
+
+  fn main() {
+      let args: Vec<String> = env::args().collect();
+
+      let query = &args[0];
+      let file_path = &args[1];
+
+      println!("Searching for {query}");
+      println!("In file {file_path}");
+  }
+expected_output: |
+  Searching for test
+  In file sample.txt
+explanation: |
+  args[1] and args[2]. The starter printed the program's path as the
+  query, which looks different on every computer. collect needs the type
+  annotation, Vec<String>, as it can build many kinds of collection.

@@ -1,0 +1,36 @@
+id: reexport-api
+title: A Convenient Public API
+type: multiple_choice
+body: |
+  A library's modules are organised for the people writing it; that is not
+  always convenient for the people using it. An art library might have:
+
+    pub mod kinds {
+        pub enum PrimaryColor { Red, Yellow, Blue }
+    }
+    pub mod utils {
+        pub fn mix(c1: kinds::PrimaryColor, c2: kinds::PrimaryColor) -> ... { ... }
+    }
+
+  Users would have to write use art::kinds::PrimaryColor; and
+  use art::utils::mix;. With re-exports in src/lib.rs,
+
+    pub use self::kinds::PrimaryColor;
+    pub use self::utils::mix;
+
+  they can write use art::PrimaryColor; and use art::mix; instead, and
+  cargo doc lists the re-exports on the front page.
+question: After the re-exports, does art::kinds::PrimaryColor still work?
+choices:
+  - id: a
+    text: "Yes: re-exporting adds a path, and the original stays"
+    correct: true
+  - id: b
+    text: "No: pub use moves the item"
+  - id: c
+    text: Only inside the art crate
+  - id: d
+    text: Only with a feature flag
+explanation: |
+  The library can then reorganise its modules later without breaking
+  anyone, as long as the re-exports stay.

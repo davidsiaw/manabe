@@ -1,0 +1,47 @@
+id: sort-by-key
+title: Closures That Are Called Many Times
+type: code
+language: rust
+run: local
+body: |
+  sort_by_key sorts by the key its closure returns for each item, and calls
+  the closure many times, so it requires FnMut. This closure also tries to
+  record each call, by pushing a captured String into a vector, which
+  moves the String: that only works once.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0507]: cannot move out of `value`, a captured variable in an `FnMut` closure
+question: Count the calls with a number instead, so that the closure is FnMut, and the program prints as below. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  struct Rectangle {
+      width: u32,
+      height: u32,
+  }
+
+  fn main() {
+      let mut list = [
+          Rectangle { width: 10, height: 1 },
+          Rectangle { width: 3, height: 5 },
+          Rectangle { width: 7, height: 12 },
+      ];
+
+      let mut sort_operations = vec![];
+      let value = String::from("closure called");
+
+      list.sort_by_key(|r| {
+          sort_operations.push(value);
+          r.width
+      });
+      println!("{list:?}");
+      println!("the closure was called: {}", !sort_operations.is_empty());
+  }
+expected_output: |
+  [Rectangle { width: 3, height: 5 }, Rectangle { width: 7, height: 12 }, Rectangle { width: 10, height: 1 }]
+  the closure was called: true
+explanation: |
+  let mut num_sort_operations = 0; and num_sort_operations += 1 in the
+  closure, which only changes a captured variable, through a mutable
+  borrow: FnMut. How many times sort_by_key calls it depends on the
+  sorting algorithm, which is why the program only says that it was called.

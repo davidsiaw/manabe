@@ -1,0 +1,33 @@
+id: separation-of-concerns
+title: Separating Concerns
+type: multiple_choice
+body: |
+  main is starting to do several jobs: parsing arguments, reading the file,
+  and soon searching. As it grows, it gets harder to read, to test, and to
+  change without breaking something. The usual split for a binary program
+  is:
+
+  - main.rs: parsing the arguments, setting up, calling run, and handling
+    the errors run returns
+  - run: the program's logic, returning a Result
+  - lib.rs: the code that can be tested on its own, such as the search
+
+  The arguments go into a struct, Config, so that their meaning is in the
+  field names, query and file_path, rather than in indexes. Config owns
+  its Strings, cloned from args: that costs a copy, but keeps lifetimes
+  out of the way, a fair trade for a few short strings read once.
+question: Why does the book put the search in src/lib.rs, and not in main?
+choices:
+  - id: a
+    text: So that it can be tested on its own, without running the program
+    correct: true
+  - id: b
+    text: Because main cannot call functions
+  - id: c
+    text: Because lib.rs is faster
+  - id: d
+    text: Because binary crates cannot contain functions
+explanation: |
+  Tests call library functions directly; testing main would mean running
+  the program and looking at what it prints. That is what the next
+  problems do with search.

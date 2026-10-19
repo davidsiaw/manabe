@@ -1,0 +1,38 @@
+id: pig-latin
+title: "Putting It Together: Pig Latin"
+type: code
+language: rust
+run: local
+body: |
+  The second exercise: convert words to Pig Latin. A word that starts with
+  a consonant has it moved to the end, with "ay" added: first becomes
+  irst-fay. A word that starts with a vowel just gets "hay" added: apple
+  becomes apple-hay.
+
+  Remember that a String is UTF-8, so take the first character with
+  chars(), not by indexing. A char's len_utf8() says how many bytes it
+  takes, which tells you where the rest of the word starts.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write pig_latin for one word. Run it and paste what it printed.
+starter_code: |
+  fn pig_latin(word: &str) -> String {
+      todo!()
+  }
+
+  fn main() {
+      let sentence = "the quick apple is first";
+
+      let mut words = Vec::new();
+      for word in sentence.split_whitespace() {
+          words.push(pig_latin(word));
+      }
+      println!("{}", words.join(" "));
+  }
+expected_output: |
+  he-tay uick-qay apple-hay is-hay irst-fay
+explanation: |
+  Take the first char; if "aeiou" contains it, add -hay; otherwise slice
+  the rest from first.len_utf8(), which is always a char boundary, and
+  format!("{rest}-{first}ay"). join puts the words back together with
+  spaces.

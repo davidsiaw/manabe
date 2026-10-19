@@ -1,0 +1,48 @@
+id: split-at-mut
+title: A Safe Abstraction over Unsafe Code
+type: code
+language: rust
+run: local
+body: |
+  The standard library's split_at_mut splits a mutable slice into two
+  mutable slices that do not overlap. Written with ordinary borrows, it is
+  refused: the compiler only sees two mutable borrows of the same slice,
+  and does not know they cover different parts.
+
+  With raw pointers it works: as_mut_ptr gives a pointer to the first
+  element, and slice::from_raw_parts_mut(ptr, len) makes a slice from a
+  pointer and a length, which is unsafe, as nothing checks the pointer and
+  length are valid. ptr.add(mid) is a pointer mid elements further on.
+
+  The function itself stays safe to call: the assert makes sure mid is in
+  range, so the two slices are always valid.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0499]: cannot borrow `*values` as mutable more than once at a time
+question: Write split_at_mut with raw pointers and an unsafe block. Run it and paste what it printed.
+starter_code: |
+  fn split_at_mut(values: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
+      let len = values.len();
+
+      assert!(mid <= len);
+
+      (&mut values[..mid], &mut values[mid..])
+  }
+
+  fn main() {
+      let mut v = vec![1, 2, 3, 4, 5, 6];
+      let (a, b) = split_at_mut(&mut v, 3);
+      a[0] = 10;
+      b[0] = 40;
+      println!("{a:?} {b:?}");
+      println!("{v:?}");
+  }
+expected_output: |
+  [10, 2, 3] [40, 5, 6]
+  [10, 2, 3, 40, 5, 6]
+explanation: |
+  Two slices from raw parts, one of mid elements at ptr, and one of the
+  rest at ptr.add(mid). Without the assert, a mid past the end would make
+  slices of memory that is not the vector's: undefined behaviour from a
+  safe function, the one thing a safe abstraction must never allow.

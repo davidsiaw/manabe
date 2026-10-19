@@ -1,0 +1,27 @@
+id: blanket-impl
+title: Blanket Implementations
+type: multiple_choice
+body: |
+  A trait can also be implemented for every type that meets a bound: a
+  blanket implementation. The standard library has this one:
+
+    impl<T: Display> ToString for T {
+        // --snip--
+    }
+
+  So every type that implements Display has to_string, without writing
+  anything more.
+question: Celsius implements Display, as in the last problem. Does Celsius(20.0).to_string() work?
+choices:
+  - id: a
+    text: "Yes: the blanket implementation gives it ToString"
+    correct: true
+  - id: b
+    text: "No: Celsius needs its own impl ToString"
+  - id: c
+    text: "Only with #[derive(ToString)]"
+  - id: d
+    text: "No: to_string only works on literals"
+explanation: |
+  It returns "20°C". Implementing Display is how a type gets both {}
+  formatting and to_string at once.

@@ -1,0 +1,34 @@
+id: testing-expect
+title: "expect"
+type: code
+language: zig
+body: |
+  std.testing.expect(condition) returns an error when the condition is
+  false. Called from main with try, a failing check stops the program
+  with error: TestUnexpectedResult.
+
+  isLeapYear has a bug: run the program. A year is a leap year if it is
+  divisible by 4, except for years divisible by 100, which are only leap
+  years when also divisible by 400.
+question: Fix isLeapYear, so that every check passes.
+starter_code: |
+  const std = @import("std");
+  const expect = std.testing.expect;
+
+  fn isLeapYear(year: u32) bool {
+      return year % 4 == 0;
+  }
+
+  pub fn main() !void {
+      try expect(isLeapYear(2024));
+      try expect(!isLeapYear(2023));
+      try expect(isLeapYear(2000));
+      try expect(!isLeapYear(1900));
+      std.debug.print("all checks passed\n", .{});
+  }
+expected_output: |
+  all checks passed
+explanation: |
+  (year % 4 == 0 and year % 100 != 0) or year % 400 == 0. expect only
+  says that a check failed, not what the values were, so it took a look
+  at the code to find which one; the next function does better.

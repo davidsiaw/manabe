@@ -1,0 +1,45 @@
+id: early-drop
+title: Dropping Early
+type: code
+language: rust
+run: local
+body: |
+  Sometimes a value should be cleaned up before its scope ends: a lock,
+  say, so that other code can take it. Calling the drop method yourself is
+  not allowed, as Rust would then drop the value a second time at the end
+  of the scope:
+
+    error[E0040]: explicit use of destructor method
+
+  std::mem::drop, in the prelude as drop, takes the value, and so ends it
+  there and then.
+
+  Copy the program into src/main.rs in your hello project and run it.
+question: Drop c with drop, so that it is cleaned up before the end of main. Run it and paste what it printed.
+starter_code: |
+  struct CustomSmartPointer {
+      data: String,
+  }
+
+  impl Drop for CustomSmartPointer {
+      fn drop(&mut self) {
+          println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+      }
+  }
+
+  fn main() {
+      let c = CustomSmartPointer {
+          data: String::from("some data"),
+      };
+      println!("CustomSmartPointer created.");
+      c.drop();
+      println!("CustomSmartPointer dropped before the end of main.");
+  }
+expected_output: |
+  CustomSmartPointer created.
+  Dropping CustomSmartPointer with data `some data`!
+  CustomSmartPointer dropped before the end of main.
+explanation: |
+  drop(c). It moves c into the function, which does nothing with it, so it
+  is dropped when the function ends. Using c after that would be "use of
+  moved value", so it cannot be dropped twice.

@@ -16,6 +16,16 @@ class CourseCatalog
     LANGUAGE_FORMAT = /\A[a-z0-9][a-z0-9_-]*\z/
     # The line `cargo run` prints just before the program's own output.
     CARGO_RUNNING = /\A\s*Running `/
+    # Cargo's own status lines, which it indents, such as `cargo test`'s
+    # "Running unittests src/main.rs (target/debug/deps/hello-...)".
+    CARGO_STATUS = /\A\s+(Compiling|Finished|Running|Doc-tests) /
+    CARGO_TEST_RUNNING = /\A\s+Running /
+    # What `cargo run` adds when the program exits with an error code.
+    CARGO_EXIT = /\Aerror: process didn't exit successfully: /
+    # The timing line after merged doc-tests (the 2024 edition's).
+    DOCTEST_TIMING = /\Aall doctests ran in [\d.]+s; merged doctests compilation took [\d.]+s\z/
+    # `cargo test` ends each summary with how long the tests took.
+    TEST_DURATION = /\A(test result: .*); finished in [\d.]+s\z/
 
     Choice = Data.define(:id, :text, :correct)
 
@@ -46,7 +56,10 @@ class CourseCatalog
     # Compares printed output, ignoring trailing whitespace on each line,
     # trailing blank lines and CRLF line endings, which a learner cannot see.
     # Output pasted from a terminal may start with what Cargo printed while
-    # building; everything up to its Running line is left out.
+    # building; everything up to its Running line is left out. For `cargo
+    # test`, which prints a Running line per test binary, everything before
+    # the first one (the build, and any warnings), Cargo's status lines and
+    # the test durations are left out instead.
     def output_correct?(output)
       return false unless code?
 
@@ -70,7 +83,22 @@ class CourseCatalog
     def program_output(pasted)
       lines = pasted.gsub("\r\n", "\n").split("\n")
       running = lines.rindex { |line| line.match?(CARGO_RUNNING) }
-      running ? lines.drop(running + 1).join("\n") : pasted
+      (running ? lines.drop(running + 1).grep_v(CARGO_EXIT) : cargo_test_output(lines)).join("\n")
+    end
+
+    # What the tests printed: from the first test binary's Running line on,
+    # without Cargo's own lines and timings.
+    def cargo_test_output(lines)
+      first_binary = lines.index { |line| line.match?(CARGO_TEST_RUNNING) }
+      lines = without_cargo_status(lines.drop(first_binary || 0).grep_v(DOCTEST_TIMING))
+      lines.drop_while { |line| line.strip.empty? }.map { |line| line.sub(TEST_DURATION, '\1') }
+    end
+
+    # Cargo's status lines, each with the blank line Cargo prints after it.
+    def without_cargo_status(lines)
+      lines.each_with_index.reject do |line, i|
+        line.match?(CARGO_STATUS) || (line.strip.empty? && i.positive? && lines[i - 1].match?(CARGO_STATUS))
+      end.map(&:first)
     end
 
     def normalize_output(text)

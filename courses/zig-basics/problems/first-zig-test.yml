@@ -1,0 +1,40 @@
+id: first-zig-test
+title: "Running zig test"
+type: code
+language: zig
+run: local
+body: |
+  Now real tests, run with zig test on your computer. Save the program
+  below as sum.zig, and run
+
+      zig test sum.zig
+
+  zig test builds the file with its test blocks, runs each one, and
+  reports: a line per test, with the file's name, then a summary. One of
+  these fails: read what it says.
+question: Fix sum, run zig test sum.zig again, and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  pub fn sum(numbers: []const i32) i32 {
+      var total: i32 = 0;
+      for (numbers[1..]) |n| total += n;
+      return total;
+  }
+
+  test "sum of some numbers" {
+      try std.testing.expectEqual(10, sum(&.{ 1, 2, 3, 4 }));
+  }
+
+  test "sum of nothing" {
+      try std.testing.expectEqual(0, sum(&.{}));
+  }
+expected_output: |
+  1/2 sum.test.sum of some numbers...OK
+  2/2 sum.test.sum of nothing...OK
+  All 2 tests passed.
+explanation: |
+  for (numbers), from the start. The first test failed with "expected 10,
+  found 9", and the second panicked with "start index 1 is larger than
+  end index 0": an empty slice has no element 1 to start from. Tests run
+  in Debug, so safety checks catch that too.

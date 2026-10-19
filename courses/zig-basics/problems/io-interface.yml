@@ -1,0 +1,35 @@
+id: io-interface
+title: "Readers, Writers and io"
+type: multiple_choice
+body: |
+  Zig does input and output through two interfaces. A writer is anything
+  bytes can be written to: a file, the terminal, a network connection, a
+  buffer in memory. A reader is anything bytes can be read from. Code
+  written for a writer, such as print, works with all of them.
+
+  The operations themselves go through an Io, which says how the program
+  does input and output: with threads, with an event loop, or in a test.
+  main receives the default one in init.io, and functions that do input
+  and output take it as a parameter, the way functions that allocate take
+  an allocator:
+
+      pub fn main(init: std.process.Init) !void {
+          const io = init.io;
+          const file = try std.Io.Dir.cwd().openFile(io, "notes.txt", .{});
+          defer file.close(io);
+      }
+question: Why does openFile take io as a parameter?
+choices:
+  - id: a
+    text: "So that the caller decides how input and output are done"
+    correct: true
+  - id: b
+    text: "Because files are opened by the compiler"
+  - id: c
+    text: "io is the file's name"
+  - id: d
+    text: "It is optional, and can be left out"
+explanation: |
+  The same code can then run with a different Io: in tests, with threads,
+  or with something else entirely, without changing a line of it. It is
+  the same idea as passing allocators in.

@@ -1,0 +1,27 @@
+id: string-slice
+title: Slicing a String
+type: code
+language: rust
+run: local
+body: |
+  A string can be sliced with a range of bytes, &s[0..4], which gives a
+  &str. But the range must fall between characters: if it would cut a
+  character in two, the program panics.
+
+  Copy the program into src/main.rs in your hello project and run it: it panics, saying
+
+    end byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2 of string)
+question: Fix the range so that the slice is the first two letters. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let hello = "Здравствуйте";
+
+      let start = &hello[0..1];
+      println!("{start} is {} bytes", start.len());
+  }
+expected_output: |
+  Зд is 4 bytes
+explanation: |
+  Two letters of two bytes each: &hello[0..4]. Byte ranges are fine when
+  you know where the characters start, for example from a search with
+  find; to take characters by count, use chars().

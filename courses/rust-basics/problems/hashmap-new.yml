@@ -1,0 +1,47 @@
+id: hashmap-new
+title: Hash Maps
+type: code
+language: rust
+run: local
+body: |
+  A hash map, HashMap<K, V>, stores values of type V, each under a key of
+  type K. Where a vector finds a value by its position, a hash map finds
+  it by its key: a score by its team's name, say.
+
+  It is not in the prelude, the names Rust brings into every program, so
+  it needs a use:
+
+    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+
+  get takes a reference to a key, and returns an Option<&V>: None when the
+  key is not there. copied() turns the Option<&i32> into an Option<i32>,
+  and unwrap_or gives a value for None:
+
+    let score = scores.get("Blue").copied().unwrap_or(0);
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0433]: cannot find type `HashMap` in this scope
+question: Make it compile, and print a missing team's score as 0. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut scores = HashMap::new();
+      scores.insert(String::from("Blue"), 10);
+      scores.insert(String::from("Yellow"), 50);
+
+      for team in ["Blue", "Yellow", "Red"] {
+          let score = scores.get(team);
+          println!("{team}: {score:?}");
+      }
+  }
+expected_output: |
+  Blue: 10
+  Yellow: 50
+  Red: 0
+explanation: |
+  The use at the top, and .copied().unwrap_or(0) after get. The keys are
+  Strings, and get(team) takes a &str: that works, as a String key can be
+  looked up by a &str.

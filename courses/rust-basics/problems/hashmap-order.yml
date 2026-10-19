@@ -1,0 +1,30 @@
+id: hashmap-order
+title: Going Through a Hash Map
+type: multiple_choice
+body: |
+  A for loop goes through a hash map's keys and values, as pairs:
+
+    for (key, value) in &scores {
+        println!("{key}: {value}");
+    }
+
+  The order is not the order they were inserted in, nor sorted. A hash
+  map puts each key where its hash, a number computed from it, says, so
+  the order looks random, and can even change from one run to the next.
+
+  When the order matters, take the keys out into a vector and sort it, or
+  use a BTreeMap, a map from std::collections that keeps its keys sorted.
+question: A program inserts Blue, then Yellow, then Red, and prints the map with a for loop. In what order are they printed?
+choices:
+  - id: a
+    text: Any order, which may change between runs
+    correct: true
+  - id: b
+    text: "Blue, Yellow, Red: the order they were inserted in"
+  - id: c
+    text: "Blue, Red, Yellow: sorted"
+  - id: d
+    text: "Red, Yellow, Blue: the most recent first"
+explanation: |
+  That is why the problems that follow sort before printing: so that the
+  output is the same every time.

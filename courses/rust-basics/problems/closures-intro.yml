@@ -1,0 +1,80 @@
+id: closures-intro
+title: Closures
+type: code
+language: rust
+run: local
+body: |
+  A closure is a function without a name, that can be stored in a
+  variable or passed to another function. Unlike a function, it can use
+  the variables around where it is written: it captures its environment.
+
+    let add_one = |x| x + 1;           // parameters between bars
+    let total = add_one(5);            // called like a function
+
+  A shirt company gives away a shirt to each person on its mailing list:
+  the colour they asked for, if they did, and otherwise the colour it has
+  most of. unwrap_or_else on an Option takes a closure, and calls it only
+  when the Option is None:
+
+    user_preference.unwrap_or_else(|| self.most_stocked())
+
+  The closure takes no parameters, so its bars are empty, and it captures
+  self, to call most_stocked.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write giveaway, using unwrap_or_else with a closure. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug, PartialEq, Copy, Clone)]
+  enum ShirtColor {
+      Red,
+      Blue,
+  }
+
+  struct Inventory {
+      shirts: Vec<ShirtColor>,
+  }
+
+  impl Inventory {
+      fn giveaway(&self, user_preference: Option<ShirtColor>) -> ShirtColor {
+          todo!()
+      }
+
+      fn most_stocked(&self) -> ShirtColor {
+          let mut num_red = 0;
+          let mut num_blue = 0;
+
+          for color in &self.shirts {
+              match color {
+                  ShirtColor::Red => num_red += 1,
+                  ShirtColor::Blue => num_blue += 1,
+              }
+          }
+          if num_red > num_blue {
+              ShirtColor::Red
+          } else {
+              ShirtColor::Blue
+          }
+      }
+  }
+
+  fn main() {
+      let store = Inventory {
+          shirts: vec![ShirtColor::Blue, ShirtColor::Red, ShirtColor::Blue],
+      };
+
+      let user_pref1 = Some(ShirtColor::Red);
+      let giveaway1 = store.giveaway(user_pref1);
+      println!("The user with preference {user_pref1:?} gets {giveaway1:?}");
+
+      let user_pref2 = None;
+      let giveaway2 = store.giveaway(user_pref2);
+      println!("The user with preference {user_pref2:?} gets {giveaway2:?}");
+  }
+expected_output: |
+  The user with preference Some(Red) gets Red
+  The user with preference None gets Blue
+explanation: |
+  user_preference.unwrap_or_else(|| self.most_stocked()). unwrap_or(
+  self.most_stocked()) would give the same answers, but count the shirts
+  every time, even for users with a preference; the closure only runs when
+  it is needed.

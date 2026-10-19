@@ -1,0 +1,59 @@
+id: parse-request
+title: "Parsing a Request"
+type: code
+language: zig
+body: |
+  Now all of it, as the server needs it: parseRequest takes the text of a
+  request, and returns a Request with its method, URI and version, or an
+  error when the request is not one the server understands:
+
+  - error.UnsupportedMethod for a method not in the map
+  - error.BadRequest for a request line without all three parts
+
+  The fields are slices of the request's text: nothing is copied.
+question: Write parseRequest. main prints what it returns for each request.
+starter_code: |
+  const std = @import("std");
+
+  const Method = enum { GET, POST };
+  const MethodMap = std.static_string_map.StaticStringMap(Method).initComptime(.{
+      .{ "GET", .GET },
+      .{ "POST", .POST },
+  });
+
+  const Request = struct {
+      method: Method,
+      uri: []const u8,
+      version: []const u8,
+  };
+
+  fn parseRequest(text: []const u8) !Request {
+      _ = text;
+      return error.NotWritten;
+  }
+
+  pub fn main() void {
+      const requests = [_][]const u8{
+          "GET / HTTP/1.1\r\nHost: localhost\r\n\r\n",
+          "POST /login HTTP/1.1\r\nContent-Length: 0\r\n\r\n",
+          "BREW /coffee HTTP/1.1\r\n\r\n",
+          "GET\r\n\r\n",
+      };
+      for (requests) |text| {
+          if (parseRequest(text)) |request| {
+              std.debug.print("{s} {s} {s}\n", .{ @tagName(request.method), request.uri, request.version });
+          } else |err| {
+              std.debug.print("error: {s}\n", .{@errorName(err)});
+          }
+      }
+  }
+expected_output: |
+  GET / HTTP/1.1
+  POST /login HTTP/1.1
+  error: UnsupportedMethod
+  error: BadRequest
+explanation: |
+  orelse return error.BadRequest leaves the function with an error as soon
+  as a part is missing. The first next() never returns null, as
+  splitScalar always gives at least one piece, even of an empty line, so
+  .? is safe there.

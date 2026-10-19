@@ -1,0 +1,56 @@
+id: pgm-image
+title: "Writing an Image File"
+type: code
+language: zig
+body: |
+  The PGM format, portable grey map, is an image format in plain text. Its
+  "plain" version, P2, is the letters P2, the width and height, the
+  largest grey value, and then the grey values, a row per line:
+
+      P2
+      3 2
+      255
+      54 182 18
+      255 0 75
+
+  Most image viewers can open it, and it is easy to write: no compression,
+  no library.
+question: Write writePgm, which writes the grey image as a P2 file to the writer, so that the program prints as below.
+starter_code: |
+  const std = @import("std");
+
+  fn writePgm(writer: *std.Io.Writer, width: usize, grey: []const u8) !void {
+      _ = writer;
+      _ = width;
+      _ = grey;
+  }
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      const cwd = std.Io.Dir.cwd();
+      const grey = [_]u8{ 54, 182, 18, 255, 0, 75 };
+
+      {
+          const file = try cwd.createFile(io, "grey.pgm", .{});
+          defer file.close(io);
+          var buffer: [256]u8 = undefined;
+          var writer = file.writer(io, &buffer);
+          try writePgm(&writer.interface, 3, &grey);
+          try writer.interface.flush();
+      }
+
+      var read_buffer: [256]u8 = undefined;
+      const text = try cwd.readFile(io, "grey.pgm", &read_buffer);
+      std.debug.print("{s}", .{text});
+  }
+expected_output: |
+  P2
+  3 2
+  255
+  54 182 18
+  255 0 75
+explanation: |
+  The header with print, then each value, with a space between values and
+  a new line after the last of each row. writePgm takes a *std.Io.Writer,
+  so it would write to stdout, a network connection or a buffer just as
+  well. readFile reads a whole file into a buffer you give it.

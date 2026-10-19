@@ -1,0 +1,28 @@
+id: paths
+title: "The Current Directory and Paths"
+type: multiple_choice
+body: |
+  A path says where a file is. An absolute path starts from the top of the
+  file system: /home/pedro/notes.txt, or C:\\Users\\pedro\\notes.txt on
+  Windows. A relative path starts from the current working directory, the
+  folder the program was started in: notes.txt, or data/notes.txt for a
+  file in a subfolder.
+
+  std.Io.Dir.cwd() gives the current working directory as a Dir, and the
+  file operations are its methods: openFile, createFile, deleteFile,
+  createDir and so on, each taking io and a path relative to it.
+question: A program opens the relative path data/input.txt. Where does it look?
+choices:
+  - id: a
+    text: "In a folder called data, inside the folder the program was started in"
+    correct: true
+  - id: b
+    text: "Next to the program's executable file"
+  - id: c
+    text: "At the top of the file system"
+  - id: d
+    text: "In the user's home folder"
+explanation: |
+  That is why running a program from a different folder can make it lose
+  its files. The same is true of cargo run and zig build run: they run the
+  program in the folder you ran them in.

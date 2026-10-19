@@ -1,0 +1,47 @@
+id: score-sheet
+title: "Putting It Together: A Score Sheet"
+type: code
+language: rust
+run: local
+body: |
+  A score sheet in text, one player per line, as name: score. total adds
+  up the scores and returns the sum, or an error that says which line was
+  wrong: "line 3: invalid digit found in string".
+
+  Use ? to pass errors on, and map_err to turn a ParseIntError into the
+  String the function returns, adding the line number:
+
+    let score: u32 = text.parse().map_err(|e| format!("line {number}: {e}"))?;
+
+  |e| format!(...) is a closure, a small unnamed function, which map_err
+  calls with the error; chapter 13 covers closures. lines().enumerate()
+  gives each line with its index, from 0.
+
+  Copy the program into src/main.rs in your hello project and run it; it panics at todo!().
+question: Write total. Run it and paste what it printed.
+starter_code: |
+  fn total(sheet: &str) -> Result<u32, String> {
+      todo!()
+  }
+
+  fn main() {
+      let good = "ana: 12\nben: 30\ncy: 7";
+      let bad = "ana: 12\nben: 30\ncy: seven";
+      let missing = "ana: 12\nben";
+
+      println!("{:?}", total(good));
+      println!("{:?}", total(bad));
+      println!("{:?}", total(missing));
+  }
+expected_output: |
+  Ok(49)
+  Err("line 3: invalid digit found in string")
+  Err("line 2: no score")
+explanation: |
+  - split_once(": ") is an Option, None when the line has no ": ". ok_or
+    turns it into a Result with the given error, so ? works on it here.
+  - map_err does the same for the parse error, adding the line number.
+  - index + 1, as people count lines from 1.
+
+  Each ? keeps the happy path in a straight line, with the errors handled
+  where they happen.

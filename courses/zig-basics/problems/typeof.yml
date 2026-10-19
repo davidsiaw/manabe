@@ -1,0 +1,32 @@
+id: typeof
+title: "@TypeOf"
+type: code
+language: zig
+body: |
+  Some bugs are about types: a value is not the type you thought. @TypeOf
+  gives the type of any expression, while compiling, and a type prints
+  with {any}:
+
+      const number: i32 = 5;
+      std.debug.print("{any}\n", .{@TypeOf(number)});   // i32
+
+  The program below expects half to be 3.5, and prints 3. Print the types
+  of half and of ratio to see why.
+question: Print the two types, as below, and then fix half so that it is 3.5 too.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const half = 7 / 2;
+      const ratio = @as(f32, 7) / 2;
+
+      std.debug.print("half {d}, ratio {d}\n", .{ half, ratio });
+  }
+expected_output: |
+  half comptime_int, ratio f32
+  half 3.5, ratio 3.5
+explanation: |
+  7 / 2 is a division of two integers, so its result is an integer too, a
+  comptime_int, and the .5 is lost. Making either side a float, as with
+  7.0 / 2 or @as(f32, 7) / 2, makes it a float division. Print the types
+  before the fix: after it, half is an f32.

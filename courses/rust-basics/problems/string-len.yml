@@ -1,0 +1,31 @@
+id: string-len
+title: Bytes, Characters and Letters
+type: multiple_choice
+body: |
+  There are three ways to look at a string, and they give different
+  answers. Take the Hindi word नमस्ते:
+
+  - as bytes, it is 18 u8 values
+  - as Unicode scalar values, Rust's char, it is 6: न, म, स, ्, त and े,
+    where the fourth and sixth are marks that only make sense on top of
+    the letter before them
+  - as grapheme clusters, what a person would call its letters, it is 4:
+    न, म, स् and ते
+
+  len() gives the number of bytes. chars() gives the chars, and
+  bytes() the bytes. Grapheme clusters are complicated, and not in the
+  standard library; crates on crates.io provide them.
+question: What is "Здравствуйте".len()?
+choices:
+  - id: a
+    text: "24"
+    correct: true
+  - id: b
+    text: "12"
+  - id: c
+    text: "1"
+  - id: d
+    text: It does not compile, as the string is not ASCII
+explanation: |
+  len() counts bytes: 12 Cyrillic letters at 2 bytes each.
+  "Здравствуйте".chars().count() is 12.

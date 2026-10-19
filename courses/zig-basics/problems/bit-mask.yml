@@ -1,0 +1,29 @@
+id: bit-mask
+title: "Selecting Bits with &"
+type: multiple_choice
+body: |
+  & compares the bits of two numbers one by one, and keeps a 1 only where
+  both have a 1. Used with a mask, a number with 1s just where you want
+  them, it selects those bits and clears the rest:
+
+      0b10010111 & 0b00000011     // 0b00000011: the last two bits
+
+  The encoder needs three masks, usually written in hexadecimal:
+
+  - 0x03, 0b00000011: the last 2 bits
+  - 0x0f, 0b00001111: the last 4 bits
+  - 0x3f, 0b00111111: the last 6 bits
+question: What is 0b10010111 & 0b00110000?
+choices:
+  - id: a
+    text: "16, which is 0b00010000"
+    correct: true
+  - id: b
+    text: "48, which is 0b00110000"
+  - id: c
+    text: "151, which is 0b10010111"
+  - id: d
+    text: "0"
+explanation: |
+  The mask has 1s in two places, and 0b10010111 has a 1 in only one of
+  them, so one bit is left: 0b00010000, 16.

@@ -1,0 +1,39 @@
+id: vectors
+title: "Vectors"
+type: code
+language: zig
+body: |
+  @Vector(len, T) is the type of a vector of len values of type T:
+
+      const v1 = @Vector(4, u32){ 4, 12, 37, 9 };
+      const v2 = @Vector(4, u32){ 10, 22, 5, 12 };
+      const v3 = v1 + v2;       // { 14, 34, 42, 21 }
+
+  The usual operators work on vectors, element by element: + - * / and
+  comparisons, which give a vector of bools. Arrays of the same length
+  and type convert to and from vectors by assignment:
+
+      const a = [4]u32{ 4, 12, 37, 9 };
+      const v: @Vector(4, u32) = a;
+
+  Run the program: arrays cannot be added.
+question: Make prices and tax vectors, so that the additions work, and print as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const prices = [4]u32{ 120, 45, 300, 8 };
+      const tax = [4]u32{ 24, 9, 60, 2 };
+
+      const totals = prices + tax;
+      std.debug.print("{any}\n", .{totals});
+      std.debug.print("{any}\n", .{totals > @as(@Vector(4, u32), @splat(100))});
+  }
+expected_output: |
+  { 144, 54, 360, 10 }
+  { true, false, true, false }
+explanation: |
+  Declaring both as @Vector(4, u32). The error was "invalid operands to
+  binary expression: 'array' and 'array'". The comparison gives a
+  @Vector(4, bool): which totals are over 100. @splat, in the next
+  problem, made the vector of 100s.

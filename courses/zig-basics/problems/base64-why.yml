@@ -1,0 +1,30 @@
+id: base64-why
+title: "What Base64 Is For"
+type: multiple_choice
+body: |
+  The first project: an encoder and decoder for Base64, which turns any
+  binary data into text, and back.
+
+  Some systems only carry text. Email is the classic case: an attachment,
+  such as a photo, is binary, and is sent as Base64 text inside the message.
+  Web pages do the same with data: URLs, which put an image's bytes right in
+  the page.
+
+  Base64 uses only 64 characters, all of them safe in any text: A to Z, a to
+  z, 0 to 9, + and /. It has to pay for that: the text is about a third
+  larger than the data.
+question: Why would a program send a photo as Base64 rather than as its bytes?
+choices:
+  - id: a
+    text: "Because the channel it goes through, such as email, only carries text"
+    correct: true
+  - id: b
+    text: "Because Base64 makes the photo smaller"
+  - id: c
+    text: "Because Base64 encrypts the photo, so nobody else can see it"
+  - id: d
+    text: "Because computers cannot store binary data"
+explanation: |
+  Base64 is an encoding, not encryption: anyone can decode it. And the
+  result is bigger, 4 characters for every 3 bytes, as the next problems
+  show.

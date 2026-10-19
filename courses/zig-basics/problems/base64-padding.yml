@@ -1,0 +1,32 @@
+id: base64-padding
+title: "Padding with ="
+type: multiple_choice
+body: |
+  When the input is not a whole number of 3-byte windows, the last window
+  is short. Take "Hi", 2 bytes, 16 bits:
+
+      H        i
+      01001000 01101001
+      010010 000110 1001__          the third group is short:
+      010010 000110 100100          fill it with zeros
+      S      G      k      =        and the missing fourth group is =
+
+  The output is still 4 characters: a group with only some of its bits
+  filled with zeros, and a group with no bits at all becomes =, which is
+  not in the scale. It is padding, telling the decoder that there was
+  nothing there. One byte leaves two groups missing: "0" is "MA==".
+question: The input is 4 bytes long. How does its Base64 end?
+choices:
+  - id: a
+    text: "With =="
+    correct: true
+  - id: b
+    text: "With ="
+  - id: c
+    text: "With no ="
+  - id: d
+    text: "With ==="
+explanation: |
+  4 bytes are one full window and 1 byte more. That byte makes one full
+  group and one partly filled with zeros, and the other two groups are
+  missing: ==. With 5 bytes it would be one =, and with 6 none.

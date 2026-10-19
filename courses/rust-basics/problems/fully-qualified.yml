@@ -1,0 +1,83 @@
+id: fully-qualified
+title: Fully Qualified Syntax
+type: code
+language: rust
+run: local
+body: |
+  Two traits can have methods with the same name, and a type can implement
+  both, along with a method of its own with that name:
+
+    person.fly();               // the type's own method
+    Pilot::fly(&person);        // Pilot's
+    Wizard::fly(&person);       // Wizard's
+
+  For associated functions without self, there is no value to tell Rust
+  which type is meant, and the fully qualified syntax spells it out:
+
+    <Dog as Animal>::baby_name()
+
+  Copy the program into src/main.rs in your hello project and run it: it prints the dog's own baby_name, not Animal's.
+question: Make each line call what it says, as below. Run it and paste what it printed.
+starter_code: |
+  trait Pilot {
+      fn fly(&self) -> String;
+  }
+
+  trait Wizard {
+      fn fly(&self) -> String;
+  }
+
+  struct Human;
+
+  impl Pilot for Human {
+      fn fly(&self) -> String {
+          String::from("This is your captain speaking.")
+      }
+  }
+
+  impl Wizard for Human {
+      fn fly(&self) -> String {
+          String::from("Up!")
+      }
+  }
+
+  impl Human {
+      fn fly(&self) -> String {
+          String::from("*waving arms furiously*")
+      }
+  }
+
+  trait Animal {
+      fn baby_name() -> String;
+  }
+
+  struct Dog;
+
+  impl Dog {
+      fn baby_name() -> String {
+          String::from("Spot")
+      }
+  }
+
+  impl Animal for Dog {
+      fn baby_name() -> String {
+          String::from("puppy")
+      }
+  }
+
+  fn main() {
+      let person = Human;
+      println!("Pilot: {}", person.fly());
+      println!("Wizard: {}", person.fly());
+      println!("Human: {}", person.fly());
+      println!("A baby dog is called a {}", Dog::baby_name());
+  }
+expected_output: |
+  Pilot: This is your captain speaking.
+  Wizard: Up!
+  Human: *waving arms furiously*
+  A baby dog is called a puppy
+explanation: |
+  Pilot::fly(&person), Wizard::fly(&person), and <Dog as Animal>::baby_name().
+  Animal::baby_name() alone does not compile: Animal could be implemented by
+  many types, and nothing says which.

@@ -1,0 +1,37 @@
+id: thread-spawn
+title: Creating Threads
+type: multiple_choice
+body: |
+  thread::spawn runs a closure in a new thread:
+
+    use std::thread;
+    use std::time::Duration;
+
+    thread::spawn(|| {
+        for i in 1..10 {
+            println!("hi number {i} from the spawned thread!");
+            thread::sleep(Duration::from_millis(1));
+        }
+    });
+
+    for i in 1..5 {
+        println!("hi number {i} from the main thread!");
+        thread::sleep(Duration::from_millis(1));
+    }
+
+  The two threads take turns as the operating system schedules them, so the
+  lines come out mixed, in an order that can differ from run to run.
+question: When main's loop ends and main returns, what happens to the spawned thread?
+choices:
+  - id: a
+    text: It is stopped, finished or not
+    correct: true
+  - id: b
+    text: main waits for it to finish
+  - id: c
+    text: It keeps running after the program ends
+  - id: d
+    text: The program panics
+explanation: |
+  So the spawned thread above may never get to 9. thread::spawn returns a
+  JoinHandle, whose join waits for the thread: the next problem.

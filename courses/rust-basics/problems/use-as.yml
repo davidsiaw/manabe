@@ -1,0 +1,41 @@
+id: use-as
+title: Renaming with as
+type: code
+language: rust
+run: local
+body: |
+  Two items with the same name cannot both be brought into one scope: the
+  compiler could not tell which one a use of the name means. One way out is
+  to use their parent modules, as in fmt::Result and io::Result. Another is
+  as, which gives the item a new name in this scope:
+
+    use std::fmt::Result;
+    use std::io::Result as IoResult;
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0252]: the name `Result` is defined multiple times
+question: Rename io's Result with as, and use the new name where the io one is meant. Run it and paste what it printed.
+starter_code: |
+  use std::fmt::Result;
+  use std::io::Result;
+
+  // Meant to return a std::fmt::Result.
+  fn check_format() -> Result {
+      Ok(())
+  }
+
+  // Meant to return a std::io::Result<()>.
+  fn check_io() -> Result<()> {
+      Ok(())
+  }
+
+  fn main() {
+      println!("format: {:?}, io: {:?}", check_format(), check_io());
+  }
+expected_output: |
+  format: Ok(()), io: Ok(())
+explanation: |
+  use std::io::Result as IoResult;, and check_io returns IoResult<()>. Both
+  Results are versions of the Result enum of the standard library, which
+  comes up in chapter 9; each module fixes some of its details.

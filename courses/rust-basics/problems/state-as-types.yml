@@ -1,0 +1,72 @@
+id: state-as-types
+title: Encoding States as Types
+type: code
+language: rust
+run: local
+body: |
+  The state pattern catches mistakes, such as reading a draft's content,
+  only while running: the content is just empty. Rust can do better, by
+  making each state a type of its own, with only the methods that state
+  allows:
+
+  - DraftPost has add_text and request_review, but no content.
+  - request_review consumes the draft, and returns a PendingReviewPost.
+  - approve consumes that, and returns a Post, which has content.
+
+  Calling content on a draft is then a compile error, rather than a bug.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0599]: no method named `content` found for struct `DraftPost` in the current scope
+question: Remove the line that reads the draft's content, and write approve on PendingReviewPost. Run it and paste what it printed.
+starter_code: |
+  pub struct Post {
+      content: String,
+  }
+
+  pub struct DraftPost {
+      content: String,
+  }
+
+  impl Post {
+      pub fn new() -> DraftPost {
+          DraftPost { content: String::new() }
+      }
+
+      pub fn content(&self) -> &str {
+          &self.content
+      }
+  }
+
+  impl DraftPost {
+      pub fn add_text(&mut self, text: &str) {
+          self.content.push_str(text);
+      }
+
+      pub fn request_review(self) -> PendingReviewPost {
+          PendingReviewPost { content: self.content }
+      }
+  }
+
+  pub struct PendingReviewPost {
+      content: String,
+  }
+
+  fn main() {
+      let mut post = Post::new();
+
+      post.add_text("I ate a salad for lunch today");
+      println!("draft: {}", post.content());
+
+      let post = post.request_review();
+      let post = post.approve();
+
+      println!("published: {}", post.content());
+  }
+expected_output: |
+  published: I ate a salad for lunch today
+explanation: |
+  approve takes self, and returns Post { content: self.content }. Each step
+  consumes the old value, so main shadows post with the new one. There is no
+  way to get a Post without going through review: the type system enforces
+  the workflow.

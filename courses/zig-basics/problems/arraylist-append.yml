@@ -1,0 +1,40 @@
+id: arraylist-append
+title: "Appending"
+type: code
+language: zig
+body: |
+  An empty ArrayList is .empty. append adds one element, appendSlice a
+  whole slice, and the elements are in items, a slice:
+
+      var list: std.ArrayList(u8) = .empty;
+      defer list.deinit(allocator);
+      try list.append(allocator, 'H');
+      try list.appendSlice(allocator, "ello");
+      // list.items is "Hello"
+
+  Both can fail with error.OutOfMemory, hence try. Run the program: the
+  DebugAllocator reports a leak.
+question: Free the list when main ends, and append " World!" with one call, so that it prints as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      var buffer: std.ArrayList(u8) = .empty;
+      try buffer.append(allocator, 'H');
+      try buffer.append(allocator, 'e');
+      try buffer.append(allocator, 'l');
+      try buffer.append(allocator, 'l');
+      try buffer.append(allocator, 'o');
+
+      std.debug.print("{s} ({d} bytes)\n", .{ buffer.items, buffer.items.len });
+  }
+expected_output: |
+  Hello World! (12 bytes)
+explanation: |
+  defer buffer.deinit(allocator); and appendSlice(allocator, " World!").
+  The defer goes right after the list is made, so that it is freed however
+  main ends.

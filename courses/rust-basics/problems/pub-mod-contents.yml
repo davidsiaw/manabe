@@ -1,0 +1,25 @@
+id: pub-mod-contents
+title: pub on a Module
+type: multiple_choice
+body: |
+  After pub mod hosting, the compiler still refused, with a different
+  error:
+
+    error[E0603]: function `add_to_waitlist` is private
+
+  Making a module public lets code in its parent refer to it, and that is
+  all. The items inside are still private, each until it is marked pub.
+question: A module is pub, and none of its functions are. What can its parent do with it?
+choices:
+  - id: a
+    text: Refer to the module, but call none of its functions
+    correct: true
+  - id: b
+    text: Call all of its functions
+  - id: c
+    text: Call the functions, but only through an absolute path
+  - id: d
+    text: "Nothing: a module with no public items is an error"
+explanation: |
+  pub mod opens the door to the module, and each pub fn opens one of the
+  rooms behind it. Both are needed to reach a function.

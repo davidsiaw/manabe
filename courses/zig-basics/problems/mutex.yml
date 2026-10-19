@@ -1,0 +1,63 @@
+id: mutex
+title: "Mutexes"
+type: code
+language: zig
+run: local
+body: |
+  A mutex, from mutual exclusion, makes code run in one thread at a time.
+  A thread locks it before using the shared data, and unlocks it after;
+  a thread that tries to lock it while it is locked waits until it is
+  unlocked. The code between, which only one thread can be in at a time,
+  is the critical section.
+
+      var mutex: std.Io.Mutex = .init;
+
+      mutex.lockUncancelable(io);
+      defer mutex.unlock(io);
+      // the critical section
+
+  In Zig 0.17, the mutex is part of std.Io, and its methods take io.
+  lock(io) can also be cancelled, and returns an error then;
+  lockUncancelable cannot.
+
+  The program has the data race of the last problem. Its _ = io; is
+  only there because io is not used yet: remove it when you use io, as
+  Zig refuses to discard a parameter that is used.
+
+  Programs in the browser run on a single thread, so this one runs on your
+  computer. Save it as counter.zig, and run zig run counter.zig.
+question: Protect the counter with the mutex, so that it always ends at 2000000. Run it and paste what it printed.
+starter_code: |
+  const std = @import("std");
+
+  const Counter = struct {
+      mutex: std.Io.Mutex = .init,
+      value: u64 = 0,
+  };
+
+  fn increment(io: std.Io, counter: *Counter) void {
+      _ = io;
+      for (0..1_000_000) |_| {
+          counter.value += 1;
+      }
+  }
+
+  pub fn main(init: std.process.Init) !void {
+      const io = init.io;
+      var counter: Counter = .{};
+
+      const a = try std.Thread.spawn(.{}, increment, .{ io, &counter });
+      const b = try std.Thread.spawn(.{}, increment, .{ io, &counter });
+      a.join();
+      b.join();
+
+      std.debug.print("counter {d}\n", .{counter.value});
+  }
+expected_output: |
+  counter 2000000
+explanation: |
+  Lock and unlock around the increment, with defer, so that the unlock
+  cannot be forgotten. The starter printed a different, smaller number on
+  each run (if it happened to print 2000000, run it again). Locking a
+  million times is slow; adding up locally and locking once at the end, as
+  the putting-it-together problem does, is much faster.

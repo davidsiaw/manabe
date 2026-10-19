@@ -1,0 +1,90 @@
+id: ignore-case-env
+title: Environment Variables
+type: code
+language: rust
+run: local
+body: |
+  The program chooses the search with an environment variable: if
+  IGNORE_CASE is set, to anything, it ignores case. That way a user can set
+  it once for a whole terminal session.
+
+  std::env::var returns a Result: Ok with the value if the variable is
+  set, Err if not. is_ok() is all that matters here.
+
+  Copy the program into src/main.rs, keeping src/lib.rs with both
+  searches, and poem.txt. Config has an ignore_case field, which is
+  always false so far.
+question: |
+  Set ignore_case from IGNORE_CASE. Then run it with the variable set,
+  and paste what it printed. In a Unix shell (macOS, Linux):
+
+    IGNORE_CASE=1 cargo run -- to poem.txt
+
+  In PowerShell, set it first: $Env:IGNORE_CASE=1; cargo run -- to poem.txt
+starter_code: |
+  use std::env;
+  use std::error::Error;
+  use std::fs;
+  use std::process;
+
+  use minigrep::{search, search_case_insensitive};
+
+  fn main() {
+      let args: Vec<String> = env::args().collect();
+
+      let config = Config::build(&args).unwrap_or_else(|err| {
+          eprintln!("Problem parsing arguments: {err}");
+          process::exit(1);
+      });
+
+      if let Err(e) = run(config) {
+          eprintln!("Application error: {e}");
+          process::exit(1);
+      }
+  }
+
+  struct Config {
+      query: String,
+      file_path: String,
+      ignore_case: bool,
+  }
+
+  impl Config {
+      fn build(args: &[String]) -> Result<Config, &'static str> {
+          if args.len() < 3 {
+              return Err("not enough arguments");
+          }
+
+          let query = args[1].clone();
+          let file_path = args[2].clone();
+          let ignore_case = false;
+
+          Ok(Config { query, file_path, ignore_case })
+      }
+  }
+
+  fn run(config: Config) -> Result<(), Box<dyn Error>> {
+      let contents = fs::read_to_string(config.file_path)?;
+
+      let results = if config.ignore_case {
+          search_case_insensitive(&config.query, &contents)
+      } else {
+          search(&config.query, &contents)
+      };
+
+      for line in results {
+          println!("{line}");
+      }
+
+      Ok(())
+  }
+expected_output: |
+  Are you nobody, too?
+  How dreary to be somebody!
+  To tell your name the livelong day
+  To an admiring bog!
+explanation: |
+  let ignore_case = env::var("IGNORE_CASE").is_ok();. Without the
+  variable, cargo run -- to poem.txt finds only the two lines with a
+  lower-case to. In PowerShell, Remove-Item Env:IGNORE_CASE unsets it
+  again.

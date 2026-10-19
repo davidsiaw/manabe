@@ -1,0 +1,39 @@
+id: format-specifiers
+title: "Format Specifiers"
+type: code
+language: zig
+body: |
+  The simplest way to see what a program is doing is to print its values
+  as it goes: print debugging. Both stdout.print and std.debug.print take a
+  format string and a list of values, and each {} in the string says how
+  to print the next value:
+
+  - {d}: a number, in decimal
+  - {c}: a byte, as a character
+  - {s}: a string
+  - {x}: a number in hexadecimal ({X} in capitals), {b} in binary
+  - {any}: whatever suits the value's type
+
+  Run the program below: {any} prints the letter as a number, and the
+  string as the list of bytes it is.
+question: Change the specifiers so that the program prints exactly what is below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const letter: u8 = 'Z';
+      const name = "Ziggy";
+      const flags: u8 = 0b1011;
+      const color: u32 = 0xff8800;
+
+      std.debug.print("{any} is {any}\n", .{ letter, letter });
+      std.debug.print("hello, {any}\n", .{name});
+      std.debug.print("flags {any}, color {any}\n", .{ flags, color });
+  }
+expected_output: |
+  Z is 90
+  hello, Ziggy
+  flags 1011, color ff8800
+explanation: |
+  {c} and {d} for the letter, {s} for the name, {b} and {x} for the last
+  two. The value is the same either way; only how it is shown changes.

@@ -1,0 +1,121 @@
+id: state-pattern
+title: The State Pattern
+type: code
+language: rust
+run: local
+body: |
+  The state pattern: a value has an inner state, held as a trait object,
+  and each state decides what the value's methods do, and which state comes
+  next. A blog post goes from draft, to pending review, to published, and
+  its content is only shown once it is published:
+
+  - Draft, PendingReview and Published are structs that implement State.
+  - Post keeps its state in an Option<Box<dyn State>>, and passes each
+    request on to it, replacing the state with the one it returns.
+
+  The methods take self: Box<Self>, so that a state can consume itself and
+  return the next one. take() moves the state out of the Option, leaving
+  None, so that Post can call such a method on it.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0599]: no method named `approve` found for struct `Post` in the current scope
+question: Add approve to Post, passing it on to the state as request_review does. Run it and paste what it printed.
+starter_code: |
+  pub struct Post {
+      state: Option<Box<dyn State>>,
+      content: String,
+  }
+
+  impl Post {
+      pub fn new() -> Post {
+          Post {
+              state: Some(Box::new(Draft {})),
+              content: String::new(),
+          }
+      }
+
+      pub fn add_text(&mut self, text: &str) {
+          self.content.push_str(text);
+      }
+
+      pub fn content(&self) -> &str {
+          self.state.as_ref().unwrap().content(self)
+      }
+
+      pub fn request_review(&mut self) {
+          if let Some(s) = self.state.take() {
+              self.state = Some(s.request_review())
+          }
+      }
+  }
+
+  trait State {
+      fn request_review(self: Box<Self>) -> Box<dyn State>;
+      fn approve(self: Box<Self>) -> Box<dyn State>;
+      fn content<'a>(&self, _post: &'a Post) -> &'a str {
+          ""
+      }
+  }
+
+  struct Draft {}
+
+  impl State for Draft {
+      fn request_review(self: Box<Self>) -> Box<dyn State> {
+          Box::new(PendingReview {})
+      }
+
+      fn approve(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+  }
+
+  struct PendingReview {}
+
+  impl State for PendingReview {
+      fn request_review(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+
+      fn approve(self: Box<Self>) -> Box<dyn State> {
+          Box::new(Published {})
+      }
+  }
+
+  struct Published {}
+
+  impl State for Published {
+      fn request_review(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+
+      fn approve(self: Box<Self>) -> Box<dyn State> {
+          self
+      }
+
+      fn content<'a>(&self, post: &'a Post) -> &'a str {
+          &post.content
+      }
+  }
+
+  fn main() {
+      let mut post = Post::new();
+
+      post.add_text("I ate a salad for lunch today");
+      println!("draft: {:?}", post.content());
+
+      post.request_review();
+      println!("in review: {:?}", post.content());
+
+      post.approve();
+      println!("published: {:?}", post.content());
+  }
+expected_output: |
+  draft: ""
+  in review: ""
+  published: "I ate a salad for lunch today"
+explanation: |
+  pub fn approve(&mut self) { if let Some(s) = self.state.take() {
+  self.state = Some(s.approve()) } }. Post knows nothing about the order of
+  the states: each state's approve says what comes after it, so adding a
+  state touches only the states around it.

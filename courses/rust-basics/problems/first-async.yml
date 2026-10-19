@@ -1,0 +1,54 @@
+id: first-async
+title: Futures, async and await
+type: code
+language: rust
+run: local
+body: |
+  An async fn does not run when it is called: it returns a future, a value
+  that will produce the result later. .await runs the future until it is
+  ready, pausing the current async code whenever the future has to wait,
+  and gives its result:
+
+    async fn double(n: u32) -> u32 {
+        n * 2
+    }
+
+    let n = double(21).await;
+
+  .await only works inside async code. Something has to run the outermost
+  future: a runtime, which Rust does not include. trpl::run starts one,
+  runs a future to the end, and returns its result.
+
+  The book's examples use its helper crate, trpl, which gathers the pieces
+  of async Rust it needs into one place. Add it to your hello project, once:
+
+    cargo add trpl
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0308]: mismatched types
+question: Await the futures, so that the program prints as below. Run it and paste what it printed.
+starter_code: |
+  async fn double(n: u32) -> u32 {
+      n * 2
+  }
+
+  async fn quadruple(n: u32) -> u32 {
+      double(double(n)) * 1
+  }
+
+  fn main() {
+      trpl::run(async {
+          let n: u32 = double(21);
+          println!("double 21 = {n}");
+          println!("quadruple 5 = {}", quadruple(5));
+      });
+  }
+expected_output: |
+  double 21 = 42
+  quadruple 5 = 20
+explanation: |
+  .await after each call: double(21).await, double(double(n).await).await
+  and quadruple(5).await. The error said the code expected a u32 and found
+  a future: "expected `u32`, found future". (The * 1 is only there to show
+  that the awaited value is a plain u32.)

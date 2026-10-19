@@ -2,11 +2,18 @@ id: rust-basics
 title: Rust Basics
 language: rust
 description: |
-  Rust from the start, following chapters 1 to 6 of The Rust Programming
+  Rust from the start, following all 21 chapters of The Rust Programming
   Language (doc.rust-lang.org/book): installing Rust, Cargo, a guessing game,
   the concepts every program uses, from variables and types to functions
-  and loops, ownership, borrowing and slices, structs and methods, and
-  enums and pattern matching. Some problems are questions; the others are programs
+  and loops, ownership, borrowing and slices, structs and methods, enums
+  and pattern matching, organising code in packages, crates and modules,
+  the collections: vectors, strings and hash maps, error handling,
+  generics, traits and lifetimes, writing automated tests, a command-line
+  project, minigrep, closures and iterators, more about Cargo, smart
+  pointers, concurrency, async and await, object-oriented features,
+  patterns and matching, advanced features: unsafe code, advanced traits
+  and types, function pointers and macros, and a final project, a
+  multithreaded web server. Some problems are questions; the others are programs
   you build and run on your own computer, and the first ones show you how
   to install everything. Some examples are adapted from the book.
 sections:
@@ -52,3 +59,135 @@ sections:
         problems: [coin-match, match-arm-blocks, bind-values, match-option, enum-methods, non-exhaustive, fix-option-add, catch-all, catch-all-order]
       - title: if let and let...else
         problems: [if-let, if-let-tradeoff, let-else, calculator]
+  - title: Packages, Crates, and Modules
+    sections:
+      - title: Packages and Crates
+        problems: [binary-library-crates, packages]
+      - title: Modules
+        problems: [modules-cheat-sheet, module-tree, inline-modules]
+      - title: Paths
+        problems: [absolute-relative, fix-private, pub-mod-contents, super-paths, pub-struct-fields, pub-enums]
+      - title: The use Keyword
+        problems: [use-scope, idiomatic-use, use-as, pub-use, nested-paths]
+      - title: Modules in Files
+        problems: [module-files, mod-rs, restaurant-modules]
+  - title: Common Collections
+    sections:
+      - title: Vectors
+        problems: [vec-new, vec-index-get, vec-get, vec-borrow, vec-borrow-why, vec-iter-mut, vec-enum, vec-drop]
+      - title: Strings
+        problems: [string-kinds, string-push, string-concat, string-index, string-len, string-slice, string-chars]
+      - title: Hash Maps
+        problems: [hashmap-new, hashmap-order, hashmap-ownership, hashmap-entry, word-count, hashing]
+      - title: Putting It Together
+        problems: [median-mode, pig-latin, employee-directory]
+  - title: Error Handling
+    sections:
+      - title: Unrecoverable Errors with panic!
+        problems: [panic-intro, panic-backtrace]
+      - title: Recoverable Errors with Result
+        problems: [result-enum, result-match, error-kind, unwrap-expect, propagate-match, question-mark, question-from, question-option, main-result]
+      - title: To panic! or Not to panic!
+        problems: [panic-or-not, more-info-than-compiler, validation-type, score-sheet]
+  - title: Generic Types, Traits, and Lifetimes
+    problems: [extract-function]
+    sections:
+      - title: Generic Data Types
+        problems: [generic-function, generic-struct, generic-enums, generic-methods, generic-mixup, monomorphization]
+      - title: Traits
+        problems: [define-trait, orphan-rule, default-impl, impl-trait-param, trait-bound-syntax, multiple-bounds, return-impl-trait, conditional-impl, blanket-impl]
+      - title: Lifetimes
+        problems: [dangling-reference, longest, lifetime-scope, lifetime-local, struct-lifetime, lifetime-elision, static-lifetime, longest-announcement]
+  - title: Writing Automated Tests
+    sections:
+      - title: How to Write Tests
+        problems: [first-cargo-test, test-anatomy, assert-macro, assert-eq, custom-messages, should-panic, result-tests]
+      - title: Controlling How Tests Are Run
+        problems: [test-threads, show-output, filter-tests]
+      - title: Test Organization
+        problems: [private-tests, integration-tests, test-helpers, binary-tests, roman-numerals]
+  - title: "An I/O Project: minigrep"
+    sections:
+      - title: Arguments and Files
+        problems: [minigrep-args, args-unicode, minigrep-read]
+      - title: Refactoring
+        problems: [separation-of-concerns, config-build, run-errors]
+      - title: Test-Driven Development
+        problems: [search-tdd, search-lifetimes, use-search]
+      - title: Environment Variables and stderr
+        problems: [search-case-insensitive, ignore-case-env, eprintln]
+  - title: "Functional Language Features: Iterators and Closures"
+    sections:
+      - title: Closures
+        problems: [closures-intro, closure-types, closure-capture, move-closures, fn-traits, sort-by-key]
+      - title: Iterators
+        problems: [iterators-lazy, iterator-next, consuming-adapters, map-collect, filter-closure, iterator-chain]
+      - title: Improving minigrep
+        problems: [config-iterator, search-iterator, loops-vs-iterators, word-stats]
+  - title: More About Cargo and Crates.io
+    sections:
+      - title: Release Profiles and Documentation
+        problems: [release-profiles, doc-comments, doc-tests, inner-doc-comments]
+      - title: Publishing and Workspaces
+        problems: [reexport-api, publishing, workspaces, cargo-install]
+  - title: Smart Pointers
+    problems: [smart-pointers]
+    sections:
+      - title: Box, Deref and Drop
+        problems: [box-recursive, deref-trait, deref-coercion, drop-trait, early-drop]
+      - title: Rc and RefCell
+        problems: [rc-shared, interior-mutability, refcell-mock, rc-refcell]
+      - title: Reference Cycles
+        problems: [reference-cycles, weak-tree]
+  - title: Fearless Concurrency
+    problems: [fearless-concurrency]
+    sections:
+      - title: Threads
+        problems: [thread-spawn, join-handles]
+      - title: Message Passing
+        problems: [channels, multiple-producers]
+      - title: Shared State
+        problems: [mutex-arc, send-sync, deadlocks-rust, parallel-word-count]
+  - title: "Async and Await"
+    problems: [async-concurrency]
+    sections:
+      - title: Futures
+        problems: [first-async, futures-lazy]
+      - title: Concurrency with Async
+        problems: [join-futures, async-channel, select-race, yield-now]
+      - title: Streams, Traits and Tasks
+        problems: [streams, future-trait, tasks-threads, async-downloads]
+  - title: Object-Oriented Programming Features
+    sections:
+      - title: Objects and Encapsulation
+        problems: [oop-features, encapsulation]
+      - title: Trait Objects
+        problems: [trait-objects, dyn-vs-generics, dyn-compatible]
+      - title: The State Pattern
+        problems: [state-pattern, state-as-types, two-approvals]
+  - title: Patterns and Matching
+    sections:
+      - title: Where Patterns Can Be Used
+        problems: [pattern-places, refutability]
+      - title: Pattern Syntax
+        problems: [literal-range-patterns, named-shadowing, destructuring, ignoring-values, match-guards, at-bindings, expression-evaluator]
+  - title: Advanced Features
+    sections:
+      - title: Unsafe Rust
+        problems: [unsafe-intro, raw-pointers, split-at-mut, extern-c, static-mut]
+      - title: Advanced Traits
+        problems: [associated-types, operator-overloading, fully-qualified, supertraits, newtype-orphan]
+      - title: Advanced Types
+        problems: [type-aliases, never-type, sized-trait]
+      - title: Advanced Functions and Closures
+        problems: [function-pointers, returning-closures]
+      - title: Macros
+        problems: [macros-vs-functions, macro-rules]
+  - title: "Final Project: A Multithreaded Web Server"
+    sections:
+      - title: A Single-Threaded Server
+        problems: [web-server-intro, single-threaded-server, slow-requests]
+      - title: A Thread Pool
+        problems: [thread-pool, graceful-shutdown, worker-loop]
+      - title: Putting It Together
+        problems: [multithreaded-server, whats-next]

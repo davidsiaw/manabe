@@ -1,0 +1,32 @@
+id: vec-get
+title: Reading Safely with get
+type: code
+language: rust
+run: local
+body: |
+  This program looks up the elements a user asked for. Some of the
+  indexes are out of range, and indexing panics on the first one:
+
+    index out of bounds: the len is 5 but the index is 7
+
+  Copy the program into src/main.rs in your hello project and run it.
+question: Use get, and print "nothing at" and the index when there is no element there. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let v = vec![10, 20, 30, 40, 50];
+      let wanted = [1, 7, 4, 100];
+
+      for index in wanted {
+          let element = &v[index];
+          println!("at {index}: {element}");
+      }
+  }
+expected_output: |
+  at 1: 20
+  nothing at 7
+  at 4: 50
+  nothing at 100
+explanation: |
+  A match on v.get(index), or an if let Some(element) = v.get(index) with
+  an else. The program now handles every index, instead of stopping at the
+  first bad one.

@@ -1,0 +1,29 @@
+id: publishing
+title: Publishing to crates.io
+type: multiple_choice
+body: |
+  To share a library, publish it to crates.io, Rust's public registry:
+
+  - log in, with an API token from crates.io: cargo login
+  - fill in Cargo.toml's [package]: a unique name, a description and a
+    licence, such as license = "MIT OR Apache-2.0"
+  - cargo publish
+
+  A new version is published by changing version in Cargo.toml, following
+  semantic versioning, and publishing again.
+question: A published version turns out to have a serious bug. What can you do about it?
+choices:
+  - id: a
+    text: "Yank it with cargo yank: new projects stop using it, existing ones keep working"
+    correct: true
+  - id: b
+    text: Delete it from crates.io
+  - id: c
+    text: Overwrite it by publishing the same version again
+  - id: d
+    text: Nothing at all
+explanation: |
+  Publishing is permanent: code on crates.io can never be deleted or
+  changed, so that projects that depend on it keep building. Yanking only
+  stops new projects from choosing that version; publish a fixed version
+  as well.

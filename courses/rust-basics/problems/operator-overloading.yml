@@ -1,0 +1,48 @@
+id: operator-overloading
+title: Operator Overloading
+type: code
+language: rust
+run: local
+body: |
+  Operators such as + are traits in std::ops: implementing Add for a type
+  makes + work on it.
+
+    impl Add for Point {
+        type Output = Point;
+
+        fn add(self, other: Point) -> Point { ... }
+    }
+
+  Add's definition is trait Add<Rhs = Self>: its type parameter, the
+  right-hand side, defaults to the type itself. Implementing Add<Meters> for
+  Millimeters lets millimetres and metres be added.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0369]: cannot add `Point` to `Point`
+question: Implement Add for Point, and Add<Meters> for Millimeters. Run it and paste what it printed.
+starter_code: |
+  use std::ops::Add;
+
+  #[derive(Debug, Copy, Clone, PartialEq)]
+  struct Point {
+      x: i32,
+      y: i32,
+  }
+
+  #[derive(Debug)]
+  struct Millimeters(u32);
+  #[derive(Debug)]
+  struct Meters(u32);
+
+  fn main() {
+      println!("{:?}", Point { x: 1, y: 0 } + Point { x: 2, y: 3 });
+      println!("{:?}", Millimeters(500) + Meters(2));
+  }
+expected_output: |
+  Point { x: 3, y: 3 }
+  Millimeters(2500)
+explanation: |
+  impl Add for Point uses the default, Rhs = Self; impl Add<Meters> for
+  Millimeters names it. Meters(2) + Millimeters(500) would still not
+  compile: that would be Add<Millimeters> for Meters, another impl.
