@@ -1,0 +1,12 @@
+id: one
+title: Problem one
+type: multiple_choice
+body: Body of one.
+question: Pick b.
+choices:
+  - id: a
+    text: Not this
+  - id: b
+    text: This one
+    correct: true
+explanation: Because b.

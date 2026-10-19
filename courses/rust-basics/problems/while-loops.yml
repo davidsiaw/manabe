@@ -1,0 +1,28 @@
+id: while-loops
+title: "Loops: while"
+type: multiple_choice
+body: |
+  A `while` loop runs its body for as long as its condition is true:
+
+      let mut total = 0;
+      let mut i = 1;
+      while i <= 4 {
+          total += i;
+          i += 1;
+      }
+
+  Any variable the loop changes must be declared mut. `break` leaves a loop
+  early, and `continue` skips to the next check of the condition.
+question: After the loop above finishes, what is total?
+choices:
+  - id: a
+    text: "6"
+  - id: b
+    text: "10"
+    correct: true
+  - id: c
+    text: "15"
+  - id: d
+    text: "4"
+explanation: |
+  The loop adds 1, 2, 3 and 4, then stops when i becomes 5. 1+2+3+4 = 10.

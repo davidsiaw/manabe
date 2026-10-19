@@ -1,0 +1,27 @@
+id: branches
+title: Branches
+type: multiple_choice
+body: |
+  A branch is a movable name that points at a commit. When you commit on a
+  branch, the branch moves forward to the new commit.
+
+  `git branch feature` creates a branch called feature, pointing at the
+  current commit. `git switch feature` makes it the current branch, and
+  `git switch -c feature` does both in one step.
+
+  Branches are cheap: creating one only writes a small file. Use them freely
+  for every piece of work.
+question: What does git branch feature do on its own?
+choices:
+  - id: a
+    text: Creates the branch and switches to it
+  - id: b
+    text: Creates the branch, but you stay on the current one
+    correct: true
+  - id: c
+    text: Copies every file into a new folder
+  - id: d
+    text: Deletes the branch called feature
+explanation: |
+  git branch only creates the name. Switch to it with git switch feature, or
+  create and switch at once with git switch -c feature.

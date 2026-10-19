@@ -1,0 +1,28 @@
+id: literals
+title: Literals
+type: multiple_choice
+body: |
+  A number written directly in code, like `42`, is a literal. If nothing else
+  decides its type, an integer literal is an i32.
+
+  You can choose the type by adding it as a suffix: `42u8`, `7i64`. Long
+  numbers can be broken up with underscores, which the compiler ignores:
+  `1_000_000` is one million.
+
+  Rust never converts between integer types silently. Adding a u8 to a u32 is
+  a compile error, even though every u8 value fits in a u32. You have to
+  convert one side explicitly.
+question: What is the type of the literal 1_000u16?
+choices:
+  - id: a
+    text: i32, because that is the default
+  - id: b
+    text: u16, with the value 1000
+    correct: true
+  - id: c
+    text: It does not compile, because underscores are not allowed before a suffix
+  - id: d
+    text: u16, with the value 1
+explanation: |
+  The suffix sets the type to u16, and the underscore is ignored, so the value
+  is 1000.

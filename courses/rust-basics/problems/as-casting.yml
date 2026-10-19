@@ -1,0 +1,28 @@
+id: as-casting
+title: Conversions with as
+type: multiple_choice
+body: |
+  The `as` keyword converts a value from one numeric type to another:
+
+      let small: u8 = 7;
+      let big: u32 = small as u32;
+
+  Converting to a wider type is always exact. Converting to a narrower integer
+  type never fails, but it keeps only the lowest bits, so large values change.
+
+  Because `as` can silently change a value, prefer the `From` and `TryFrom`
+  traits when you want a conversion that cannot lose information, or that
+  reports when it would.
+question: What is the value of 300u32 as u8?
+choices:
+  - id: a
+    text: "255"
+  - id: b
+    text: "44"
+    correct: true
+  - id: c
+    text: "300"
+  - id: d
+    text: It panics
+explanation: |
+  Only the lowest 8 bits are kept: 300 - 256 = 44.

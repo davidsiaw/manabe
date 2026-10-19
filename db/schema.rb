@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_10_27_085259) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_17_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -41,6 +41,60 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_27_085259) do
     t.index ["unlock_token"], name: "index_admins_on_unlock_token", unique: true
   end
 
+  create_table "completions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "learner_id", null: false
+    t.string "course_id", null: false
+    t.string "problem_id", null: false
+    t.datetime "updated_at"
+    t.integer "round", default: 1, null: false
+    t.index ["learner_id", "course_id", "round", "problem_id"], name: "idx_on_learner_id_course_id_round_problem_id_c7ed3357c9", unique: true
+  end
+
+  create_table "learner_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "learner_id", null: false
+    t.string "token_digest", null: false
+    t.datetime "updated_at"
+    t.index ["learner_id"], name: "index_learner_sessions_on_learner_id"
+    t.index ["token_digest"], name: "index_learner_sessions_on_token_digest", unique: true
+  end
+
+  create_table "learners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "updated_at"
+    t.citext "email"
+    t.string "webauthn_id"
+    t.index ["email"], name: "index_learners_on_email", unique: true
+    t.index ["webauthn_id"], name: "index_learners_on_webauthn_id", unique: true
+  end
+
+  create_table "passkey_challenges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "challenge", null: false
+    t.string "purpose", null: false
+    t.uuid "learner_id"
+    t.citext "email"
+    t.datetime "expires_at", null: false
+    t.datetime "updated_at"
+    t.index ["challenge"], name: "index_passkey_challenges_on_challenge", unique: true
+    t.index ["learner_id"], name: "index_passkey_challenges_on_learner_id"
+  end
+
+  create_table "passkeys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "learner_id", null: false
+    t.string "external_id", null: false
+    t.text "public_key", null: false
+    t.bigint "sign_count", default: 0, null: false
+    t.datetime "updated_at"
+    t.index ["external_id"], name: "index_passkeys_on_external_id", unique: true
+    t.index ["learner_id"], name: "index_passkeys_on_learner_id"
+  end
+
+  create_table "revisions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "learner_id", null: false
+    t.string "course_id", null: false
+    t.integer "number", null: false
+    t.datetime "updated_at"
+    t.index ["learner_id", "course_id", "number"], name: "index_revisions_on_learner_id_and_course_id_and_number", unique: true
+  end
+
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.string "event", null: false
@@ -51,4 +105,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_27_085259) do
     t.string "whodunnit"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
+
+  add_foreign_key "completions", "learners"
+  add_foreign_key "learner_sessions", "learners"
+  add_foreign_key "passkey_challenges", "learners"
+  add_foreign_key "passkeys", "learners"
+  add_foreign_key "revisions", "learners"
 end

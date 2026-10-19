@@ -1,0 +1,11 @@
+id: sample
+title: Sample Course
+description: For specs.
+sections:
+  - title: First
+    problems: [one]
+    sections:
+      - title: Nested
+        problems: [two]
+  - title: Second
+    problems: [three]

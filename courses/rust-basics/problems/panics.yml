@@ -1,0 +1,28 @@
+id: panics
+title: Panics
+type: multiple_choice
+body: |
+  A panic is how a Rust program stops when it reaches a state it cannot
+  continue from. The program prints a message saying where the panic
+  happened, and the thread stops.
+
+  You can panic deliberately with the `panic!` macro. Some operations panic
+  for you: integer overflow in a debug build, indexing past the end of a
+  vector, and dividing an integer by zero.
+
+  Panics are for bugs. Errors that are expected to happen, such as a missing
+  file, are returned as values instead, which a later course covers.
+question: What happens when a program divides an integer by zero at run time?
+choices:
+  - id: a
+    text: The result is 0
+  - id: b
+    text: The result is the type's maximum value
+  - id: c
+    text: The program panics
+    correct: true
+  - id: d
+    text: The result is infinity
+explanation: |
+  Integer division by zero always panics, in debug and release builds alike.
+  Floating point division is different and gives infinity or NaN.

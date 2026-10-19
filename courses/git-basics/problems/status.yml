@@ -1,0 +1,24 @@
+id: status
+title: git status
+type: multiple_choice
+body: |
+  `git status` tells you what Git sees right now: which branch you are on,
+  which files have changed since the last commit, which changes are staged
+  for the next commit, and which files Git is not tracking at all.
+
+  It never changes anything, so it is safe to run whenever you are unsure
+  what state you are in. Many people run it before and after every other
+  command.
+question: What does git status change in your repository?
+choices:
+  - id: a
+    text: It stages every changed file
+  - id: b
+    text: It commits staged changes
+  - id: c
+    text: Nothing; it only reports
+    correct: true
+  - id: d
+    text: It downloads changes from the server
+explanation: |
+  git status only reads. That is what makes it the safe first step.

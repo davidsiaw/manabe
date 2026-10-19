@@ -1,0 +1,27 @@
+id: overflow
+title: Overflow and underflow
+type: multiple_choice
+body: |
+  What happens when arithmetic produces a value that does not fit in the type?
+  For example, a u8 holding 255 with 1 added to it.
+
+  Rust's answer depends on how the program was built. In a debug build (the
+  default for `cargo build` and `cargo run`) the program panics with
+  "attempt to add with overflow". In a release build (`--release`) the check
+  is left out for speed and the value wraps around, so 255 + 1 becomes 0.
+
+  Subtracting below zero in an unsigned type is called underflow and behaves
+  the same way.
+question: In a debug build, what happens when a u8 holding 255 has 1 added to it?
+choices:
+  - id: a
+    text: The result wraps around to 0
+  - id: b
+    text: The result is 256
+  - id: c
+    text: The program panics
+    correct: true
+  - id: d
+    text: The result stays at 255
+explanation: |
+  Debug builds check for overflow and panic. Only release builds wrap.

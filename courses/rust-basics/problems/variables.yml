@@ -1,0 +1,31 @@
+id: variables
+title: Variables
+type: multiple_choice
+body: |
+  Variables are introduced with `let`. Their type can usually be inferred:
+
+      let x = 5;          // i32
+      let y: u64 = 5;     // stated explicitly
+
+  Variables are immutable by default. Once x has a value, it cannot be
+  assigned a new one. To allow that, declare it with `let mut`.
+
+  You can also declare a new variable with the same name, which hides the old
+  one. This is called shadowing, and it is allowed even without mut:
+
+      let x = 5;
+      let x = x + 1;      // a new x, equal to 6
+question: What happens when this code is compiled? let x = 5; x = 6;
+choices:
+  - id: a
+    text: It compiles, and x ends up as 6
+  - id: b
+    text: It compiles, and x stays 5
+  - id: c
+    text: It fails to compile, because x is not mutable
+    correct: true
+  - id: d
+    text: It compiles, but panics when run
+explanation: |
+  Assigning to an immutable variable is a compile error. Use let mut x = 5;
+  or shadow it with let x = 6;

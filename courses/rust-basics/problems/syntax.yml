@@ -1,0 +1,33 @@
+id: syntax
+title: Syntax
+type: multiple_choice
+body: |
+  A function is declared with the `fn` keyword, followed by its name, its
+  parameters in parentheses and, if it returns something, an arrow and the
+  return type:
+
+      fn add(a: u32, b: u32) -> u32 {
+          a + b
+      }
+
+  Every parameter must have a type. Rust does not guess the types of function
+  parameters.
+
+  Notice that `a + b` has no semicolon and no `return`. The last expression in
+  a block is the value of the block, so it becomes the return value of the
+  function. Adding a semicolon would turn it into a statement, and the
+  function would then return nothing.
+question: Which of these functions compiles and returns twice its input?
+choices:
+  - id: a
+    text: "fn double(x) -> u32 { x * 2 }"
+  - id: b
+    text: "fn double(x: u32) -> u32 { x * 2; }"
+  - id: c
+    text: "fn double(x: u32) -> u32 { x * 2 }"
+    correct: true
+  - id: d
+    text: "function double(x: u32): u32 { return x * 2 }"
+explanation: |
+  The first is missing the parameter type, the second discards the value with
+  a semicolon, and the last uses another language's syntax.

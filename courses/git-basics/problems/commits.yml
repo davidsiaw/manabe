@@ -1,0 +1,28 @@
+id: commits
+title: Commits
+type: multiple_choice
+body: |
+  `git commit -m "message"` records the staged changes as a commit: a
+  snapshot of the project, with an author, a date, a message and a pointer to
+  the commit before it.
+
+  Each commit is identified by a hash, a long string such as
+  `3f9c2a1e...`, usually shortened to its first seven characters. The hash is
+  computed from the commit's content and its parent, so a commit cannot be
+  changed without getting a different hash.
+
+  `git log` lists the commits, newest first.
+question: Why can a commit not be edited in place without its hash changing?
+choices:
+  - id: a
+    text: Because Git locks commits for 24 hours
+  - id: b
+    text: Because the hash is computed from the commit's content and parent
+    correct: true
+  - id: c
+    text: Because hashes are assigned at random
+  - id: d
+    text: Because commits are stored on the server
+explanation: |
+  Change anything in a commit and its hash changes, and so do the hashes of
+  every commit after it.

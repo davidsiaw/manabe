@@ -1,0 +1,30 @@
+id: staging
+title: Staging with git add
+type: multiple_choice
+body: |
+  A commit does not automatically include every file you changed. First you
+  choose what goes into it, by staging changes with `git add`:
+
+      git add README.md
+      git add src/
+
+  Staged changes sit in the staging area (also called the index) until you
+  commit. This lets you split unrelated edits into separate commits, even
+  when you made them at the same time.
+
+  If you change a file again after staging it, the new change is not staged
+  until you run `git add` again.
+question: You edit a.txt and b.txt, run git add a.txt, then commit. What does the commit contain?
+choices:
+  - id: a
+    text: The changes to both files
+  - id: b
+    text: Only the changes to a.txt
+    correct: true
+  - id: c
+    text: Only the changes to b.txt
+  - id: d
+    text: Nothing, because b.txt was not staged
+explanation: |
+  Only staged changes are committed. The change to b.txt stays in your
+  working folder, uncommitted.

@@ -1,0 +1,26 @@
+id: saturating
+title: Saturating arithmetic
+type: multiple_choice
+body: |
+  Sometimes neither panicking nor wrapping is what you want. Integer types
+  have methods that spell out the behaviour, whatever the build:
+
+  - `wrapping_add` always wraps around.
+  - `saturating_add` stops at the type's maximum (or minimum).
+  - `checked_add` returns None on overflow and Some(result) otherwise.
+
+  The same families exist for sub, mul and the other operations.
+question: What is the value of 250u8.saturating_add(10)?
+choices:
+  - id: a
+    text: "4"
+  - id: b
+    text: "255"
+    correct: true
+  - id: c
+    text: "260"
+  - id: d
+    text: It panics
+explanation: |
+  260 does not fit in a u8, so the result saturates at the maximum, 255.
+  wrapping_add would have given 4.

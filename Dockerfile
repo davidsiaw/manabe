@@ -29,6 +29,7 @@ ADD --chown=srv:srv db /srv/db
 ADD --chown=srv:srv config /srv/config
 ADD --chown=srv:srv spec /srv/spec
 ADD --chown=srv:srv app /srv/app
+ADD --chown=srv:srv courses /srv/courses
 
 RUN chown -R srv /srv && \
     chgrp -R srv /srv

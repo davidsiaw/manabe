@@ -1,0 +1,27 @@
+id: welcome
+title: Welcome
+type: multiple_choice
+body: |
+  Welcome to Rust Basics. Each problem explains one small idea and then asks
+  a question about it. Answer correctly and the problem is ticked in the
+  sidebar. You can come back to any problem at any time.
+
+  Rust projects are usually managed with Cargo, Rust's build tool and package
+  manager. `cargo new hello` creates a project, `cargo build` compiles it and
+  `cargo run` compiles it and then runs the result.
+
+  Rust itself is installed and updated with rustup. The compiler is called
+  rustc, but you rarely run it directly: Cargo runs it for you.
+question: Which command compiles your project and then runs it?
+choices:
+  - id: a
+    text: rustup run
+  - id: b
+    text: cargo run
+    correct: true
+  - id: c
+    text: rustc run
+  - id: d
+    text: cargo new
+explanation: |
+  cargo run builds the project if anything changed, then runs the binary.

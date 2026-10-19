@@ -1,0 +1,29 @@
+id: for-loops
+title: "Loops: for"
+type: multiple_choice
+body: |
+  A `for` loop runs once for each item in a sequence. A range is the simplest
+  sequence:
+
+      for i in 1..5 {
+          println!("{i}");
+      }
+
+  `1..5` includes the start but not the end, so this prints 1, 2, 3 and 4.
+  To include the end, write `1..=5`.
+
+  for loops are usually clearer than while loops, because there is no counter
+  to forget to update.
+question: How many times does the body of for i in 0..=5 { } run?
+choices:
+  - id: a
+    text: "4"
+  - id: b
+    text: "5"
+  - id: c
+    text: "6"
+    correct: true
+  - id: d
+    text: "7"
+explanation: |
+  0..=5 is 0, 1, 2, 3, 4 and 5: six values.

@@ -1,0 +1,26 @@
+id: merging
+title: Merging
+type: multiple_choice
+body: |
+  `git merge feature` brings the commits of feature into the current branch.
+
+  If the current branch has no commits that feature lacks, Git simply moves
+  the current branch forward to where feature is. This is a fast-forward,
+  and it creates no new commit.
+
+  Otherwise both branches have moved on, and Git creates a merge commit with
+  two parents that combines them. If both changed the same lines, Git stops
+  and asks you to resolve the conflict before committing.
+question: You are on main, which has no new commits since feature branched off. What does git merge feature do?
+choices:
+  - id: a
+    text: Creates a merge commit with two parents
+  - id: b
+    text: Reports a conflict
+  - id: c
+    text: Moves main forward to feature's commit, without a new commit
+    correct: true
+  - id: d
+    text: Deletes the feature branch
+explanation: |
+  With nothing new on main, a fast-forward is enough.

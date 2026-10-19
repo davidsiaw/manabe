@@ -1,0 +1,28 @@
+id: if-else
+title: "Branching: if/else"
+type: multiple_choice
+body: |
+  An `if` takes a condition without parentheses, and the condition must be a
+  bool. Rust does not treat numbers as true or false, so `if 1 { }` does not
+  compile.
+
+  In Rust, `if` is an expression: it produces a value. That means it can be
+  used on the right of a `let`:
+
+      let size = if n > 10 { "big" } else { "small" };
+
+  When used this way, both branches must produce the same type, and there must
+  be an else branch.
+question: Given let n = 10; what is the value of size?  let size = if n > 10 { "big" } else { "small" };
+choices:
+  - id: a
+    text: '"big"'
+  - id: b
+    text: '"small"'
+    correct: true
+  - id: c
+    text: It does not compile, because if cannot produce a value
+  - id: d
+    text: It does not compile, because the condition needs parentheses
+explanation: |
+  10 > 10 is false, so the else branch is taken.

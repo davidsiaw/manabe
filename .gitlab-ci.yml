@@ -8,7 +8,7 @@ image: "ruby:3.4-alpine"
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
 
 variables:
-  POSTGRES_DB: rails-zen_test
+  POSTGRES_DB: manabase_test
   POSTGRES_PASSWORD: postgres
 
 # Cache gems in between builds

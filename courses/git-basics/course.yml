@@ -1,0 +1,12 @@
+id: git-basics
+title: Git Basics
+description: |
+  What Git keeps track of, and the handful of commands you use every day:
+  status, add, commit, branch, switch and merge.
+sections:
+  - title: Getting Started
+    problems: [repositories, status]
+  - title: Saving Work
+    problems: [staging, commits]
+  - title: Branches
+    problems: [branches, merging]

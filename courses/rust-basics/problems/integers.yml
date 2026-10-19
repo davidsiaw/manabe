@@ -1,0 +1,29 @@
+id: integers
+title: Integers
+type: multiple_choice
+body: |
+  Rust has a family of integer types, named by whether they can hold negative
+  numbers and by how many bits wide they are.
+
+  Types starting with `i` are signed: i8, i16, i32, i64 and i128. Types
+  starting with `u` are unsigned and can only hold zero and positive values:
+  u8, u16, u32, u64 and u128.
+
+  An unsigned type with n bits holds 0 to 2^n - 1. A signed type with n bits
+  holds -2^(n-1) to 2^(n-1) - 1. So an i8 runs from -128 to 127.
+
+  There are also isize and usize, whose width matches the machine's pointer
+  size. usize is the type used for indexing into collections.
+question: What is the largest value a u8 can hold?
+choices:
+  - id: a
+    text: "127"
+  - id: b
+    text: "128"
+  - id: c
+    text: "255"
+    correct: true
+  - id: d
+    text: "256"
+explanation: |
+  u8 has 8 bits and no sign, so its largest value is 2^8 - 1 = 255.

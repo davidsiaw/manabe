@@ -1,0 +1,14 @@
+id: rust-basics
+title: Rust Basics
+description: |
+  A first look at Rust through small questions: functions, numbers, variables
+  and control flow.
+sections:
+  - title: Welcome
+    problems: [welcome, syntax]
+  - title: A Basic Calculator
+    sections:
+      - title: Numbers
+        problems: [integers, literals, overflow, saturating, as-casting]
+      - title: Variables and Control Flow
+        problems: [variables, if-else, panics, while-loops, for-loops]

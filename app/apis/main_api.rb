@@ -11,6 +11,10 @@ class MainApi < Grape::API
   class V1Api < Grape::API
     version 'v1', using: :path
     mount HealthApi
+    mount LearnersApi
+    mount AccountApi
+    mount CoursesApi
+    mount ProblemsApi
   end
 
   mount V1Api
