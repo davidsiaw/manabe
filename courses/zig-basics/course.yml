@@ -1,0 +1,44 @@
+id: zig-basics
+title: Zig Basics
+language: zig
+description: |
+  Zig from the start, in your browser: your programs are compiled by the real
+  Zig compiler (0.17), running right here, and you see everything it says.
+  Covers chapters 1 to 3 of Introduction to Zig: a project-based book, by
+  Pedro Duarte Faria (pedropark99.github.io/zig-book), licensed CC BY 4.0:
+  values and types, arrays, slices and strings, control flow, structs, and
+  memory and allocators. The text here is rewritten and shortened, and the
+  examples are changed into exercises.
+sections:
+  - title: Introducing Zig
+    sections:
+      - title: Your First Program
+        problems: [hello-world, error-return, flush, debug-print]
+      - title: Values and Types
+        problems: [const-var, never-mutated, unused, comptime-int, integer-types, undefined]
+      - title: Arrays and Slices
+        problems: [arrays, slices, array-operators, labeled-blocks]
+      - title: Strings
+        problems: [string-types, count-vowels, string-equality, unicode-bytes]
+      - title: Safety
+        problems: [bounds-check]
+  - title: Control Flow, Structs and Types
+    sections:
+      - title: Branching
+        problems: [if-else, switch-exhaustive, switch-ranges]
+      - title: defer and errdefer
+        problems: [defer, defer-cleanup, errdefer]
+      - title: Loops
+        problems: [for-index, while-loops, break-continue]
+      - title: Functions
+        problems: [immutable-params, pointer-params]
+      - title: Structs
+        problems: [define-struct, struct-const, self-pointer, anonymous-structs, pub-and-modules]
+      - title: Converting Types
+        problems: [casting, intcast-safety]
+  - title: Memory and Allocators
+    sections:
+      - title: Where Memory Lives
+        problems: [compile-time-known, stack-heap, stack-overflow]
+      - title: Allocators
+        problems: [why-allocators, alloc-free, leak, fixed-buffer, allocator-kinds, arena, create-destroy, repeat-word]

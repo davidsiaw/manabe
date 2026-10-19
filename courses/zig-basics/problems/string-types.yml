@@ -1,0 +1,31 @@
+id: string-types
+title: "What a String Is"
+type: multiple_choice
+body: |
+  Zig has no string type. A string literal such as "Hi" is an array of bytes,
+  u8, with one extra zero byte after the end, a sentinel, for compatibility
+  with C. Its type is *const [2:0]u8: a pointer to a constant array of 2
+  bytes, ended by 0.
+
+  Functions usually take strings as slices, []const u8: some bytes and a
+  length. A literal turns into one where one is needed.
+
+  {s} prints bytes as text; {any} prints the numbers.
+question: |
+  What does this print?
+
+      const t: []const u8 = "Hi";
+      std.debug.print("{s} {any}\n", .{ t, t });
+choices:
+  - id: a
+    text: "Hi { 72, 105 }"
+    correct: true
+  - id: b
+    text: "Hi Hi"
+  - id: c
+    text: "Hi { 72, 105, 0 }"
+  - id: d
+    text: "{ 72, 105 } Hi"
+explanation: |
+  Each character of "Hi" is one byte, H is 72 and i is 105. The slice's
+  length is 2: the sentinel is past its end.

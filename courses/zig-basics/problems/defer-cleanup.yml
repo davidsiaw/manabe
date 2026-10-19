@@ -1,0 +1,41 @@
+id: defer-cleanup
+title: "Cleaning Up with defer"
+type: code
+language: zig
+body: |
+  The program below "opens" and "closes" things, printing what it does. It
+  returns early when it finds a problem, and that return skips the close.
+
+  Put defer to work: a deferred close runs whichever way the function
+  leaves.
+question: |
+  Change process so that "closing" is printed every time, after everything
+  else the function printed, also when it returns early.
+starter_code: |
+  const std = @import("std");
+
+  fn process(name: []const u8, fail: bool) void {
+      std.debug.print("opening {s}\n", .{name});
+      if (fail) {
+          std.debug.print("problem with {s}\n", .{name});
+          return;
+      }
+      std.debug.print("working on {s}\n", .{name});
+      std.debug.print("closing {s}\n", .{name});
+  }
+
+  pub fn main() void {
+      process("a.txt", false);
+      process("b.txt", true);
+  }
+expected_output: |
+  opening a.txt
+  working on a.txt
+  closing a.txt
+  opening b.txt
+  problem with b.txt
+  closing b.txt
+explanation: |
+  defer std.debug.print("closing {s}\n", .{name}); straight after the
+  opening line, and remove the old close at the end. Putting the cleanup
+  next to the setup is the point: you cannot forget it on some path.

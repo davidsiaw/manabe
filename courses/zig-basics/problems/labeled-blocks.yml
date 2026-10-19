@@ -1,0 +1,31 @@
+id: labeled-blocks
+title: "Blocks with Values"
+type: code
+language: zig
+body: |
+  Curly brackets make a block, a scope of its own. A block can also produce a
+  value: give it a label, and break out of it with the value:
+
+      const y = compute: {
+          var t: u32 = 6;
+          t *= 7;
+          break :compute t;
+      };     // y is 42
+
+  The variables inside are gone after the closing bracket; only the value
+  leaves.
+question: |
+  Set total with a labeled block that adds up 1 + 2 + ... + 100 with a loop,
+  and breaks with the sum.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const total: u32 = 0; // replace 0 with a labeled block
+      std.debug.print("total: {d}\n", .{total});
+  }
+expected_output: |
+  total: 5050
+explanation: |
+  The loop's variables stay inside the block, and total can be a const
+  although it took several steps to work out.

@@ -1,0 +1,31 @@
+id: allocator-kinds
+title: "Choosing an Allocator"
+type: multiple_choice
+body: |
+  The allocators in std.heap, in short:
+
+  - DebugAllocator: general purpose, with checks for leaks and double frees.
+    The one to use while learning and testing.
+  - page_allocator: asks the operating system for whole pages of memory at a
+    time. Simple, but wasteful for small allocations.
+  - FixedBufferAllocator: hands out pieces of one buffer you give it, often
+    on the stack. Fast; limited to the buffer's size.
+  - ArenaAllocator: wraps another allocator, and frees everything allocated
+    through it at once, when the arena is deinitialised.
+question: |
+  A program makes many small allocations while handling one request, and all
+  of them can be thrown away together when the request is done. Which
+  allocator fits best?
+choices:
+  - id: a
+    text: "ArenaAllocator"
+    correct: true
+  - id: b
+    text: "page_allocator"
+  - id: c
+    text: "FixedBufferAllocator, with a buffer of 10 bytes"
+  - id: d
+    text: "No allocator; put it all in global variables"
+explanation: |
+  An arena lets you skip freeing each piece: one deinit when the request
+  ends frees it all.

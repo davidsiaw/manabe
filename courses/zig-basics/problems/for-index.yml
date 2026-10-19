@@ -1,0 +1,31 @@
+id: for-index
+title: "for with an Index"
+type: code
+language: zig
+body: |
+  A for loop can go through several things at once, in step. A range with no
+  end, 0.., counts alongside, which gives each element's index:
+
+      for (items, 0..) |item, i| {
+          ...
+      }
+
+  The captures between the bars match the things in parentheses, in order.
+question: |
+  Print the shopping list numbered from 1, as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const items = [_][]const u8{ "milk", "eggs", "bread" };
+      for (items) |item| {
+          std.debug.print("{s}\n", .{item});
+      }
+  }
+expected_output: |
+  1. milk
+  2. eggs
+  3. bread
+explanation: |
+  for (items, 0..) |item, i|. The index starts at 0, so print i + 1. 1..
+  would also work, counting from 1.

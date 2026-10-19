@@ -1,0 +1,32 @@
+id: debug-print
+title: "std.debug.print"
+type: multiple_choice
+body: |
+  There is a shorter way to print: std.debug.print, which needs no setup and
+  no try. It writes to standard error, straight away, without a buffer:
+
+      std.debug.print("{d} + {d} = {d}\n", .{ 2, 2, 4 });
+
+  It is meant for messages while you develop, and the rest of this course
+  uses it to keep programs short. Programs whose output is their purpose
+  write to stdout, as before. In this course, both count as what your
+  program printed.
+question: |
+  What appears, in order, when this runs? (The stdout setup is not shown.)
+
+      try stdout.print("A\n", .{});
+      std.debug.print("B\n", .{});
+      try stdout.flush();
+choices:
+  - id: a
+    text: "B, then A"
+    correct: true
+  - id: b
+    text: "A, then B"
+  - id: c
+    text: "Only A"
+  - id: d
+    text: "Only B"
+explanation: |
+  A waits in stdout's buffer until the flush, while B is written at once. It
+  is the same in a terminal, so do not mix the two when the order matters.

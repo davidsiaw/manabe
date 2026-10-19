@@ -1,0 +1,24 @@
+id: stack-overflow
+title: "Stack Overflow"
+type: multiple_choice
+body: |
+  The stack is small, a few megabytes or less. Putting something very large in
+  a local variable, or recursing too deeply, runs past its end: a stack
+  overflow, which crashes the program.
+
+      var big: [100 * 1024 * 1024]u8 = undefined;   // 100 MB on the stack
+question: |
+  Where should a buffer of 100 MB go?
+choices:
+  - id: a
+    text: "On the heap, allocated with an allocator"
+    correct: true
+  - id: b
+    text: "On the stack, as a local array"
+  - id: c
+    text: "In a const, so it does not take space"
+  - id: d
+    text: "Anywhere: Zig grows the stack as needed"
+explanation: |
+  Large or variable-sized data belongs on the heap; the stack is for small
+  things of known size.

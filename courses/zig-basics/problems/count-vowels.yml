@@ -1,0 +1,30 @@
+id: count-vowels
+title: "Going Through a String"
+type: code
+language: zig
+body: |
+  A string is bytes, so a for loop goes through it byte by byte, and a
+  character literal such as 'a' is a u8 that can be compared with each one:
+
+      for (text) |c| {
+          if (c == 'z') { ... }
+      }
+
+  Conditions combine with and and or, which are words in Zig.
+question: |
+  Count the vowels (a, e, i, o, u, lower case only) in text, and print them
+  as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const text = "the quick brown fox jumps over the lazy dog";
+      var vowels: usize = 0;
+      _ = text;
+      std.debug.print("{d} vowels\n", .{vowels});
+  }
+expected_output: |
+  11 vowels
+explanation: |
+  A switch would also do, once switch comes up: switch (c) { 'a', 'e', 'i',
+  'o', 'u' => vowels += 1, else => {} }.

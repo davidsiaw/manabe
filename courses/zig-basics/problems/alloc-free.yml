@@ -1,0 +1,38 @@
+id: alloc-free
+title: "alloc and free"
+type: code
+language: zig
+body: |
+  An allocator's alloc asks for a slice of a number of elements, and free
+  gives it back:
+
+      const numbers = try allocator.alloc(u64, n);   // a []u64, n long
+      defer allocator.free(numbers);
+
+  alloc can fail with error.OutOfMemory, hence try. defer right after it
+  makes sure the memory is freed when the function ends. The new slice's
+  contents are undefined until you fill them.
+
+  The program sets up a DebugAllocator, a general purpose allocator that
+  also checks for mistakes, such as forgetting to free.
+question: |
+  Allocate a slice of n u64 values, fill it with the squares 1, 4, 9 and so
+  on, print it with {any}, and free it.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      const n: usize = 6;
+      _ = n;
+      _ = allocator;
+  }
+expected_output: |
+  { 1, 4, 9, 16, 25, 36 }
+explanation: |
+  for (squares, 1..) |*square, i| captures a pointer to each element, so
+  square.* = i * i writes into the slice. A plain |square| would be a copy,
+  and could not be assigned to. A while loop with an index works too.

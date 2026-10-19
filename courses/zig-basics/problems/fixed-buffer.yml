@@ -1,0 +1,38 @@
+id: fixed-buffer
+title: "FixedBufferAllocator"
+type: code
+language: zig
+body: |
+  A FixedBufferAllocator hands out memory from a buffer you give it, often an
+  array on the stack. It never touches the heap, and it is fast, but it can
+  only give out what fits in the buffer; past that, alloc fails with
+  error.OutOfMemory.
+
+      var buffer: [100]u8 = undefined;
+      var fba = std.heap.FixedBufferAllocator.init(&buffer);
+      const allocator = fba.allocator();
+
+  When main returns an error, the program prints it and stops: run the program
+  below and see.
+question: |
+  The buffer is too small. Make it big enough for the allocation, so that the
+  program runs to the end.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var buffer: [10]u8 = undefined;
+      var fba = std.heap.FixedBufferAllocator.init(&buffer);
+      const allocator = fba.allocator();
+
+      const message = try allocator.alloc(u8, 26);
+      defer allocator.free(message);
+      for (message, 0..) |*c, i| c.* = 'a' + @as(u8, @intCast(i));
+      std.debug.print("{s}\n", .{message});
+  }
+expected_output: |
+  abcdefghijklmnopqrstuvwxyz
+explanation: |
+  A buffer of at least 26 bytes. The program first stopped with "error:
+  OutOfMemory": try passed alloc's error up out of main. @as(u8, ...) says
+  which type the converted index should be.

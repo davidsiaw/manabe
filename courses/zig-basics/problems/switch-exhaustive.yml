@@ -1,0 +1,46 @@
+id: switch-exhaustive
+title: "switch Must Cover Everything"
+type: code
+language: zig
+body: |
+  switch picks a branch by value. Each branch lists values, then =>, then the
+  result; several values can share a branch:
+
+      const area = switch (role) {
+          .PM, .SE, .DPE, .PO => "Platform",
+          .DE, .DA => "Data & Analytics",
+      };
+
+  role is an enum, a type with a fixed set of values, written .PM and so on
+  when the type is known. A switch must handle every possible value, or the
+  program does not compile.
+question: |
+  The company has added a role, KS, for knowledge sharing, and the program no
+  longer compiles. KS belongs to "Education". Read the compiler's notes, fix
+  it, and run it.
+starter_code: |
+  const std = @import("std");
+
+  const Role = enum { SE, DPE, DE, DA, PM, PO, KS };
+
+  fn area(role: Role) []const u8 {
+      return switch (role) {
+          .PM, .SE, .DPE, .PO => "Platform",
+          .DE, .DA => "Data & Analytics",
+      };
+  }
+
+  pub fn main() void {
+      for ([_]Role{ .SE, .DA, .KS }) |role| {
+          std.debug.print("{s}: {s}\n", .{ @tagName(role), area(role) });
+      }
+  }
+expected_output: |
+  SE: Platform
+  DA: Data & Analytics
+  KS: Education
+explanation: |
+  The compiler says "switch must handle all possibilities" and notes
+  "unhandled enumeration value: 'KS'". Adding a value to an enum makes the
+  compiler find every switch that has to deal with it. @tagName gives a
+  value's name as a string.

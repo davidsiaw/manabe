@@ -1,0 +1,40 @@
+id: switch-ranges
+title: "Ranges and else"
+type: code
+language: zig
+body: |
+  A branch can match a range of values, written with three dots, both ends
+  included: 0...9. else catches everything the other branches do not:
+
+      const kind = switch (age) {
+          0...12 => "child",
+          13...19 => "teenager",
+          else => "adult",
+      };
+
+  Numbers have too many values to list, so a switch on a number needs else
+  (or ranges that cover everything).
+question: |
+  Write grade with a switch: 90 to 100 is 'A', 80 to 89 'B', 70 to 79 'C',
+  and anything else 'F'. {c} prints a u8 as a character.
+starter_code: |
+  const std = @import("std");
+
+  fn grade(score: u8) u8 {
+      _ = score;
+      return '?';
+  }
+
+  pub fn main() void {
+      for ([_]u8{ 95, 83, 70, 42 }) |score| {
+          std.debug.print("{d}: {c}\n", .{ score, grade(score) });
+      }
+  }
+expected_output: |
+  95: A
+  83: B
+  70: C
+  42: F
+explanation: |
+  switch is an expression, so return switch (score) { ... }; returns the
+  branch's value. The ranges are inclusive at both ends, unlike slices.

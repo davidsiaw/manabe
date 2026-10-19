@@ -8,7 +8,10 @@ The things most likely to bite:
 - After a migration, migrate the test database too and restart the server with `heighliner up`.
 - ULID references: `ulid :x_id, primary_key: false` when required; `attribute :x_id, ULID::Rails::Type.new` when optional. See docs/data-model.md.
 - `let(:json)` is memoized; do not use it in examples that make several requests.
-- Correct answers must never be sent to the frontend.
+- Correct answers must never be sent to the frontend; for code problems, neither is `expected_output`.
+- Courses are loaded with `YAML.safe_load`: quote anything YAML might read as another type (`:hi` is a Symbol and the course fails to load). `spec/services/course_catalog_spec.rb` loads every course.
+- A code problem's `expected_output` must be what the real runtime or toolchain prints. Run every solution, and every starter, before committing (courses/README.md, "Checking code problems").
+- Heighliner.config takes shared names from heighliner (`<%= @config[:shared_names][:chrome] %>`); never hard-code `heighliner-chrome`, which is `kaiser-chrome` on upgraded hosts.
 - Specs and RuboCop must pass: `heighliner login bundle exec rspec` and `heighliner login bundle exec rubocop`.
 
 ## Ruby version

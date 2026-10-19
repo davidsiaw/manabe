@@ -1,0 +1,29 @@
+id: undefined
+title: "undefined"
+type: multiple_choice
+body: |
+  Every variable needs a value when it is declared. When you will only give
+  it one later, say so with undefined:
+
+      var buffer: [1024]u8 = undefined;
+      var x: u8 = undefined;
+      x = 7;
+
+  That is what the stdout setup does with its buffer.
+question: |
+  What is in x after var x: u8 = undefined; and before anything is assigned
+  to it?
+choices:
+  - id: a
+    text: "Anything: reading it before assigning is a bug"
+    correct: true
+  - id: b
+    text: "0"
+  - id: c
+    text: "null"
+  - id: d
+    text: "It does not compile"
+explanation: |
+  undefined means "no particular value": the memory holds whatever it held.
+  Debug builds fill it with 0xAA bytes to make such bugs easier to spot, but
+  nothing can be relied on.

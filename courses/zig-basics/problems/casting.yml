@@ -1,0 +1,38 @@
+id: casting
+title: "Converting Numbers"
+type: code
+language: zig
+body: |
+  Zig converts between number types on its own only when nothing can be
+  lost: a u8 into a u32, or a u32 into an f64, which holds every u32 exactly.
+  Everything else you ask for, with a builtin that takes its result type from
+  where the value goes:
+
+      const ratio: f64 = @floatFromInt(count);   // integer to float
+      const small: u8 = @intCast(big);           // to a smaller integer
+      const whole: u32 = @intFromFloat(x);       // float to integer
+
+  The program below compiles and runs, and its answer is wrong: the mean of
+  3, 4 and 9 is 5.33. Integer division happened first, dropping the
+  fraction, and only the result, 5, was turned into an f64.
+question: |
+  Make average convert both numbers to f64 with @floatFromInt before
+  dividing, so that it prints 5.33.
+starter_code: |
+  const std = @import("std");
+
+  fn average(values: []const u32) f64 {
+      var total: u32 = 0;
+      for (values) |v| total += v;
+      return total / values.len;
+  }
+
+  pub fn main() void {
+      const values = [_]u32{ 3, 4, 9 };
+      std.debug.print("{d:.2}\n", .{average(&values)});
+  }
+expected_output: |
+  5.33
+explanation: |
+  Converting first makes the division a float division. {d:.2} prints two
+  digits after the point, and &values passes the array as a slice.

@@ -1,0 +1,24 @@
+id: integer-types
+title: "Integer Types"
+type: multiple_choice
+body: |
+  Each integer type holds a fixed range. An unsigned type with n bits holds 0
+  to 2^n - 1; a signed one -2^(n-1) to 2^(n-1) - 1. So a u8 holds 0 to 255
+  and an i8 -128 to 127.
+
+  Zig also has integers of any width, such as u3 (0 to 7) or i21.
+question: |
+  Which type should hold the index of an element in an array?
+choices:
+  - id: a
+    text: "usize"
+    correct: true
+  - id: b
+    text: "i32"
+  - id: c
+    text: "u8"
+  - id: d
+    text: "f64"
+explanation: |
+  Lengths and indexes are usize in Zig: arr.len is a usize, and indexing
+  with a different integer type often needs a cast.

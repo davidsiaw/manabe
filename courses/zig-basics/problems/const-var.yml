@@ -1,0 +1,31 @@
+id: const-var
+title: "const and var"
+type: code
+language: zig
+body: |
+  Zig has two ways to make a named value:
+
+      const answer: u32 = 42;    // can never change
+      var count: u32 = 0;        // can be changed later
+      count += 1;
+
+  The type comes after a colon. When the compiler can tell it from the value,
+  it can be left out: const name = "Ziggy";.
+
+  std.debug.print's {d} prints a number in decimal.
+question: |
+  The program does not compile; read the compiler's message, fix it, and run
+  it.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const count: u32 = 0;
+      count += 1;
+      std.debug.print("count is {d}\n", .{count});
+  }
+expected_output: |
+  count is 1
+explanation: |
+  "cannot assign to constant": count changes, so it must be var. Prefer
+  const for everything that does not change.

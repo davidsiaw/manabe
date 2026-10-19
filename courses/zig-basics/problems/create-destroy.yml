@@ -1,0 +1,38 @@
+id: create-destroy
+title: "create and destroy"
+type: code
+language: zig
+body: |
+  alloc and free are for slices of several elements. For a single value,
+  there are create, which returns a pointer to new memory for one value of a
+  type, and destroy, which frees it:
+
+      const user = try allocator.create(User);
+      defer allocator.destroy(user);
+      user.* = User{ .id = 1, .name = "Ziggy" };
+
+  Through the pointer, fields are reached directly: user.name.
+question: |
+  Create a Point on the heap with create, set it to x 3 and y 4, print it as
+  below, and destroy it.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      _ = allocator;
+  }
+
+  const Point = struct {
+      x: i32,
+      y: i32,
+  };
+expected_output: |
+  point at 3, 4
+explanation: |
+  create(Point) gives a *Point. p.* = ... fills it in, and p.x reads a field
+  through the pointer without writing p.*.x. Declarations such as Point can
+  come after the code that uses them.

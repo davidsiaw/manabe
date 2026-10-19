@@ -85,7 +85,7 @@ browser, where it runs; the answer is right when it prints `expected_output`.
 id: hello-world
 title: Hello, World
 type: code
-language: ruby                # the only one the browser can run for now
+language: ruby                # ruby or zig: the languages the browser can run
 body: |
   Plain text explanation, as above.
 question: Print Hello, world!
@@ -98,7 +98,10 @@ explanation: |                # optional; shown once answered correctly
 ```
 
 Output is compared ignoring trailing spaces on each line and blank lines at
-the end. Ruby runs on mruby 3.4, not CRuby, so `expected_output` must be what
+the end. For Zig, what the program printed includes standard error, so
+`std.debug.print` counts; the compiler's messages do not. Zig problems are
+compiled with Zig 0.17.0, in Debug mode, so safety checks panic. Ruby runs
+on mruby 3.4, not CRuby, so `expected_output` must be what
 mruby prints: avoid printing inexact Floats (mruby prints fewer digits), and
 `it` in blocks does not exist (use `_1` or a named parameter). The frontend's
 docs/runtimes.md lists the differences and how to run a solution on the real
@@ -156,3 +159,40 @@ course.
 
 Courses are read from disk on every request, so edits show up without a
 restart.
+
+## Checking code problems
+
+The loader cannot tell whether `expected_output` is right, so check every
+code problem by running it, before committing. For each one:
+
+1. Run the solution, and compare what it prints with `expected_output`, after
+   trimming trailing spaces and blank lines as the backend does.
+2. Run the starter code too. It must not already print `expected_output`,
+   unless the problem only asks the learner to run it (`install-rust`,
+   `guess-input`). When the text quotes a compiler error or a warning, copy
+   it from this run, not from memory.
+3. For programs that read input, run them in a pseudo-terminal, so that the
+   typed text is echoed as it is in a real terminal and appears in the
+   output:
+
+       (sleep 0.5; printf '50\n'; sleep 0.3; printf '42\n') \
+         | script -qec ./target/debug/guessing_game /dev/null | tr -d '\r'
+
+Zig: compile and run each program the way the browser does, with the
+frontend's `Resources/runtimes/zig/` files under Node and
+`@bjorn3/browser_wasi_shim`, and the flags in `runtimes/zig/worker.js`
+(frontend docs/runtimes.md); a local `zig run` uses a different target and
+can behave differently (`usize` is 32 bits in the browser). Then submit
+each solution through the app, which also catches problems in the text.
+
+Ruby: run the solution on the frontend's mruby build, not on CRuby; with
+Node, `require('Resources/runtimes/ruby/mruby.js')` and call
+`ccall('manabase_run', 'number', ['string'], [code])` (frontend
+docs/runtimes.md). Rust: put each program in one Cargo project's
+`src/main.rs` and `cargo run` it, with a current stable toolchain. The
+`rust-basics` programs were last checked with rustc 1.99.1.
+
+Also check that solutions compile without warnings where possible: a
+beginner reads every warning as something they did wrong. Where one cannot
+be avoided (a field only printed with `{:?}` "is never read"), say in the
+problem text that it is expected.

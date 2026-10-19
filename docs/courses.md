@@ -13,7 +13,47 @@ courses/
                           (type code: language, starter_code, expected_output instead of choices)
 ```
 
-There are three sample courses, `rust-basics` (105 problems, original text following chapters 1 to 6 of The Rust Programming Language, with some examples adapted from it; 52 are programs the learner runs on their own computer), `git-basics` (6 problems) and `ruby-basics` (10 problems, 8 of them code). Text is plain: the frontend joins wrapped lines into paragraphs, keeps list items on their own lines, and shows indented lines as highlighted code, so write it like simple markdown without markup (courses/README.md). A course may say which `language` the code in its text is in; `problem_json` sends it with multiple choice problems.
+The courses are described below, under "The courses". Text is plain: the frontend joins wrapped lines into paragraphs, keeps list items on their own lines, and shows indented lines as highlighted code, so write it like simple markdown without markup (courses/README.md). A course may say which `language` the code in its text is in; `problem_json` sends it with multiple choice problems.
+
+## The courses
+
+| Course | Language | Problems | What it is |
+|---|---|---|---|
+| `rust-basics` | rust | 105, 52 of them programs run on the learner's computer | Chapters 1 to 6 of The Rust Programming Language |
+| `ruby-basics` | ruby | 10, 8 of them programs run in the browser | Ruby from puts to methods, on mruby |
+| `zig-basics` | zig | 48, 28 of them programs compiled and run in the browser | Chapters 1 to 3 of Introduction to Zig |
+| `git-basics` | shell | 6, all multiple choice | What Git tracks, and the everyday commands |
+
+### rust-basics: where it stands
+
+It follows [The Rust Programming Language](https://doc.rust-lang.org/book/), one top-level section per chapter, with the book's subsections as subsections: Getting Started, A Guessing Game, Common Programming Concepts, Understanding Ownership, Structs, Enums and Pattern Matching. The text is original; some examples are adapted from the book (MIT or Apache-2.0), as the course description says. Chapter 7, Packages, Crates and Modules, is next.
+
+How the chapters are written, so that the next ones match:
+
+- **Short texts, then practice.** Each problem explains one idea. New syntax is shown first as a small annotated pattern, in an indented code block, before any prose about it.
+- **Three kinds of exercise**, mixed throughout:
+  - *Write it*: the starter code calls something that does not exist yet (a struct, a method), or has a `todo!()`; the learner writes it.
+  - *Fix it*: the starter does not compile, or panics, and the text quotes the first line of the compiler's message. The lesson is reading the error. Most of chapters 4 to 6 work like this, as the borrow checker and the pattern checker are best learned from their messages.
+  - *Predict it*: a multiple choice question on what some code prints, or whether it compiles.
+- **Local problems** (`run: local`) all use the learner's `hello` project from `install-rust`, except the guessing game, which has its own `guessing_game` project. The text says "Copy the program into src/main.rs in your hello project".
+- **`Noisy`**, a tuple struct whose `Drop` prints "Noisy N is dropped", makes ownership visible in chapter 4 (`drop-order`, `move-into-function`, `borrow-noisy`). Its `impl Drop` comes with a comment to ignore it for now: traits are chapter 10, `Drop` chapter 15.
+- **The guessing game** uses a fixed secret number, 42, so that its output can be checked, and tells the learner exactly what to type; the expected output includes the typed lines. The text shows `rand::random_range` for the real thing (rand 0.10).
+- **Each chapter ends with a capstone** that puts it together: `fizzbuzz`, `fibonacci` and `temperatures` (chapter 3), `account` (5), `calculator` (6).
+- **Problem ids are never renamed or removed**, as completions refer to them; reordering sections is fine. Adding problems makes earlier completions incomplete (progress.md), which is expected.
+
+Every program was checked with rustc 1.99.1 (courses/README.md, "Checking code problems"). Nothing re-checks them automatically yet (roadmap.md).
+
+### zig-basics: where it stands
+
+It follows chapters 1 to 3 of [Introduction to Zig: a project-based book](https://pedropark99.github.io/zig-book/) by Pedro Duarte Faria, which is CC BY 4.0: the course description names the book, its author, its licence, and says the text is rewritten and the examples changed, as the licence requires. Keep that if the course grows. The book is built with Zig 0.17.0, the version the frontend's runtime compiles with, and its examples were checked against it.
+
+The programs are compiled in the browser by the real Zig compiler (frontend docs/runtimes.md), and the learner sees all its output, as on HDLBits. So most code problems are *fix it* problems built on Zig's strictness, with the compiler's own message quoted in the text: a `var` that is never changed, an unused value, `comptime_int` needing a type, `==` on strings, a `switch` missing a case, a method that needs `self: *T`. Chapter 3 adds the runtime's reports: the `DebugAllocator`'s leak report and `error: OutOfMemory`. Multiple choice problems sit beside them for what code cannot show (where memory lives, which allocator to choose, what `errdefer` does).
+
+- Programs print with `std.debug.print`, which needs no setup; the first problems show the book's stdout writer, and `flush` and `debug-print` explain the difference. Both count as output.
+- Chapter 3's programs set up a `DebugAllocator` in `main`, so that leaks show.
+- Chapter 3 ends with a capstone, `repeat-word`: a function that takes an allocator and returns memory the caller frees.
+
+Every problem was checked by compiling and running it the way the browser does (courses/README.md, "Checking code problems"), and every solution was then submitted through the real app.
 
 ## Loading: CourseCatalog
 

@@ -1,0 +1,34 @@
+id: immutable-params
+title: "Parameters Are Constants"
+type: code
+language: zig
+body: |
+  A function's parameters cannot be changed inside it: they are constants.
+  That lets the compiler pass them however is fastest, by copying small
+  values or by passing a pointer to big ones, without the function being able
+  to tell.
+
+  To work with a changing value, make a var copy:
+
+      fn f(x: u32) u32 {
+          var y = x;
+          ...
+question: |
+  The program does not compile. Fix add2 without changing its parameter or
+  return types, and run it.
+starter_code: |
+  const std = @import("std");
+
+  fn add2(x: u32) u32 {
+      x = x + 2;
+      return x;
+  }
+
+  pub fn main() void {
+      std.debug.print("{d}\n", .{add2(40)});
+  }
+expected_output: |
+  42
+explanation: |
+  "cannot assign to constant". return x + 2; is simplest; a var copy works
+  too.

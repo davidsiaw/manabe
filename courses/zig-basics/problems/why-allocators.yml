@@ -1,0 +1,30 @@
+id: why-allocators
+title: "Why Allocators"
+type: multiple_choice
+body: |
+  In Zig, nothing allocates heap memory behind your back. A function that
+  needs memory takes an allocator as a parameter, of type std.mem.Allocator,
+  and uses that. So:
+
+  - you can see from a function's parameters whether it allocates;
+  - the caller chooses how: from the heap, from a fixed buffer, or in a way
+    that checks for leaks while testing.
+
+  The standard library has several allocators, and they all give the same
+  std.mem.Allocator interface.
+question: |
+  How do you tell whether a function from the standard library may allocate
+  memory?
+choices:
+  - id: a
+    text: "It takes an allocator as a parameter"
+    correct: true
+  - id: b
+    text: "Its name ends in Alloc"
+  - id: c
+    text: "You cannot; any function may allocate"
+  - id: d
+    text: "It returns a pointer"
+explanation: |
+  No allocator, no heap allocation. That is a convention the whole standard
+  library follows, and a good one to follow in your own code.

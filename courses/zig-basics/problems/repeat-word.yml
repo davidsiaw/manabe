@@ -1,0 +1,46 @@
+id: repeat-word
+title: "Putting It Together: Returning Memory"
+type: code
+language: zig
+body: |
+  A function that builds something of a size only known at run time, such as
+  text, needs an allocator, and returns memory the caller must free. The
+  usual shape:
+
+      fn build(allocator: std.mem.Allocator, ...) ![]u8 {
+          const result = try allocator.alloc(u8, size);
+          // ... fill result ...
+          return result;      // the caller owns it now, and frees it
+      }
+
+  @memcpy(destination, source) copies a slice into another of the same
+  length; result[start..][0..len] is the piece of length len at start.
+question: |
+  Write repeat, which returns word repeated times times, as a new slice from
+  allocator. main frees it.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      const text = try repeat(allocator, "ab", 3);
+      defer allocator.free(text);
+      std.debug.print("{s} ({d} bytes)\n", .{ text, text.len });
+  }
+
+  fn repeat(allocator: std.mem.Allocator, word: []const u8, times: usize) ![]u8 {
+      _ = allocator;
+      _ = word;
+      _ = times;
+      return error.NotWritten;
+  }
+expected_output: |
+  ababab (6 bytes)
+explanation: |
+  Allocate word.len * times bytes, copy word in at each multiple of
+  word.len, and return the slice. The DebugAllocator would report a leak if
+  main forgot to free it. return error.NotWritten in the starter shows that
+  any name can be an error in Zig: error.Anything.

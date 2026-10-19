@@ -1,0 +1,28 @@
+id: pub-and-modules
+title: "Modules and pub"
+type: multiple_choice
+body: |
+  Every Zig file is a module, and a module is a struct: @import("std") gives
+  the standard library's top-level struct, and std.debug.print reaches
+  inside it.
+
+  Declarations are private to their file unless marked pub. That is why main
+  is pub fn main: the code that starts the program lives in the standard
+  library and must be able to see it.
+question: |
+  A file shapes.zig contains fn area(...) without pub. What happens when
+  main.zig does const shapes = @import("shapes.zig"); and calls
+  shapes.area(...)?
+choices:
+  - id: a
+    text: "It does not compile: area is not public"
+    correct: true
+  - id: b
+    text: "It works, as the file was imported"
+  - id: c
+    text: "It works, but only in Debug builds"
+  - id: d
+    text: "It calls a different area function"
+explanation: |
+  Only pub declarations can be used from other files. Writing pub fn area
+  fixes it.

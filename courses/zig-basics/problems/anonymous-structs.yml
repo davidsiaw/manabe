@@ -1,0 +1,28 @@
+id: anonymous-structs
+title: "Anonymous Struct Literals"
+type: multiple_choice
+body: |
+  When the compiler already knows the type a value must have, the type's name
+  can be left out, leaving only a dot:
+
+      const v: Vec3 = .{ .x = 1, .y = 2, .z = 3 };
+      const role: Role = .SE;
+
+  That .{ } is an anonymous struct literal. The .{ 2, 2, 4 } given to print
+  is one too, with fields that have no names, like a tuple.
+question: |
+  Which of these makes a Vec3, given const Vec3 = struct { x: f64, y: f64,
+  z: f64 }; ?
+choices:
+  - id: a
+    text: "const v: Vec3 = .{ .x = 1, .y = 2, .z = 3 };"
+    correct: true
+  - id: b
+    text: "const v = .{ 1, 2, 3 };"
+  - id: c
+    text: "const v = Vec3(1, 2, 3);"
+  - id: d
+    text: "const v: Vec3 = { x: 1, y: 2, z: 3 };"
+explanation: |
+  The type annotation tells the compiler what .{ } is. Without it, as in
+  the second, it is just a tuple of three numbers, not a Vec3.

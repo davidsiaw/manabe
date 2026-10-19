@@ -1,0 +1,34 @@
+id: flush
+title: "Don't Forget to Flush"
+type: code
+language: zig
+body: |
+  The stdout writer collects what you print in its buffer, the
+  stdout_buffer array, and only writes it out to the terminal when it is
+  flushed. Writing in large pieces is much faster than writing every few
+  characters.
+
+  The price is that output that is never flushed is never seen. Run the
+  program below: it prints three lines, and nothing appears.
+question: |
+  Make the three lines appear.
+starter_code: |
+  const std = @import("std");
+  const Writer = std.Io.File.Writer;
+
+  pub fn main(init: std.process.Init) !void {
+      var stdout_buffer: [1024]u8 = undefined;
+      var stdout_writer = Writer.init(std.Io.File.stdout(), init.io, &stdout_buffer);
+      const stdout = &stdout_writer.interface;
+
+      try stdout.print("one\n", .{});
+      try stdout.print("two\n", .{});
+      try stdout.print("three\n", .{});
+  }
+expected_output: |
+  one
+  two
+  three
+explanation: |
+  try stdout.flush(); after the last print. One flush at the end writes
+  everything; there is no need for one after each line.

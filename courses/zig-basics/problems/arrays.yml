@@ -1,0 +1,33 @@
+id: arrays
+title: "Arrays"
+type: code
+language: zig
+body: |
+  An array has a fixed number of elements of one type:
+
+      const ns = [4]u8{ 48, 24, 12, 6 };
+      const ls = [_]f64{ 432.1, 87.2, 900.05 };   // _: count them for me
+
+  Elements are read with an index from 0, ns[2], and an array knows its
+  length, ns.len.
+
+  for goes through the elements of an array, giving each one a name between
+  bars:
+
+      for (ns) |n| {
+          std.debug.print("{d}\n", .{n});
+      }
+question: |
+  Print the sum of the scores and the number of scores, as below.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const scores = [_]u32{ 7, 12, 3, 9, 4 };
+      _ = scores;
+  }
+expected_output: |
+  sum: 35, count: 5
+explanation: |
+  var sum: u32 = 0; then sum += score; in the for loop, and scores.len for
+  the count. Remove the _ = scores; once scores is used.

@@ -1,0 +1,32 @@
+id: pointer-params
+title: "Changing the Caller's Value"
+type: code
+language: zig
+body: |
+  To let a function change a variable of its caller, pass a pointer to it.
+  &n is a pointer to n, of type *u32 for a u32. Inside the function, x.* is
+  the value it points to:
+
+      fn reset(x: *u32) void {
+          x.* = 0;
+      }
+
+      reset(&count);
+question: |
+  Write double, which takes a pointer to a u32 and doubles the value it
+  points to.
+starter_code: |
+  const std = @import("std");
+
+  // Write double here.
+
+  pub fn main() void {
+      var n: u32 = 21;
+      double(&n);
+      std.debug.print("{d}\n", .{n});
+  }
+expected_output: |
+  42
+explanation: |
+  fn double(x: *u32) void { x.* *= 2; }. The & at the call shows the reader
+  that n may change.

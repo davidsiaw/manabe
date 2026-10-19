@@ -1,0 +1,49 @@
+id: hello-world
+title: "Hello, World"
+type: code
+language: zig
+body: |
+  Every Zig program starts in a function called main. This one prints a line
+  through stdout, the program's standard output:
+
+      const std = @import("std");           // the standard library
+      pub fn main(init: std.process.Init) !void {
+          // ... stdout set up from init.io ...
+          try stdout.print("Hello, {s}!\n", .{"world"});
+          try stdout.flush();
+      }
+
+  - @import("std") loads the standard library. Names that start with @ are
+    builtin functions, provided by the compiler.
+  - main must be pub (public), so that the program can be started.
+  - print fills the {s} placeholder with a string, taken from .{"world"}, a
+    list of values in .{ } brackets.
+  - try runs something that can fail and, if it does, passes the error on.
+
+  The four lines that set up stdout are the same in every program; you do
+  not need to understand them yet.
+
+  Write your program in the editor. Run compiles and runs it, and shows you
+  everything the compiler and the program printed; Check answer runs it and
+  checks what it printed. The first run downloads the Zig compiler, about 5
+  MB, which takes a moment; after that, compiling takes a second or so.
+question: |
+  Make the program greet Zig instead: Hello, Zig!
+starter_code: |
+  const std = @import("std");
+  const Writer = std.Io.File.Writer;
+
+  pub fn main(init: std.process.Init) !void {
+      var stdout_buffer: [1024]u8 = undefined;
+      var stdout_writer = Writer.init(std.Io.File.stdout(), init.io, &stdout_buffer);
+      const stdout = &stdout_writer.interface;
+
+      try stdout.print("Hello, {s}!\n", .{"world"});
+      try stdout.flush();
+  }
+expected_output: |
+  Hello, Zig!
+explanation: |
+  Changing "world" to "Zig" is enough. "Hello, Zig!\n" with no placeholder
+  and an empty .{} would also do: print always takes the list, even when it
+  is empty.

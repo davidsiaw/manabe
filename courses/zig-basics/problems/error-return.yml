@@ -1,0 +1,27 @@
+id: error-return
+title: "!void and try"
+type: multiple_choice
+body: |
+  main's return type is !void. void means it returns nothing; the ! in front
+  means it may return an error instead. Zig has no exceptions: an error is a
+  value, returned like any other, and the type says when one is possible.
+
+  Writing to stdout can fail, so print and flush can return errors, and each
+  call needs try. try uses the result if there is no error, and otherwise
+  returns the error from main straight away. A function that uses try must
+  have a ! in its return type.
+question: |
+  A function's return type is !u32. What can it return?
+choices:
+  - id: a
+    text: "A u32, or an error"
+    correct: true
+  - id: b
+    text: "Only a u32 that is not zero"
+  - id: c
+    text: "Nothing"
+  - id: d
+    text: "A u32, or nothing at all"
+explanation: |
+  !u32 is an error union: a u32 or an error. try and catch, which come later,
+  are how the caller deals with the error case.

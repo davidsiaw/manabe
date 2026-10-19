@@ -12,7 +12,7 @@ class CourseCatalog
     TYPES = %w[multiple_choice code].freeze
     RUNS = %w[browser local].freeze
     # Languages the frontend has a runtime for (its Resources/runtimes/).
-    LANGUAGES = %w[ruby].freeze
+    LANGUAGES = %w[ruby zig].freeze
     LANGUAGE_FORMAT = /\A[a-z0-9][a-z0-9_-]*\z/
     # The line `cargo run` prints just before the program's own output.
     CARGO_RUNNING = /\A\s*Running `/

@@ -1,0 +1,26 @@
+id: struct-const
+title: "Types Are Values"
+type: multiple_choice
+body: |
+  In Zig a type is a value, which only exists while compiling. struct { ... }
+  is an expression that makes a new type, and naming it is an ordinary
+  declaration.
+
+  A value that only exists while compiling cannot be changed while the
+  program runs.
+question: |
+  What happens with var Point = struct { x: i32, y: i32 }; ?
+choices:
+  - id: a
+    text: "It does not compile: a type must be const (or comptime)"
+    correct: true
+  - id: b
+    text: "It works, and Point can later be given another struct"
+  - id: c
+    text: "It works the same as const"
+  - id: d
+    text: "It makes a Point with x and y set to 0"
+explanation: |
+  The compiler says "variable of type 'type' must be const or comptime",
+  and notes "types are not available at runtime". Struct declarations are
+  always const.

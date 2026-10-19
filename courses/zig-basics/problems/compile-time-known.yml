@@ -1,0 +1,28 @@
+id: compile-time-known
+title: "Known While Compiling"
+type: multiple_choice
+body: |
+  Zig cares a lot about when a value is known.
+
+  - Compile-time known: the compiler can work it out, such as a literal, a
+    const made from literals, or an array's length.
+  - Runtime known: only known when the program runs, such as input from the
+    user, a file's contents, or a function's parameter.
+
+  It decides what is allowed (++, array lengths, types) and where the value
+  can live in memory.
+question: |
+  Which of these is known at compile time?
+choices:
+  - id: a
+    text: "The length of const ns = [_]u8{ 1, 2, 3 };"
+    correct: true
+  - id: b
+    text: "The number of bytes a program reads from a file"
+  - id: c
+    text: "The value of a function's parameter, inside the function"
+  - id: d
+    text: "The text a user types in"
+explanation: |
+  The compiler counts the array's elements, so ns.len is 3 before the program
+  ever runs.

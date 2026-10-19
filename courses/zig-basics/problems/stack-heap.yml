@@ -1,0 +1,35 @@
+id: stack-heap
+title: "The Stack and the Heap"
+type: multiple_choice
+body: |
+  A program keeps its data in a few places:
+
+  - The stack: each function call gets a frame on it for its local variables,
+    of sizes known while compiling. The frame is thrown away when the
+    function returns, so it is fast and needs no cleanup.
+  - The heap: memory asked for while running, of any size, that lasts until
+    it is given back. In Zig you ask an allocator for it, and give it back
+    yourself.
+  - The global data area: literals and global constants, part of the program.
+
+  So a local variable stops existing when its function returns, and anything
+  pointing to it then points to garbage.
+question: |
+  A function returns &result, a pointer to one of its own local variables.
+  What can the caller do with it?
+choices:
+  - id: a
+    text: "Nothing safely: the variable was on the function's stack frame, which is gone"
+    correct: true
+  - id: b
+    text: "Use it normally: Zig moves the variable to the heap"
+  - id: c
+    text: "Use it until the program ends"
+  - id: d
+    text: "Read it, but not change it"
+explanation: |
+  The pointer dangles: the memory may be reused by the next call. The
+  compiler catches the plainest case, saying "returning address of expired
+  local variable", but not every case, and a program that gets past it may
+  even seem to work. To return data that must outlive a function, put it on
+  the heap with an allocator, or return it by value.

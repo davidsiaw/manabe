@@ -1,0 +1,35 @@
+id: defer
+title: "defer"
+type: multiple_choice
+body: |
+  defer runs a statement when the current block ends, however it ends: at
+  the closing bracket, at a return, or when an error is returned. It is how
+  Zig makes sure cleanup happens, right next to the code that needs it:
+
+      const file = try open(...);
+      defer file.close();
+      // ... use file; it is closed when the function ends ...
+
+  Several defers in one block run in reverse order, the last one first.
+question: |
+  What does this print?
+
+      pub fn main() void {
+          defer std.debug.print("1\n", .{});
+          defer std.debug.print("2\n", .{});
+          std.debug.print("body\n", .{});
+      }
+choices:
+  - id: a
+    text: "body, 2, 1"
+    correct: true
+  - id: b
+    text: "1, 2, body"
+  - id: c
+    text: "body, 1, 2"
+  - id: d
+    text: "2, 1, body"
+explanation: |
+  The body runs first, then the defers, newest first. Cleanup happens in the
+  reverse order of setup, which is usually what you want: the last thing
+  opened is the first closed.

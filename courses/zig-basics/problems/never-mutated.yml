@@ -1,0 +1,25 @@
+id: never-mutated
+title: "var That Never Changes"
+type: multiple_choice
+body: |
+  Zig is strict about variables. A var must actually be changed somewhere;
+  if it never is, the compiler stops with an error, not a warning, because it
+  should have been a const.
+question: |
+  What happens with this code?
+
+      var age: u8 = 24;
+      std.debug.print("{d}\n", .{age});
+choices:
+  - id: a
+    text: "It does not compile: the variable is never mutated"
+    correct: true
+  - id: b
+    text: "It prints 24"
+  - id: c
+    text: "It prints 24, with a warning"
+  - id: d
+    text: "It does not compile: age needs a value later"
+explanation: |
+  The compiler says "local variable is never mutated" and suggests using
+  const. Zig has no warnings: things are either fine or errors.

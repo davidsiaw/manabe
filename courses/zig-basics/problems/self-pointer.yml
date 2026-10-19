@@ -1,0 +1,38 @@
+id: self-pointer
+title: "Methods That Change the Struct"
+type: code
+language: zig
+body: |
+  self is a parameter like any other, so it is constant: a method taking
+  self: Vec3 gets a read-only copy. To change the struct, take a pointer,
+  self: *Vec3. The call stays the same, v.grow(), as Zig takes the address
+  for you.
+question: |
+  The program does not compile. Make grow able to change the vector, run it
+  and check the output. Read every message: there may be more than one
+  thing to fix.
+starter_code: |
+  const std = @import("std");
+
+  const Vec3 = struct {
+      x: f64,
+      y: f64,
+      z: f64,
+
+      fn grow(self: Vec3, by: f64) void {
+          self.x += by;
+          self.y += by;
+          self.z += by;
+      }
+  };
+
+  pub fn main() void {
+      const v = Vec3{ .x = 1, .y = 2, .z = 3 };
+      v.grow(10);
+      std.debug.print("{d} {d} {d}\n", .{ v.x, v.y, v.z });
+  }
+expected_output: |
+  11 12 13
+explanation: |
+  self: *Vec3 in grow, and var v in main: a method that changes v needs v to
+  be changeable.

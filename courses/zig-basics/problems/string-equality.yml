@@ -1,0 +1,32 @@
+id: string-equality
+title: "Comparing Strings"
+type: code
+language: zig
+body: |
+  == compares two numbers, or two pointers, not the contents of two slices.
+  Zig does not hide a loop behind an operator, so comparing strings is a
+  function call:
+
+      std.mem.eql(u8, a, b)     // true if a and b hold the same bytes
+
+  The u8 says what the slices are made of. std.mem has more: startsWith,
+  endsWith, indexOf, count, and others.
+question: |
+  The program does not compile. Fix the comparison, run it, and check the
+  output.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const words = [_][]const u8{ "zig", "rust", "zig", "c" };
+      var zigs: u32 = 0;
+      for (words) |word| {
+          if (word == "zig") zigs += 1;
+      }
+      std.debug.print("{d} times zig\n", .{zigs});
+  }
+expected_output: |
+  2 times zig
+explanation: |
+  The compiler says "operator == not allowed for type '[]const u8'".
+  std.mem.eql(u8, word, "zig") compares the bytes.

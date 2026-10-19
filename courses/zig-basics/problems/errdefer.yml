@@ -1,0 +1,29 @@
+id: errdefer
+title: "errdefer"
+type: multiple_choice
+body: |
+  errdefer is a defer that only runs when the function returns an error. It
+  undoes half-finished work when something fails partway, and stays out of
+  the way when everything works:
+
+      const buffer = try allocator.alloc(u8, 100);
+      errdefer allocator.free(buffer);   // only if a later step fails
+      try fill(buffer);
+      return buffer;                      // success: the caller keeps it
+question: |
+  In the code above, fill succeeds and the function returns buffer. Does the
+  errdefer free it?
+choices:
+  - id: a
+    text: "No: errdefer only runs when an error is returned"
+    correct: true
+  - id: b
+    text: "Yes: it runs whenever the function ends"
+  - id: c
+    text: "Yes, but only after the caller is done with it"
+  - id: d
+    text: "It does not compile, as buffer is returned"
+explanation: |
+  On success the caller now owns buffer. If fill had failed, the errdefer
+  would have freed it before the error went back to the caller, so nothing
+  leaks either way.

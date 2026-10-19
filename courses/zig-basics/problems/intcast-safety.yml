@@ -1,0 +1,26 @@
+id: intcast-safety
+title: "Casts Are Checked"
+type: multiple_choice
+body: |
+  @intCast converts to a smaller integer type, and checks while the program
+  runs that the value fits, in Debug and ReleaseSafe builds:
+
+      const big: u32 = 300;
+      const small: u8 = @intCast(big);
+question: |
+  What happens when the code above runs, if big is only known at run time?
+choices:
+  - id: a
+    text: "The program panics: 300 does not fit in a u8"
+    correct: true
+  - id: b
+    text: "small is 44, the low 8 bits of 300"
+  - id: c
+    text: "small is 255, the largest u8"
+  - id: d
+    text: "It does not compile"
+explanation: |
+  @intCast panics with "integer does not fit in destination type". To keep
+  only the low bits on purpose there is @truncate, which gives 44. If big
+  were a comptime-known constant, the compiler would refuse it before the
+  program ever ran.

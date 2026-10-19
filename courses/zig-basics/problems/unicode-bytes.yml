@@ -1,0 +1,24 @@
+id: unicode-bytes
+title: "Bytes, Not Characters"
+type: multiple_choice
+body: |
+  Zig source files and strings are UTF-8. Letters outside plain English can
+  take more than one byte, and .len counts bytes, not characters. Indexing
+  gives bytes too, so text[0] of "été" is only the first half of é.
+
+  To go through the characters (code points), the standard library has
+  std.unicode.Utf8View.
+question: |
+  What is "Ⱥ".len ?
+choices:
+  - id: a
+    text: "2"
+    correct: true
+  - id: b
+    text: "1"
+  - id: c
+    text: "3"
+  - id: d
+    text: "It does not compile"
+explanation: |
+  Ⱥ (U+023A) takes two bytes in UTF-8, so the string's length is 2.

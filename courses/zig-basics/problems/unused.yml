@@ -1,0 +1,29 @@
+id: unused
+title: "No Unused Values"
+type: code
+language: zig
+body: |
+  Another strict rule: every local constant and variable must be used. An
+  unused one is an error, as it is often a sign of a mistake, such as
+  computing something and then printing the wrong thing.
+
+  When you really mean to ignore a value, assign it to _, which discards it:
+
+      _ = depth;
+question: |
+  This program does not compile. Make it print the area, whether by using
+  depth or discarding it. Run it, and read the messages as you go.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const width = 4;
+      const height = 3;
+      const depth = 2;
+      std.debug.print("area: {d}\n", .{width * height});
+  }
+expected_output: |
+  area: 12
+explanation: |
+  Delete depth, or add _ = depth;. Function parameters follow the same rule:
+  an unused one is discarded with _ = name; at the start of the body.

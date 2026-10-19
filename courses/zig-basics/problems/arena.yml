@@ -1,0 +1,38 @@
+id: arena
+title: "ArenaAllocator"
+type: code
+language: zig
+body: |
+  An ArenaAllocator takes another allocator, its child, and makes all its
+  allocations through it. You never free them one by one: deinit frees
+  everything at once.
+
+      var arena = std.heap.ArenaAllocator.init(gpa.allocator());
+      defer arena.deinit();
+      const allocator = arena.allocator();
+
+  The program below allocates three times and frees nothing, so the
+  DebugAllocator reports three leaks. Run it to see them.
+question: |
+  Make the three allocations go through an arena that wraps the
+  DebugAllocator, freed with a single deinit, so that nothing leaks.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() !void {
+      var gpa = std.heap.DebugAllocator(.{}){};
+      defer _ = gpa.deinit();
+      const allocator = gpa.allocator();
+
+      const a = try allocator.alloc(u8, 5);
+      const b = try allocator.alloc(u8, 10);
+      const c = try allocator.alloc(u8, 15);
+      std.debug.print("{d} bytes in three pieces\n", .{a.len + b.len + c.len});
+  }
+expected_output: |
+  30 bytes in three pieces
+explanation: |
+  The defers run in reverse order: arena.deinit() first, freeing the three
+  pieces, then gpa.deinit(), which finds nothing left. Declare them in the
+  order shown, or the DebugAllocator checks for leaks before the arena has
+  freed anything.

@@ -30,7 +30,7 @@ API specs point the catalog at the fixtures with `allow(CourseCatalog).to receiv
 
 - `let(:json) { response.parsed_body }` is **memoized**: in an example that makes several requests it keeps returning the first response. Use `response.parsed_body` directly, or `def json = response.parsed_body`. This has caused wrong results twice.
 - `post path, params: {...}` sends form parameters; the frontend sends JSON. Add `as: :json` when the difference matters (nested hashes such as `credential` need it).
-- `spec/browser/restricted_area_spec.rb` (the Sidekiq dashboard) currently fails because `manabe-redis` does not resolve (development.md). The other 82 examples pass.
+- `spec/browser/restricted_area_spec.rb` (the Sidekiq dashboard) currently fails because `manabe-redis` does not resolve (development.md). Every other example passes.
 
 ## End to end
 

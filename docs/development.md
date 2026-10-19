@@ -24,7 +24,7 @@ heighliner login bundle exec rspec
 | `REDIS_URL` | Sidekiq, Action Cable | `redis://manabe-redis:6379/0` |
 | `WEBAUTHN_ORIGINS`, `WEBAUTHN_RP_ID` | passkeys (accounts.md) | the frontend's `https://manafe.<suffix>` |
 | `FRONTEND_HOST` | CORS allowed origin | unset, so any origin |
-| `CHROME_HOSTNAME`, `TEST_HOST` | browser specs (testing.md) | shared chrome container, `manabe-app` |
+| `CHROME_HOSTNAME`, `TEST_HOST` | browser specs (testing.md) | the shared chrome container, by the name heighliner gives it (`<%= @config[:shared_names][:chrome] %>`: `heighliner-chrome`, or `kaiser-chrome` on hosts upgraded from kaiser), and `manabe-app` |
 
 The names `manabe` and `manafe` are written into both projects' Heighliner.config. Renaming either environment means editing both.
 

@@ -1,0 +1,33 @@
+id: comptime-int
+title: "Numbers Need a Type"
+type: code
+language: zig
+body: |
+  An integer literal such as 0 has a special type, comptime_int: a number
+  known while compiling, of any size. A const can have that type, but a var
+  cannot: at run time, Zig must know how many bits to keep it in.
+
+  Integer types are named by sign and size: u8, u16, u32, u64 are unsigned
+  (zero or more), i8, i16, i32, i64 signed. usize is the unsigned size of a
+  memory address, used for lengths and indexes. Floats are f32 and f64, and
+  true and false are bool.
+question: |
+  Fix the compiler error by giving total a type, so that the program sums
+  the numbers 1 to 10. Run it and read the message first.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      var total = 0;
+      var n: u32 = 1;
+      while (n <= 10) : (n += 1) {
+          total += n;
+      }
+      std.debug.print("total: {d}\n", .{total});
+  }
+expected_output: |
+  total: 55
+explanation: |
+  var total: u32 = 0;. The message says it too: a variable of type
+  comptime_int must be const or comptime, and "to modify this variable at
+  runtime, it must be given an explicit fixed-size number type".

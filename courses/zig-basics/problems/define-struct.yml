@@ -1,0 +1,42 @@
+id: define-struct
+title: "Structs"
+type: code
+language: zig
+body: |
+  A struct groups named fields. It is declared as a const, as types are
+  values in Zig, known at compile time:
+
+      const User = struct {
+          id: u64,
+          name: []const u8,
+
+          fn init(id: u64, name: []const u8) User {
+              return User{ .id = id, .name = name };
+          }
+
+          fn greet(self: User) void {
+              std.debug.print("Hi, {s}!\n", .{self.name});
+          }
+      };
+
+  Fields are written .name = value when making one. Functions inside the
+  struct belong to it: User.init(1, "Ziggy") calls one, and a function whose
+  first parameter is the struct, here self, can be called as a method:
+  user.greet().
+question: |
+  Define Book where the comment is, so that main compiles and prints as
+  below. A book has a title and a number of pages, and a describe method.
+starter_code: |
+  const std = @import("std");
+
+  // Define Book here.
+
+  pub fn main() void {
+      const book = Book.init("Dune", 412);
+      book.describe();
+  }
+expected_output: |
+  Dune has 412 pages
+explanation: |
+  Fields first, then the functions, all inside struct { }, and a semicolon
+  after the closing bracket, as it is a const declaration.

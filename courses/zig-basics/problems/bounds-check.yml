@@ -1,0 +1,31 @@
+id: bounds-check
+title: "Safety: Index Out of Bounds"
+type: code
+language: zig
+body: |
+  Zig checks every array and slice index while the program runs, in Debug and
+  ReleaseSafe builds, and stops the program with a panic rather than reading
+  past the end. Other checks work the same way, such as integer overflow.
+
+  This program crashes. Run it, and read the panic message: it says which
+  index was used and what the length was.
+question: |
+  Fix the loop so that it prints each temperature once, without going past
+  the end.
+starter_code: |
+  const std = @import("std");
+
+  pub fn main() void {
+      const temperatures = [_]i32{ 18, 21, 19 };
+      var i: usize = 0;
+      while (i <= temperatures.len) : (i += 1) {
+          std.debug.print("{d}\n", .{temperatures[i]});
+      }
+  }
+expected_output: |
+  18
+  21
+  19
+explanation: |
+  i < temperatures.len stops at the last index, 2. A for loop over the
+  array, for (temperatures) |t|, cannot go wrong this way.
