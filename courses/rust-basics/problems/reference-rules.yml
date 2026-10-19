@@ -1,0 +1,28 @@
+id: reference-rules
+title: The Rules of References
+type: multiple_choice
+body: |
+  Everything in this section comes down to two rules:
+
+  - At any given time, you can have either one mutable reference or any
+    number of read-only references to a value, but not both.
+  - References must always be valid: they cannot outlive the value they
+    refer to.
+
+  The compiler checks both, and the part of it that does is called the
+  borrow checker. Its errors are frustrating at first, and they are always
+  pointing at a bug you would otherwise have found the hard way.
+question: Which of these is allowed while v is borrowed with &mut v?
+choices:
+  - id: a
+    text: Nothing else; until that borrow ends, v can only be used through it
+    correct: true
+  - id: b
+    text: Any number of read-only references, &v
+  - id: c
+    text: One more &mut v
+  - id: d
+    text: Reading v directly, but not changing it
+explanation: |
+  A mutable borrow is exclusive. Once it is no longer used, v can be read,
+  changed or borrowed again.

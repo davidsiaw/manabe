@@ -1,0 +1,31 @@
+id: if-types
+title: if in a let
+type: multiple_choice
+body: |
+  if is an expression, so it has a value and can be used on the right of a
+  let:
+
+    let number = if condition { 5 } else { 6 };
+
+  Each branch's value is its block's last expression. Every variable has a
+  single type, known when the program is compiled, so the branches must all
+  give values of the same type.
+question: |
+  What happens with this code?
+
+    let condition = true;
+    let number = if condition { 5 } else { "six" };
+choices:
+  - id: a
+    text: It does not compile
+    correct: true
+  - id: b
+    text: number is 5
+  - id: c
+    text: number is "six"
+  - id: d
+    text: It compiles, and panics when it runs
+explanation: |
+  The compiler stops with "`if` and `else` have incompatible types": one
+  branch is an integer and the other a string, and number cannot be both.
+  It does not matter that condition is always true.

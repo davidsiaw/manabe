@@ -87,18 +87,28 @@ A **course**:
 | Method and path | Auth | Body | Response |
 |---|---|---|---|
 | `GET /courses/:course_id/problems/:problem_id` | none; required with `?round=N`, N >= 2 | | the problem |
-| `POST /courses/:course_id/problems/:problem_id/answer` | required | `{"choice": "b", "round": 1}` | the verdict |
+| `POST /courses/:course_id/problems/:problem_id/answer` | required | `{"choice": "b", "round": 1}`, or for code `{"output": "...", "round": 1}` | the verdict |
 
-A **problem** never says which choice is correct:
+A **problem** never says which choice is correct. `language` is the course's (`null` without one), for highlighting code in the text:
 
 ```json
-{"id": "integers", "title": "Integers", "body": "...", "type": "multiple_choice",
+{"id": "integers", "title": "Integers", "body": "...", "type": "multiple_choice", "language": "rust",
  "question": "What is the largest value a u8 can hold?",
  "choices": [{"id": "a", "text": "127"}, {"id": "b", "text": "128"}, ...],
  "previous": {"id": "literals", "title": "Literals"}, "next": null}
 ```
 
 With `?round=N` for the current revision, the choices are shuffled (see progress.md).
+
+A **code problem** (`"type": "code"`) has no `choices`; instead it has its language, where it runs (`"run"`: `"browser"`, or `"local"` for the learner's own computer) and the code the editor starts with. It never says what the program should print:
+
+```json
+{"id": "hello-world", "title": "Hello, World", "body": "...", "type": "code",
+ "question": "Print Hello, world!", "language": "ruby", "run": "browser", "starter_code": "# Write your program here.\n",
+ "previous": null, "next": {"id": "puts-and-p", "title": "puts and p"}}
+```
+
+The answer is `choice` for a multiple choice problem and `output` (what the learner's program printed) for a code problem; without it, 400 `{"error": "choice is missing"}` or `{"error": "output is missing"}`. Output is compared ignoring trailing whitespace on each line, trailing blank lines and CRLF. For a `local` problem, everything up to and including Cargo's `` Running `...` `` line is left out first, so a whole terminal can be pasted.
 
 The **verdict**: `{"correct": false}`, or `{"correct": true, "explanation": "...", "progress": {...}}` with the learner's progress after recording the answer. `round` defaults to 1, and must be 1 or the current revision; otherwise 409 `round_not_current`. Round 0 or less is 400.
 

@@ -1,0 +1,75 @@
+id: bind-values
+title: Patterns That Bind Values
+type: code
+language: rust
+run: local
+body: |
+  When a variant holds data, a pattern can take it out and give it a name.
+  From 1999 to 2008, US quarters had a different design for each state, so
+  the Quarter variant here holds a UsState:
+
+    Quarter(UsState),
+
+  In a match, Coin::Quarter(state) matches any quarter, and inside that arm
+  state is the UsState it holds. The name is yours to choose.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0532]: expected unit struct, unit variant or constant, found tuple variant `Coin::Quarter`
+
+  A pattern must have the shape of the variant: Quarter holds a value, so
+  its pattern has parentheses.
+question: |
+  Change the Quarter arm to take the state out of the coin, print State
+  quarter from and the state with {state:?}, then an exclamation mark, and
+  give 25. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  enum UsState {
+      Alabama,
+      Alaska,
+  }
+
+  enum Coin {
+      Penny,
+      Nickel,
+      Dime,
+      Quarter(UsState),
+  }
+
+  fn value_in_cents(coin: Coin) -> u8 {
+      match coin {
+          Coin::Penny => 1,
+          Coin::Nickel => 5,
+          Coin::Dime => 10,
+          Coin::Quarter => 25,
+      }
+  }
+
+  fn main() {
+      let purse = [
+          Coin::Quarter(UsState::Alaska),
+          Coin::Dime,
+          Coin::Penny,
+          Coin::Quarter(UsState::Alabama),
+          Coin::Nickel,
+      ];
+
+      let mut total = 0;
+      for coin in purse {
+          total += value_in_cents(coin);
+      }
+      println!("The purse holds {total} cents.");
+  }
+expected_output: |
+  State quarter from Alaska!
+  State quarter from Alabama!
+  The purse holds 66 cents.
+explanation: |
+  Coin::Quarter(state) => {
+      println!("State quarter from {state:?}!");
+      25
+  }
+
+  The compiler's own suggestion, Coin::Quarter(_), would also compile: _
+  matches anything without naming it, for when you do not need the value.

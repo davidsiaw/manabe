@@ -1,0 +1,40 @@
+id: fix-return-value
+title: Return Values
+type: code
+language: rust
+run: local
+body: |
+  A function that returns a value declares its type after an arrow, ->. Its
+  value is the value of the last expression in its body, so you rarely
+  write return; return is for leaving early.
+
+    fn five() -> i32 {
+        5
+    }
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run cargo run. It does not compile:
+
+    expected `i32`, found `()`
+
+  The compiler explains that the function implicitly returns () because its
+  body has no final expression, and points at what to change.
+question: |
+  Fix plus_one so that it returns x + 1. Run the program and paste what it
+  printed.
+starter_code: |
+  fn main() {
+      let x = plus_one(5);
+
+      println!("The value of x is: {x}");
+  }
+
+  fn plus_one(x: i32) -> i32 {
+      x + 1;
+  }
+expected_output: |
+  The value of x is: 6
+explanation: |
+  Remove the semicolon after x + 1. With it, x + 1 is a statement, the body
+  has no value, and the function returns (), which is not the i32 it
+  promised.

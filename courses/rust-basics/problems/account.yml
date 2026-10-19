@@ -1,0 +1,85 @@
+id: account
+title: 'Putting It Together: A Bank Account'
+type: code
+language: rust
+run: local
+body: |
+  Everything from this chapter in one small program: a struct, an
+  associated function that makes one, and methods that read and change it.
+
+  The struct and the outline of its impl block are there; each todo!() is
+  yours. A summary of the syntax:
+
+    Self { field: value, ... }      make an instance, in an impl block
+    self.balance                    a field of the value a method is called on
+    fn name(&mut self, ...)         a method that changes it
+    Account::new(...)               call an associated function
+    account.deposit(...)            call a method
+
+  new takes a &str, a borrowed piece of text, and the Account must own its
+  own String, so make one with String::from(owner).
+
+  Copy the program into src/main.rs in your hello project. It compiles, with
+  warnings about unused parameters, and panics at the first todo!().
+question: |
+  Write new, deposit and withdraw. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  struct Account {
+      owner: String,
+      balance: u64,
+  }
+
+  impl Account {
+      // Makes an account with a balance of 0.
+      fn new(owner: &str) -> Self {
+          todo!()
+      }
+
+      // Adds amount to the balance.
+      fn deposit(&mut self, amount: u64) {
+          todo!()
+      }
+
+      // Takes amount out and returns true, if the balance is at least
+      // amount. Otherwise changes nothing and returns false.
+      fn withdraw(&mut self, amount: u64) -> bool {
+          todo!()
+      }
+  }
+
+  fn main() {
+      let mut account = Account::new("Ferris");
+
+      account.deposit(100);
+      println!("withdraw 30: {}", account.withdraw(30));
+      println!("withdraw 80: {}", account.withdraw(80));
+      account.deposit(5);
+
+      println!("{account:?}");
+  }
+expected_output: |
+  withdraw 30: true
+  withdraw 80: false
+  Account { owner: "Ferris", balance: 75 }
+explanation: |
+  fn new(owner: &str) -> Self {
+      Self { owner: String::from(owner), balance: 0 }
+  }
+
+  fn deposit(&mut self, amount: u64) {
+      self.balance += amount;
+  }
+
+  fn withdraw(&mut self, amount: u64) -> bool {
+      if self.balance >= amount {
+          self.balance -= amount;
+          true
+      } else {
+          false
+      }
+  }
+
+  balance is a u64, which cannot go below zero, so checking before
+  subtracting is not just polite: without it, a debug build panics with an
+  overflow. Ferris is the crab who is Rust's unofficial mascot.

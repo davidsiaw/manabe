@@ -1,0 +1,36 @@
+id: fix-option-add
+title: Using a Value That Might Be Missing
+type: code
+language: rust
+run: local
+body: |
+  Back to the code that would not compile: adding an Option<i8> to an i8.
+  The compiler cannot add them because bonus might be None, and the program
+  has not said what the total should be then.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0277]: cannot add `Option<i8>` to `i8`
+question: |
+  Use a match on bonus: with Some, add the number inside to x; with None,
+  the total is just x. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let x: i8 = 5;
+      let bonus: Option<i8> = Some(5);
+
+      let total = x + bonus;
+
+      println!("total is {total}");
+  }
+expected_output: |
+  total is 10
+explanation: |
+  let total = match bonus {
+      Some(b) => x + b,
+      None => x,
+  };
+
+  Option has many methods for cases like this, and bonus.unwrap_or(0)
+  would do the same in one go; but every one of them is a match like this
+  underneath.

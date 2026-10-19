@@ -1,0 +1,6 @@
+id: coding
+title: Coding Course
+description: For specs of code problems.
+sections:
+  - title: Only
+    problems: [hello]

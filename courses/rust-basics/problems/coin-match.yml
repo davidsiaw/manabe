@@ -1,0 +1,56 @@
+id: coin-match
+title: The match Expression
+type: code
+language: rust
+run: local
+body: |
+  match compares a value with a list of patterns, in order, and runs the
+  code of the first one that matches. Think of a coin-sorting machine: each
+  coin falls through the first hole it fits.
+
+    match coin {                  // match and the value to look at
+        Coin::Penny => 1,         // pattern => code, then a comma
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+
+  Each pattern-and-code pair is an arm. match is an expression, and its value
+  is the value of the arm that ran, so it can be the last expression of a
+  function, as here, and be its result.
+
+  Unlike if, a match is not limited to a bool: it can look at any type, and
+  the patterns can take values apart, as the next problems show.
+
+  Copy the program into src/main.rs in your hello project and run it; it
+  panics at todo!().
+question: |
+  Write value_in_cents with a match: a penny is 1 cent, a nickel 5, a dime
+  10 and a quarter 25. Run it and paste what it printed.
+starter_code: |
+  enum Coin {
+      Penny,
+      Nickel,
+      Dime,
+      Quarter,
+  }
+
+  fn value_in_cents(coin: Coin) -> u8 {
+      todo!()
+  }
+
+  fn main() {
+      let purse = [Coin::Quarter, Coin::Dime, Coin::Penny, Coin::Penny, Coin::Nickel];
+
+      let mut total = 0;
+      for coin in purse {
+          total += value_in_cents(coin);
+      }
+      println!("The purse holds {total} cents.");
+  }
+expected_output: |
+  The purse holds 42 cents.
+explanation: |
+  The match above is the whole body. Note the commas between arms, and that
+  every variant has an arm; leave one out and the compiler refuses, which a
+  later problem shows.

@@ -1,0 +1,44 @@
+id: parameters
+title: Parameters
+type: code
+language: rust
+run: local
+body: |
+  Functions are declared with fn, a name in snake_case (lower case, words
+  joined with underscores), parameters in parentheses and a body in curly
+  brackets. A function can be defined before or after the code that calls
+  it, as long as it is somewhere the caller can see.
+
+  Parameters are the variables a function receives, and each one's type
+  must be written in the definition:
+
+    fn another_function(x: i32) {
+        println!("The value of x is: {x}");
+    }
+
+  That is a deliberate choice in Rust: with the types in the definition,
+  the compiler rarely needs annotations anywhere else to work out what you
+  mean, and its error messages can be more precise.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run cargo run. It does not compile:
+
+    error: expected one of `:`, `@`, or `|`, found `,`
+
+  and the compiler suggests: if this is a parameter name, give it a type.
+question: |
+  Give the parameters their types: value is an i32 and unit_label is a
+  char. Run the program and paste what it printed.
+starter_code: |
+  fn main() {
+      print_labeled_measurement(5, 'h');
+  }
+
+  fn print_labeled_measurement(value, unit_label) {
+      println!("The measurement is: {value}{unit_label}");
+  }
+expected_output: |
+  The measurement is: 5h
+explanation: |
+  fn print_labeled_measurement(value: i32, unit_label: char) declares both.
+  Several parameters are separated by commas, each with its own type.

@@ -1,0 +1,35 @@
+id: fix-borrow-mut
+title: Mutable References
+type: code
+language: rust
+run: local
+body: |
+  A plain reference, &, is read-only: you cannot change what you borrowed.
+  To be allowed to change it, borrow it mutably, with &mut. That needs the
+  value itself to be mut, the reference to be made with &mut, and the
+  parameter's type to be &mut.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0596]: cannot borrow `*some_string` as mutable, as it is behind a `&` reference
+question: |
+  Make change take a mutable reference, so that it can add to the String.
+  Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let s = String::from("hello");
+
+      change(&s);
+
+      println!("{s}");
+  }
+
+  fn change(some_string: &String) {
+      some_string.push_str(", world");
+  }
+expected_output: |
+  hello, world
+explanation: |
+  Three changes: let mut s, change(&mut s), and fn change(some_string: &mut
+  String). Writing &mut at the call makes it clear, when reading main, that
+  change may modify s.

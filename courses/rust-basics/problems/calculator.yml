@@ -1,0 +1,73 @@
+id: calculator
+title: 'Putting It Together: A Tiny Calculator'
+type: code
+language: rust
+run: local
+body: |
+  An enum, with data in some of its variants, a match that handles every
+  variant, and values taken out of patterns: a calculator that runs a small
+  program of commands.
+
+  Each Command either changes the running total or prints it. The program
+  is a list of commands; main runs them in order, passing the total along.
+
+  The patterns you need:
+
+    Command::Add(n)        a variant with a value, taken out as n
+    Command::Reset         a variant with nothing in it
+
+  command is a reference, &Command, so n comes out as a &i64; arithmetic with
+  it works as with an i64.
+
+  Copy the program into src/main.rs in your hello project. It compiles, with
+  warnings about unused parameters, and panics at todo!().
+question: |
+  Write apply. Run it and paste what it printed.
+starter_code: |
+  enum Command {
+      Add(i64),
+      Multiply(i64),
+      Reset,
+      Print,
+  }
+
+  // Carries out one command on the total so far, and returns the new total.
+  // Print prints "total: " and the total, and leaves it as it is.
+  fn apply(total: i64, command: &Command) -> i64 {
+      todo!()
+  }
+
+  fn main() {
+      let program = [
+          Command::Add(4),
+          Command::Multiply(10),
+          Command::Print,
+          Command::Add(2),
+          Command::Print,
+          Command::Reset,
+          Command::Add(7),
+          Command::Print,
+      ];
+
+      let mut total = 0;
+      for command in &program {
+          total = apply(total, command);
+      }
+  }
+expected_output: |
+  total: 40
+  total: 42
+  total: 7
+explanation: |
+  match command {
+      Command::Add(n) => total + n,
+      Command::Multiply(n) => total * n,
+      Command::Reset => 0,
+      Command::Print => {
+          println!("total: {total}");
+          total
+      }
+  }
+
+  Try adding a Subtract command: the compiler points at apply straight
+  away, because its match no longer covers every command.

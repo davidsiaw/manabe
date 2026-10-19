@@ -1,0 +1,26 @@
+id: auto-ref
+title: Where Is the -> Operator?
+type: multiple_choice
+body: |
+  In C and C++, calling a method through a pointer needs a different
+  operator, ->. Rust has no ->: when you call a method, Rust adds the &,
+  &mut or * the method needs. That is automatic referencing, and it is why
+  rect1.area() works although area wants &self.
+
+  A method is still a function. It can be called with its type's name and
+  a path separator, ::, passing self like any other argument.
+question: |
+  Which of these is the same call as rect1.area() ?
+choices:
+  - id: a
+    text: Rectangle::area(&rect1)
+    correct: true
+  - id: b
+    text: area(rect1)
+  - id: c
+    text: rect1::area()
+  - id: d
+    text: rect1->area()
+explanation: |
+  Rectangle::area(&rect1) passes self by hand. The method form is shorter
+  and reads better; the compiler turns one into the other.

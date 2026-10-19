@@ -1,0 +1,53 @@
+id: define-struct
+title: Your First Struct
+type: code
+language: rust
+run: local
+body: |
+  To make an instance of a struct, write its name and, in curly brackets,
+  each field with its value:
+
+    let user1 = User {
+        active: true,
+        username: String::from("someusername123"),
+        email: String::from("someone@example.com"),
+        sign_in_count: 1,
+    };
+
+  The fields can be given in any order, but every field must be given a
+  value: leave one out and the compiler says "missing field". Read a field
+  with a full stop: user1.email.
+
+  The program below makes a Book and prints it, but Book is not defined.
+  Copy it into src/main.rs in your hello project and run it:
+
+    error[E0422]: cannot find struct, variant or union type `Book` in this scope
+question: |
+  Define Book where the comment is, with a field for each value main gives
+  it. Pick the types from the values: the title is a String, the number of
+  pages a u32. Run it and paste what it printed.
+starter_code: |
+  // Define the Book struct here.
+
+  fn main() {
+      let book = Book {
+          title: String::from("Dune"),
+          pages: 412,
+          available: true,
+      };
+
+      println!("{} has {} pages", book.title, book.pages);
+      println!("available: {}", book.available);
+  }
+expected_output: |
+  Dune has 412 pages
+  available: true
+explanation: |
+  struct Book {
+      title: String,
+      pages: u32,
+      available: bool,
+  }
+
+  Instance and definition have the same shape: name: type in the
+  definition, name: value in the instance.

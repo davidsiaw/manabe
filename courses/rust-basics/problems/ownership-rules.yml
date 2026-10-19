@@ -1,0 +1,38 @@
+id: ownership-rules
+title: The Ownership Rules
+type: multiple_choice
+body: |
+  Three rules, all checked by the compiler:
+
+  - Each value in Rust has an owner, a variable.
+  - There can only be one owner at a time.
+  - When the owner goes out of scope, the value is dropped: its memory is
+    freed.
+
+  A variable's scope is from where it is declared to the end of the curly
+  brackets around it:
+
+    {                       // s does not exist yet
+        let s = String::from("hello");   // s exists from here
+        // use s
+    }                       // s goes out of scope; its heap memory is freed
+
+  Freeing happens automatically, at that closing bracket, every time. No
+  garbage collector, and no way to forget.
+question: |
+  A function makes a String in a variable and does not give it to anyone
+  else. What happens to the String's heap memory?
+choices:
+  - id: a
+    text: It is freed when the function's closing bracket is reached
+    correct: true
+  - id: b
+    text: It is freed when the program ends
+  - id: c
+    text: It is freed later, by a garbage collector
+  - id: d
+    text: It is never freed unless you call a function to free it
+explanation: |
+  The variable is the owner, and it goes out of scope at the end of the
+  function, so the String is dropped there. Rust calls a function named
+  drop for it, which frees the memory.

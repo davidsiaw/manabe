@@ -1,0 +1,49 @@
+id: first-word
+title: The First Word
+type: code
+language: rust
+run: local
+body: |
+  Write first_word: given some text, it returns its first word, the text up
+  to the first space, or all of it if there is no space. It returns a slice,
+  so no text is copied, and the result stays tied to the text it came from.
+
+  One way is to look at each byte in turn:
+
+  - s.as_bytes() gives the text as bytes.
+  - .iter().enumerate() goes through them, giving each one's position and a
+    reference to it: for (i, &item) in ... takes them apart.
+  - b' ' is the byte of a space.
+
+  {text:?} prints with quotes, so that the empty string and spaces are
+  visible. Copy the program into src/main.rs in your hello project and run
+  it; it panics at todo!().
+question: |
+  Write first_word. Run it and paste what it printed.
+starter_code: |
+  fn first_word(s: &str) -> &str {
+      todo!()
+  }
+
+  fn main() {
+      for text in ["hello world", "one", "  two spaces", ""] {
+          println!("{text:?} starts with {:?}", first_word(text));
+      }
+  }
+expected_output: |
+  "hello world" starts with "hello"
+  "one" starts with "one"
+  "  two spaces" starts with ""
+  "" starts with ""
+explanation: |
+  let bytes = s.as_bytes();
+  for (i, &item) in bytes.iter().enumerate() {
+      if item == b' ' {
+          return &s[0..i];
+      }
+  }
+  &s[..]
+
+  Text that starts with a space has an empty first word, &s[0..0]. The
+  next problem's version is shorter: s.find(' ') finds the position of the
+  first space for you.

@@ -1,0 +1,37 @@
+id: temperatures
+title: Converting Temperatures
+type: code
+language: rust
+run: local
+body: |
+  One more function, this time with floating-point numbers. To convert
+  degrees Fahrenheit to Celsius, subtract 32 and multiply by 5/9.
+
+  Remember that integers and floats do not mix: in an f64 calculation every
+  number must be an f64 too, so write 32.0 and 9.0, not 32 and 9.
+
+  In the println!, {celsius:.1} prints celsius with one digit after the
+  decimal point. Copy the program below into src/main.rs in your hello
+  project, replacing everything in it, and run it: like the last problem, it
+  panics at todo!().
+question: |
+  Write fahrenheit_to_celsius. Run the program and paste what it printed.
+starter_code: |
+  fn fahrenheit_to_celsius(fahrenheit: f64) -> f64 {
+      todo!()
+  }
+
+  fn main() {
+      for fahrenheit in [32.0, 98.6, 212.0] {
+          let celsius = fahrenheit_to_celsius(fahrenheit);
+          println!("{fahrenheit} F is {celsius:.1} C");
+      }
+  }
+expected_output: |
+  32 F is 0.0 C
+  98.6 F is 37.0 C
+  212 F is 100.0 C
+explanation: |
+  (fahrenheit - 32.0) * 5.0 / 9.0 does it. Written as 5 / 9, with integers,
+  it would not compile next to an f64, and as an integer division it would
+  be 0 anyway.

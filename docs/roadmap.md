@@ -2,7 +2,8 @@
 
 ## Not built yet
 
-- **Code exercises.** The `type` field exists for them; see courses.md for what a new type needs. Evaluating code safely needs a sandboxed runner, probably as a Sidekiq job.
+- **Trusted checking of code problems.** Code runs in the browser and the backend compares the output it is sent (system.md), so a learner can post the right output without a program. For anything graded, the backend would have to run the code itself, in a sandbox, probably as a Sidekiq job. Checking by tests rather than by exact output would need the same.
+- **Checking `expected_output` in CI.** Nothing runs a code problem's reference solution, so a wrong `expected_output` is found only by a learner. The course format could take a `solution`, and a frontend spec could run every one on the real runtime.
 - **Email confirmation.** Anyone can register any email address. It cannot be used to get into an existing account, but it can squat an address.
 - **Account recovery.** A learner who loses their passkey loses the account. Needs email sending first.
 - **More than one passkey per account**, to add a device whose passkeys are not synced. Registration currently refuses a learner that already has an email.

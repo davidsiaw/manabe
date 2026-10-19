@@ -1,0 +1,56 @@
+id: fizzbuzz
+title: FizzBuzz
+type: code
+language: rust
+run: local
+body: |
+  Time to put if, else and loops together on your own computer. Copy the
+  program below into src/main.rs in your hello project, replacing everything
+  in it.
+
+  It builds, but with a warning that n is unused. Warnings do not stop the
+  build; this one goes away once your code uses n.
+
+  The % operator gives the remainder of a division, so n % 3 == 0 is true
+  when n is a multiple of 3.
+question: |
+  Fill in the loop so that it prints, for each number from 1 to 15: FizzBuzz
+  for multiples of both 3 and 5, Fizz for other multiples of 3, Buzz for
+  other multiples of 5, and otherwise the number itself. Run it and paste
+  what it printed.
+starter_code: |
+  fn main() {
+      for n in 1..=15 {
+          // print FizzBuzz, Fizz, Buzz or n
+      }
+  }
+expected_output: |
+  1
+  2
+  Fizz
+  4
+  Buzz
+  Fizz
+  7
+  8
+  Fizz
+  Buzz
+  11
+  Fizz
+  13
+  14
+  FizzBuzz
+explanation: |
+  Check for multiples of 15 first, or 15 stops at the Fizz case:
+
+    if n % 15 == 0 {
+        println!("FizzBuzz");
+    } else if n % 3 == 0 {
+        println!("Fizz");
+    } else if n % 5 == 0 {
+        println!("Buzz");
+    } else {
+        println!("{n}");
+    }
+
+  A match on (n % 3, n % 5) is another neat way to write it.

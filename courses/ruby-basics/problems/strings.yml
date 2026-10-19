@@ -1,0 +1,31 @@
+id: strings
+title: Strings
+type: code
+language: ruby
+body: |
+  A variable is a name for a value; you make one by assigning to it:
+
+    language = "Ruby"
+
+  Inside double quotes, #{...} puts the value of any Ruby expression into the
+  string. This is called interpolation:
+
+    puts "I am learning #{language}!"
+
+  Strings have many methods. A few: upcase, downcase, reverse, and length,
+  which counts the characters.
+
+    "Ruby".upcase      # => "RUBY"
+    "Ruby".length      # => 4
+question: |
+  Using interpolation and the variable name, print exactly:
+
+    Hello, Matz! Your name has 4 letters and shouts as MATZ.
+starter_code: |
+  name = "Matz"
+expected_output: |
+  Hello, Matz! Your name has 4 letters and shouts as MATZ.
+explanation: |
+  puts "Hello, #{name}! Your name has #{name.length} letters and shouts as #{name.upcase}."
+  Interpolation works only in double quotes; in single quotes #{...} is
+  printed as it is.

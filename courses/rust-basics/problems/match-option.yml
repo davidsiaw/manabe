@@ -1,0 +1,41 @@
+id: match-option
+title: Matching on Option
+type: code
+language: rust
+run: local
+body: |
+  Option is an enum like any other, so match handles it the same way. This
+  is how you get at the value inside a Some, and say what happens for None:
+
+    match x {
+        None => ...,
+        Some(i) => ...,     // i is the value inside
+    }
+
+  Copy the program into src/main.rs in your hello project and run it; it
+  panics at todo!().
+question: |
+  Write plus_one: for Some, it adds one to the number inside and returns it
+  in a Some; for None, it returns None. Run it and paste what it printed.
+starter_code: |
+  fn plus_one(x: Option<i32>) -> Option<i32> {
+      todo!()
+  }
+
+  fn main() {
+      let five = Some(5);
+      let six = plus_one(five);
+      let none = plus_one(None);
+
+      println!("{six:?} {none:?}");
+  }
+expected_output: |
+  Some(6) None
+explanation: |
+  match x {
+      None => None,
+      Some(i) => Some(i + 1),
+  }
+
+  Matching on an enum, binding a variable to the data inside, and running
+  code for it, is something you will do all the time in Rust.

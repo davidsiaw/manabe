@@ -1,0 +1,39 @@
+id: catch-all
+title: Catch-All Patterns
+type: multiple_choice
+body: |
+  Sometimes only a few values need special handling. In a board game,
+  rolling a 3 gets you a fancy hat, a 7 loses it, and anything else moves
+  you that many spaces:
+
+    match dice_roll {
+        3 => add_fancy_hat(),
+        7 => remove_fancy_hat(),
+        other => move_player(other),
+    }
+
+  A plain name, other here, matches any value and gives it that name. When
+  you do not need the value, use _, which matches anything and names
+  nothing:
+
+    _ => reroll(),
+
+  And to do nothing at all, give the unit value, (), as the arm's code:
+
+    _ => (),
+question: |
+  In a match with arms 3 => add_fancy_hat(), and _ => (), what happens for
+  a roll of 9?
+choices:
+  - id: a
+    text: Nothing
+    correct: true
+  - id: b
+    text: It does not compile, as 9 has no arm
+  - id: c
+    text: add_fancy_hat runs
+  - id: d
+    text: The program panics
+explanation: |
+  _ matches 9, and its code is (), the empty value: nothing happens. The
+  catch-all is what makes the match exhaustive.

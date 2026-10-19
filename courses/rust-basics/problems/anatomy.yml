@@ -1,0 +1,35 @@
+id: anatomy
+title: The Anatomy of a Program
+type: multiple_choice
+body: |
+  Look again at the smallest Rust program:
+
+    fn main() {
+        println!("Hello, world!");
+    }
+
+  fn main() defines a function called main. main is special: it is the first
+  code that runs in every executable Rust program. It takes no parameters
+  (the empty parentheses) and its body goes between the curly brackets.
+
+  Inside, println! prints a line of text. The text is a string, in double
+  quotes, and the line ends with a semicolon, which marks the end of an
+  expression. Most lines of Rust end with one.
+
+  Rust's style is to indent with four spaces. A tool called rustfmt, run as
+  cargo fmt, formats your code that way for you.
+question: What does the ! in println! tell you?
+choices:
+  - id: a
+    text: println is a macro, not a normal function
+    correct: true
+  - id: b
+    text: The line is printed in bold
+  - id: c
+    text: println cannot fail
+  - id: d
+    text: The output is printed immediately, without buffering
+explanation: |
+  A name ending in ! calls a macro. Macros write code for you, and they do
+  not have to follow all the rules functions do: println! takes any number
+  of values to print, for example. A plain function call would be println().

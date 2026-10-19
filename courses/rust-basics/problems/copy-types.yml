@@ -1,0 +1,33 @@
+id: copy-types
+title: Copy Types
+type: multiple_choice
+body: |
+  This compiles, although it looks like the String example that did not:
+
+    let x = 5;
+    let y = x;
+    println!("x = {x}, y = {y}");
+
+  An i32 is small, of known size and entirely on the stack, so copying it is
+  as cheap as moving it, and there is nothing on the heap to free twice.
+  Types like that are Copy: assigning them copies, and the original is still
+  valid.
+
+  Copy types: all the integer and floating-point types, bool, char, and
+  tuples and arrays made only of Copy types. Anything that owns heap memory,
+  such as String, is not Copy.
+question: |
+  After let y = x; which x can still be used?
+choices:
+  - id: a
+    text: "let x: (i32, char) = (1, 'a');"
+    correct: true
+  - id: b
+    text: 'let x = String::from("a");'
+  - id: c
+    text: 'let x: (i32, String) = (1, String::from("a"));'
+  - id: d
+    text: None of them
+explanation: |
+  (i32, char) is made only of Copy types, so it is Copy. A tuple containing a
+  String is not: assigning it moves it, String and all.

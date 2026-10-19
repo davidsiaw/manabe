@@ -1,0 +1,60 @@
+id: enum-methods
+title: A Method on an Enum
+type: code
+language: rust
+run: local
+body: |
+  Enums can have methods, in an impl block like a struct's, and they
+  usually start with match self, to do the right thing for each variant.
+
+  A variant with named fields is matched by naming them, and each name then
+  holds that field's value:
+
+    Shape::Rectangle { width, height } => ...
+
+  self here is a &Shape, so the values come out as references, &f64. Arithmetic
+  on them works as on numbers.
+
+  Copy the program into src/main.rs in your hello project and run it; it
+  panics at todo!(). Pi is std::f64::consts::PI.
+question: |
+  Write area: pi times the radius squared for a circle, width times height
+  for a rectangle, and the side squared for a square. Run it and paste what it
+  printed.
+starter_code: |
+  enum Shape {
+      Circle { radius: f64 },
+      Rectangle { width: f64, height: f64 },
+      Square(f64),
+  }
+
+  impl Shape {
+      fn area(&self) -> f64 {
+          todo!()
+      }
+  }
+
+  fn main() {
+      let shapes = [
+          Shape::Circle { radius: 1.0 },
+          Shape::Rectangle { width: 2.0, height: 3.5 },
+          Shape::Square(3.0),
+      ];
+
+      for shape in &shapes {
+          println!("{:.2}", shape.area());
+      }
+  }
+expected_output: |
+  3.14
+  7.00
+  9.00
+explanation: |
+  match self {
+      Shape::Circle { radius } => std::f64::consts::PI * radius * radius,
+      Shape::Rectangle { width, height } => width * height,
+      Shape::Square(side) => side * side,
+  }
+
+  One method handles three shapes with different data, and adding a fourth
+  shape means adding a fourth arm.

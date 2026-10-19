@@ -1,0 +1,12 @@
+id: hello
+title: Hello
+type: code
+language: ruby
+body: Print things.
+question: Print hello, then 3.
+starter_code: |
+  # your code here
+expected_output: |
+  hello
+  3
+explanation: puts adds a newline.

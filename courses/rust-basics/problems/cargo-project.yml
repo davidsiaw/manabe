@@ -1,0 +1,48 @@
+id: cargo-project
+title: A Cargo Project
+type: multiple_choice
+body: |
+  cargo new made more than src/main.rs. It also wrote Cargo.toml, the
+  project's configuration, in the TOML format:
+
+    [package]
+    name = "hello"
+    version = "0.1.0"
+    edition = "2024"
+
+    [dependencies]
+
+  [package] describes the project: its name, version, and the edition of
+  Rust it is written in. [dependencies] lists other people's code, called
+  crates, that the project uses. cargo new also made the folder a Git
+  repository, with a .gitignore.
+
+  Cargo expects your code in src/, and keeps the top folder for
+  configuration, a README, licence information and the like.
+
+  The commands you will use all the time:
+
+    cargo build     compile, into target/debug/
+    cargo run       compile if anything changed, then run
+    cargo check     check that the code compiles, without making a program
+    cargo build --release   compile with optimisations, into target/release/
+
+  A release build takes longer to compile and runs faster. Build that way
+  when you measure how fast your program is, or give it to other people.
+question: |
+  You want to know quickly whether your code compiles, and do not need to
+  run it. Which command is fastest?
+choices:
+  - id: a
+    text: cargo build
+  - id: b
+    text: cargo check
+    correct: true
+  - id: c
+    text: cargo build --release
+  - id: d
+    text: cargo run
+explanation: |
+  cargo check does everything up to producing an executable, and skips that
+  step, so it is much faster than cargo build. Many people run it over and
+  over while writing code.

@@ -1,0 +1,26 @@
+id: catch-all-order
+title: Catch-Alls Go Last
+type: multiple_choice
+body: |
+  Arms are tried in order, and the first that matches wins. A catch-all
+  matches everything, so it must come last: any arm after it can never run.
+question: |
+  What happens here, with dice_roll being 3?
+
+    match dice_roll {
+        _ => println!("reroll"),
+        3 => println!("fancy hat"),
+    }
+choices:
+  - id: a
+    text: It compiles with a warning, and prints reroll
+    correct: true
+  - id: b
+    text: It prints fancy hat
+  - id: c
+    text: It prints both
+  - id: d
+    text: It does not compile
+explanation: |
+  The compiler warns "unreachable pattern": the _ arm matches the 3 first.
+  It is only a warning, so the program runs, and the 3 arm never does.

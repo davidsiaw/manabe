@@ -1,0 +1,35 @@
+id: fix-move
+title: Move and Clone
+type: code
+language: rust
+run: local
+body: |
+  What does let s2 = s1; do with a String? Copying the text on the heap
+  could be slow, and copying only the pointer would leave two owners of the
+  same text, which would both free it when they go out of scope.
+
+  Rust does something else: it moves the String. s2 becomes the owner and
+  s1 is no longer valid, so only s2 frees the text. Using s1 afterwards is
+  an error.
+
+  When you do want a second copy, call clone(). It copies the heap data
+  too, which may be slow, and makes that cost visible in the code.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: borrow of moved value: `s1`
+question: |
+  Make s2 a copy of s1, so that both can be printed. Run it and paste what it
+  printed.
+starter_code: |
+  fn main() {
+      let s1 = String::from("hello");
+      let s2 = s1;
+
+      println!("{s1} and {s2}");
+  }
+expected_output: |
+  hello and hello
+explanation: |
+  let s2 = s1.clone(); makes s2 a new String with its own copy of the text,
+  so s1 is still valid. The compiler's help line suggested exactly that.

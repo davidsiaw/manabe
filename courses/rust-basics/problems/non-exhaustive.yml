@@ -1,0 +1,48 @@
+id: non-exhaustive
+title: Matches Are Exhaustive
+type: code
+language: rust
+run: local
+body: |
+  A match must cover every possible value. Forget one, and the program does
+  not compile; the compiler even names the value you forgot.
+
+  This is a big help when a program grows. Add a variant to an enum, and
+  the compiler lists every match in the program that has to handle it. With
+  Option, it means you cannot forget the None case.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0004]: non-exhaustive patterns: `&TrafficLight::Green` not covered
+question: |
+  A green light lasts 25 seconds. Add the arm for it, run the program and
+  paste what it printed.
+starter_code: |
+  enum TrafficLight {
+      Red,
+      Yellow,
+      Green,
+  }
+
+  fn seconds(light: &TrafficLight) -> u32 {
+      match light {
+          TrafficLight::Red => 30,
+          TrafficLight::Yellow => 3,
+      }
+  }
+
+  fn main() {
+      let lights = [TrafficLight::Red, TrafficLight::Green, TrafficLight::Yellow];
+
+      for light in &lights {
+          println!("wait {} seconds", seconds(light));
+      }
+  }
+expected_output: |
+  wait 30 seconds
+  wait 25 seconds
+  wait 3 seconds
+explanation: |
+  TrafficLight::Green => 25,. The error mentioned &TrafficLight::Green
+  because seconds borrows the light: matching on a reference works with
+  the same patterns.

@@ -1,0 +1,46 @@
+id: fix-two-mutable
+title: One Mutable Reference at a Time
+type: code
+language: rust
+run: local
+body: |
+  While a mutable reference to a value is in use, there can be no other
+  reference to that value, mutable or not. This is how Rust prevents data
+  races at compile time: two pieces of code changing the same data at once,
+  or one reading it while another changes it, which in other languages
+  causes bugs that are very hard to find.
+
+  A reference is in use from where it is made until the last place it is
+  used, not until the end of its scope.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0499]: cannot borrow `s` as mutable more than once at a time
+question: |
+  Reorder the lines so that r1 is finished with before r2 is made, keeping
+  both references. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut s = String::from("hello");
+
+      let r1 = &mut s;
+      let r2 = &mut s;
+
+      r1.push_str(", world");
+      r2.push_str("!");
+
+      println!("{s}");
+  }
+expected_output: |
+  hello, world!
+explanation: |
+  Use r1 straight after making it:
+
+    let r1 = &mut s;
+    r1.push_str(", world");
+
+    let r2 = &mut s;
+    r2.push_str("!");
+
+  r1 is not used after its push_str, so by the time r2 is made, r1 is no
+  longer in use and the borrows do not overlap.

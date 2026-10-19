@@ -1,0 +1,39 @@
+id: stack-heap
+title: The Stack and the Heap
+type: multiple_choice
+body: |
+  Every program has to manage the memory it uses. Some languages have a
+  garbage collector that looks for unused memory while the program runs;
+  in others you free memory yourself, and forgetting or doing it twice are
+  classic bugs. Rust does neither: a set of rules called ownership, checked
+  when compiling, decides when memory is freed. This chapter is about those
+  rules.
+
+  Two places hold a program's data:
+
+  - The stack: fast, and used for values of a known, fixed size, such as an
+    i32 or a bool. Values are pushed on when a function starts and popped off
+    when it ends, last in first out.
+  - The heap: for data whose size is only known while the program runs, or
+    can change. The program asks for space, gets back a pointer to it (its
+    address), and the space has to be given back when it is no longer
+    needed.
+
+  A String can grow, so its text lives on the heap. The String value itself,
+  on the stack, is a pointer to that text, its length and its capacity.
+question: |
+  let s = String::from("hello"); where are the five letters of "hello"?
+choices:
+  - id: a
+    text: On the heap, with a pointer to them on the stack
+    correct: true
+  - id: b
+    text: On the stack, as the String has a fixed size
+  - id: c
+    text: Inside the compiled program, and nowhere else
+  - id: d
+    text: Wherever the garbage collector put them
+explanation: |
+  A String's text is on the heap, as it can grow. A string literal such as
+  "hello" on its own is different: it is fixed, and stored inside the
+  program. String::from copies it onto the heap.

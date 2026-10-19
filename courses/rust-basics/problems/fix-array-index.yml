@@ -1,0 +1,46 @@
+id: fix-array-index
+title: Indexing Past the End
+type: code
+language: rust
+run: local
+body: |
+  Reading an array element that does not exist is never allowed in Rust.
+  When the index is a constant, such as a[10] on a five-element array, the
+  compiler refuses the program. When the index is only known while the
+  program runs, Rust checks it then, and stops the program with a panic
+  rather than reading whatever memory happens to be past the end. Many
+  languages do not check, and that is a common source of security holes.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run cargo run. It compiles, and then panics:
+
+    index out of bounds: the len is 5 but the index is 5
+
+  The loop's condition lets index reach 5, but the last index of a
+  five-element array is 4.
+question: |
+  Fix the program so that it adds up the scores without going past the end.
+  Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let scores = [3, 1, 4, 1, 5];
+      let mut total = 0;
+      let mut index = 0;
+
+      while index <= 5 {
+          total += scores[index];
+          index += 1;
+      }
+
+      println!("total is {total}");
+  }
+expected_output: |
+  total is 14
+explanation: |
+  while index < 5 fixes it, but a for loop is better: for score in scores
+  goes through every element and cannot go past the end, however long the
+  array is.
+
+    for score in scores {
+        total += score;
+    }

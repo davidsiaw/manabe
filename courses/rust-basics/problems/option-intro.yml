@@ -1,0 +1,44 @@
+id: option-intro
+title: Option Instead of Null
+type: multiple_choice
+body: |
+  Many languages have null, a value meaning "nothing here", which any
+  variable can hold. Using a null as if it were a value is one of the most
+  common bugs there is; null's inventor called it his billion-dollar
+  mistake.
+
+  Rust has no null. When a value may be missing, its type says so, with an
+  enum from the standard library:
+
+    enum Option<T> {
+        None,
+        Some(T),
+    }
+
+  <T> means Option works for any type: Option<i32> is either Some holding
+  an i32, or None. Option, Some and None are always in scope, so you write
+  Some(5) and None without Option::.
+
+  An Option<i32> is not an i32. Before you can use the number, your code has
+  to deal with the case where there is none, and the compiler makes sure it
+  does.
+question: |
+  What happens with this code?
+
+    let x: i8 = 5;
+    let y: Option<i8> = Some(5);
+    let sum = x + y;
+choices:
+  - id: a
+    text: It does not compile
+    correct: true
+  - id: b
+    text: sum is 10
+  - id: c
+    text: sum is Some(10)
+  - id: d
+    text: It compiles, and panics if y is None
+explanation: |
+  The compiler says "cannot add `Option<i8>` to `i8`": y might be None, and
+  the code does not say what to do then. A later problem in this chapter
+  fixes it.

@@ -1,0 +1,31 @@
+id: fix-shadowing
+title: Changing Type by Shadowing
+type: code
+language: rust
+run: local
+body: |
+  Shadowing can change a variable's type, which mut cannot. A mut variable
+  can be given a new value, but only of the type it already has.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run cargo run. The compiler refuses it:
+
+    expected `&str`, found `usize`
+
+  spaces started as text (a &str, a string slice) and the program tries to
+  put a number (a usize, the length) into it.
+question: |
+  Fix the program with shadowing, so that spaces is first the text and then
+  its length, without mut. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut spaces = "   ";
+      spaces = spaces.len();
+      println!("There are {spaces} spaces.");
+  }
+expected_output: |
+  There are 3 spaces.
+explanation: |
+  let spaces = "   "; followed by let spaces = spaces.len(); makes a second
+  variable called spaces, of type usize. The name can be reused, so you do
+  not need two names such as spaces_str and spaces_num.

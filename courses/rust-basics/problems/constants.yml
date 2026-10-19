@@ -1,0 +1,36 @@
+id: constants
+title: Constants
+type: multiple_choice
+body: |
+  A constant is a name for a value that never changes, like an immutable
+  variable, with a few differences:
+
+  - It is declared with const instead of let, and can never be mut.
+  - Its type must always be written out.
+  - It can be declared anywhere, including outside every function, and is
+    then usable everywhere in the file.
+  - Its value must be something the compiler can work out while compiling,
+    such as a number or a calculation on numbers, not something only known
+    when the program runs.
+
+  Constant names are written in capitals with underscores:
+
+    const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
+
+  Naming a value used in several places, such as the highest score in a
+  game, tells the reader what it means and leaves one place to change it.
+question: Which of these compiles?
+choices:
+  - id: a
+    text: 'const MAX_POINTS: u32 = 100_000;'
+    correct: true
+  - id: b
+    text: 'const MAX_POINTS = 100_000;'
+  - id: c
+    text: 'const mut MAX_POINTS: u32 = 100_000;'
+  - id: d
+    text: 'let const MAX_POINTS: u32 = 100_000;'
+explanation: |
+  Without the type the compiler says "missing type for `const` item", and
+  with mut it says "const globals cannot be mutable". The underscore in
+  100_000 is only there to make the number easier to read.

@@ -1,0 +1,36 @@
+id: placeholders
+title: println! Placeholders
+type: multiple_choice
+body: |
+  Curly brackets in the text given to println! are placeholders. A variable
+  name inside them prints that variable:
+
+    let apples = 5;
+    println!("I have {apples} apples");
+
+  Empty brackets print the next value listed after the text, in order. Use
+  them for anything that is not just a variable name, such as a
+  calculation:
+
+    println!("Twice that is {}", apples * 2);
+
+  You can mix the two kinds in one println!.
+question: |
+  What does this print?
+
+    let x = 5;
+    let y = 10;
+    println!("x = {x} and y + 2 = {}", y + 2);
+choices:
+  - id: a
+    text: x = 5 and y + 2 = 12
+    correct: true
+  - id: b
+    text: x = 5 and y + 2 = 10 + 2
+  - id: c
+    text: 'x = {x} and y + 2 = 12'
+  - id: d
+    text: It does not compile
+explanation: |
+  {x} prints x, and {} prints the first value after the text, y + 2, which
+  is 12.

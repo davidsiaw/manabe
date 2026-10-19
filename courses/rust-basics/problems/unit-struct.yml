@@ -1,0 +1,25 @@
+id: unit-struct
+title: Unit-Like Structs
+type: multiple_choice
+body: |
+  A struct can have no fields at all. It is written with just a semicolon:
+
+    struct AlwaysEqual;
+
+  It is called unit-like, as it is like the unit, (). A struct with no data
+  sounds pointless, but it is useful when you want a type to give behaviour
+  to, which a later chapter shows with traits.
+question: How do you make an instance of AlwaysEqual?
+choices:
+  - id: a
+    text: let subject = AlwaysEqual;
+    correct: true
+  - id: b
+    text: let subject = AlwaysEqual();
+  - id: c
+    text: let subject = AlwaysEqual::new();
+  - id: d
+    text: You cannot; it has no fields
+explanation: |
+  The name on its own is the instance. AlwaysEqual() would be a tuple
+  struct with no fields, and there is no new unless you write one.

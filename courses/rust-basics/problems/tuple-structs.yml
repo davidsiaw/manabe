@@ -1,0 +1,47 @@
+id: tuple-structs
+title: Tuple Structs
+type: code
+language: rust
+run: local
+body: |
+  A tuple struct has a name but no field names, just types:
+
+    struct Color(u8, u8, u8);
+    struct Point(i32, i32, i32);
+
+    let black = Color(0, 0, 0);
+    let x = black.0;            // fields by position, like a tuple
+
+  They are useful when naming each field would add nothing, and you still
+  want a type of its own. Color and Point here are different types, even if
+  their fields had the same types: a function that takes a Color will not
+  take a Point. The compiler stops you mixing up two things that look alike.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0308]: mismatched types
+    expected `Color`, found `Point`
+question: |
+  teal is meant to be a colour. Fix it, run the program and paste what it
+  printed.
+starter_code: |
+  struct Color(u8, u8, u8);
+  struct Point(i32, i32, i32);
+
+  fn describe(color: Color) {
+      println!("red {}, green {}, blue {}", color.0, color.1, color.2);
+  }
+
+  fn main() {
+      let origin = Point(0, 0, 0);
+      let teal = Point(0, 128, 128);
+
+      println!("origin is at {}, {}, {}", origin.0, origin.1, origin.2);
+      describe(teal);
+  }
+expected_output: |
+  origin is at 0, 0, 0
+  red 0, green 128, blue 128
+explanation: |
+  let teal = Color(0, 128, 128);. Same values, different type, and the
+  compiler knows which one describe wants.

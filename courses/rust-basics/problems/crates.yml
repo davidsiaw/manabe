@@ -1,0 +1,51 @@
+id: crates
+title: Crates and Cargo.lock
+type: multiple_choice
+body: |
+  To pick a secret number the game needs random numbers, which the standard
+  library does not provide. The rand crate does. A crate is a package of
+  Rust code; crates.io is where people publish them.
+
+  In your guessing_game folder, run
+
+    cargo add rand
+
+  It adds a line to the [dependencies] in Cargo.toml, with the newest
+  version, such as
+
+    rand = "0.10.3"
+
+  "0.10.3" means 0.10.3 or any later version that is compatible with it:
+  for a crate whose version starts with 0, that is up to but not including
+  0.11.0. The next cargo build downloads rand, and the crates rand itself
+  depends on, and compiles them.
+
+  It also writes down the exact versions it chose in a file called
+  Cargo.lock. From then on Cargo uses those versions, until you run cargo
+  update, which moves to the newest compatible ones and updates Cargo.lock.
+  Commit Cargo.lock with your code.
+
+  With rand, a secret number from 1 to 100 is:
+
+    let secret_number = rand::random_range(1..=100);
+
+  1..=100 is a range that includes both ends. cargo doc --open builds the
+  documentation of every crate your project uses and opens it in your
+  browser, which is the quickest way to find out what a crate offers.
+question: |
+  What makes your project build with exactly the same version of rand next
+  month, even after a newer compatible version is published?
+choices:
+  - id: a
+    text: Cargo.lock
+    correct: true
+  - id: b
+    text: The version in Cargo.toml
+  - id: c
+    text: The target folder
+  - id: d
+    text: rustup
+explanation: |
+  Cargo.toml says which versions are acceptable; Cargo.lock records which
+  one was actually used. Builds are reproducible because Cargo keeps to the
+  lock file until you run cargo update.

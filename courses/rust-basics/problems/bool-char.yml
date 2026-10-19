@@ -1,0 +1,35 @@
+id: bool-char
+title: Booleans and Characters
+type: multiple_choice
+body: |
+  The bool type has two values, true and false, and takes one byte. It is
+  what if and while test.
+
+    let t = true;
+    let f: bool = false;
+
+  The char type is a single character, written in single quotes. Double
+  quotes make a string instead. A char is four bytes, enough for any Unicode
+  character, not just letters: accented letters, Chinese, Japanese and
+  Korean characters and emoji are all single chars.
+
+    let c = 'z';
+    let heart_eyed_cat = '😻';
+
+  Integers, floating-point numbers, booleans and characters are Rust's
+  scalar types: each holds a single value.
+question: Which of these makes c a char?
+choices:
+  - id: a
+    text: "let c = 'z';"
+    correct: true
+  - id: b
+    text: 'let c = "z";'
+  - id: c
+    text: "let c = 'zz';"
+  - id: d
+    text: 'let c: char = "z";'
+explanation: |
+  Single quotes make a char. "z" is a string with one character in it, so
+  giving it to a char fails, and the compiler suggests single quotes; 'zz'
+  is two characters, which no char can hold.

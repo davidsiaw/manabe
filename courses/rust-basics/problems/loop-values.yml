@@ -1,0 +1,49 @@
+id: loop-values
+title: Returning a Value from a Loop
+type: code
+language: rust
+run: local
+body: |
+  loop repeats its body until something stops it, most often break. Like
+  if, loop is an expression, and break can give it a value: the value after
+  break becomes the loop's value.
+
+    let mut counter = 0;
+    let result = loop {
+        counter += 1;
+        if counter == 10 {
+            break counter * 2;
+        }
+    };    // result is 20
+
+  This is handy for repeating something until it succeeds and keeping what
+  it produced. return, in contrast, leaves the whole function.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run it. It finds the wrong answer: the loop breaks
+  the first time round.
+question: |
+  Change the loop so that it keeps doubling n, and breaks with it only once
+  n is more than 1000. Run the program and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut n = 1;
+
+      let first = loop {
+          n *= 2;
+          break n;
+      };
+
+      println!("The first power of two over 1000 is {first}");
+  }
+expected_output: |
+  The first power of two over 1000 is 1024
+explanation: |
+  Put the break inside an if:
+
+    let first = loop {
+        n *= 2;
+        if n > 1000 {
+            break n;
+        }
+    };

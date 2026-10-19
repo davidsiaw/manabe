@@ -1,0 +1,29 @@
+id: fix-overflow
+title: Fixing an Overflow
+type: code
+language: rust
+run: local
+body: |
+  The compiler catches some overflows before the program even runs: when it
+  can work out the values, it refuses to build arithmetic that cannot fit.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run cargo run. It does not compile: read what the
+  compiler says. Rust's error messages point at the problem and often
+  suggest a fix, so they are worth reading in full.
+question: |
+  Change the program so that it builds, and the total stops at the largest
+  value a u8 can hold instead of overflowing. Then run it and paste what it
+  printed.
+starter_code: |
+  fn main() {
+      let stock: u8 = 200;
+      let delivery: u8 = 100;
+      let total = stock + delivery;
+      println!("total is {total}");
+  }
+expected_output: |
+  total is 255
+explanation: |
+  stock.saturating_add(delivery) stops at u8::MAX, 255. Making the type
+  bigger (u16) would also build, but print 300.

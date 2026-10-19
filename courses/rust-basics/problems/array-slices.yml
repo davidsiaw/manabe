@@ -1,0 +1,44 @@
+id: array-slices
+title: Other Slices
+type: code
+language: rust
+run: local
+body: |
+  Slices are not only for text. &a[1..4] is a slice of an array, of type
+  &[i32] for an array of i32: a reference to some of its elements, in
+  order. &a turns into a slice of the whole array where a slice is wanted.
+
+  A function that takes a slice works on a whole array, part of one, or any
+  other list of values in a row, such as a vector later on.
+
+  for n in numbers goes through a slice's elements, giving a reference to
+  each one. Copy the program into src/main.rs in your hello project and run
+  it; it panics at todo!().
+question: |
+  Write sum, which adds up the numbers in the slice. Run it and paste what it
+  printed.
+starter_code: |
+  fn sum(numbers: &[i32]) -> i32 {
+      todo!()
+  }
+
+  fn main() {
+      let a = [1, 2, 3, 4, 5];
+
+      println!("all of it: {}", sum(&a));
+      println!("the middle three: {}", sum(&a[1..4]));
+      println!("none of it: {}", sum(&a[..0]));
+  }
+expected_output: |
+  all of it: 15
+  the middle three: 9
+  none of it: 0
+explanation: |
+  let mut total = 0;
+  for n in numbers {
+      total += n;
+  }
+  total
+
+  n is a &i32, and adding a reference to an i32 works as you would hope.
+  numbers.iter().sum() does the same in one line.

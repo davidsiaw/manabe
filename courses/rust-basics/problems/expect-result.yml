@@ -1,0 +1,37 @@
+id: expect-result
+title: Results and expect
+type: multiple_choice
+body: |
+  Reading input can fail. read_line does not stop the program when it does;
+  it returns a Result, a value that is either Ok (it worked, and here is
+  the value) or Err (it failed, and here is why). Result is an enum: a type
+  whose value is one of a fixed set of variants, here Ok and Err.
+
+  .expect("Failed to read line") is one way to deal with it. If the Result
+  is Ok, expect gives you the value inside. If it is an Err, expect stops
+  the program and prints your message.
+
+  Leave expect out and the program still compiles, but the compiler warns
+  you:
+
+    warning: unused `Result` that must be used
+
+  Rust nudges you to decide what happens when something can fail. Later
+  problems handle an Err properly instead of stopping.
+question: |
+  read_line returns an Err, and the code called .expect("Failed to read
+  line") on it. What happens?
+choices:
+  - id: a
+    text: The program stops, and prints Failed to read line
+    correct: true
+  - id: b
+    text: guess is left empty and the program carries on
+  - id: c
+    text: read_line is tried again until it works
+  - id: d
+    text: It does not compile, as expect needs an Ok
+explanation: |
+  expect turns an Err into a panic, which stops the program with your
+  message. It is fine for quick programs and for errors that should never
+  happen; a real game would want to do better.

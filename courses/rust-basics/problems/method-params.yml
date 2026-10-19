@@ -1,0 +1,47 @@
+id: method-params
+title: Methods with More Parameters
+type: code
+language: rust
+run: local
+body: |
+  After self, a method takes any other parameters, exactly like a function:
+
+    fn can_hold(&self, other: &Rectangle) -> bool
+
+  The call passes only the others; self is the value before the full stop:
+
+    rect1.can_hold(&rect2)
+
+  Copy the program into src/main.rs in your hello project. It does not
+  compile until you write can_hold.
+question: |
+  Write can_hold. A rectangle can hold another if it is wider and taller
+  than it. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  struct Rectangle {
+      width: u32,
+      height: u32,
+  }
+
+  impl Rectangle {
+      // Add can_hold here.
+  }
+
+  fn main() {
+      let rect1 = Rectangle { width: 30, height: 50 };
+      let rect2 = Rectangle { width: 10, height: 40 };
+      let rect3 = Rectangle { width: 60, height: 45 };
+
+      println!("Can rect1 hold rect2? {}", rect1.can_hold(&rect2));
+      println!("Can rect1 hold rect3? {}", rect1.can_hold(&rect3));
+  }
+expected_output: |
+  Can rect1 hold rect2? true
+  Can rect1 hold rect3? false
+explanation: |
+  fn can_hold(&self, other: &Rectangle) -> bool {
+      self.width > other.width && self.height > other.height
+  }
+
+  It only reads both rectangles, so both are borrowed.

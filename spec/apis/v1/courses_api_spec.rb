@@ -4,9 +4,10 @@ RSpec.describe CoursesApi, type: :request do # also covers ProblemsApi
   let(:learner) { Learner.create! }
   let(:headers) { bearer(LearnerSession.start(learner).last) }
   let(:json) { response.parsed_body }
+  let(:catalog_root) { 'spec/fixtures/courses' }
 
   before do
-    allow(CourseCatalog).to receive(:new).and_return(CourseCatalog.new(Rails.root.join('spec/fixtures/courses')))
+    allow(CourseCatalog).to receive(:new).and_return(CourseCatalog.new(Rails.root.join(catalog_root)))
   end
 
   describe 'GET /api/v1/courses' do
@@ -46,6 +47,10 @@ RSpec.describe CoursesApi, type: :request do # also covers ProblemsApi
 
     it 'does not reveal which choice is correct' do
       expect(json['choices']).to eq [{ 'id' => 'a', 'text' => 'Not this' }, { 'id' => 'b', 'text' => 'This one' }]
+    end
+
+    it 'says what language the code in it is in, from the course' do
+      expect(json['language']).to eq 'rust'
     end
 
     it 'links to the neighbouring problems across sections' do
@@ -166,6 +171,39 @@ RSpec.describe CoursesApi, type: :request do # also covers ProblemsApi
     it 'shows revision problems only to their learner' do
       get '/api/v1/courses/sample/problems/two', params: { round: 2 }
       expect(response).to have_http_status :unauthorized
+    end
+  end
+
+  describe 'code problems' do
+    let(:catalog_root) { 'spec/fixtures/code_courses' }
+
+    def answer(params)
+      post '/api/v1/courses/coding/problems/hello/answer',
+           params: params.to_json, headers: headers.merge('Content-Type' => 'application/json')
+    end
+
+    it 'sends the language and starter code, but not the expected output' do
+      get '/api/v1/courses/coding/problems/hello'
+      expect(json).to include('type' => 'code', 'language' => 'ruby', 'run' => 'browser',
+                              'starter_code' => "# your code here\n")
+      expect(json.keys).not_to include('expected_output', 'choices')
+    end
+
+    it 'records output that matches, ignoring trailing whitespace' do
+      answer(output: "hello  \r\n3\n\n")
+      expect(json).to include('correct' => true, 'explanation' => 'puts adds a newline.')
+      expect(learner.completions.pluck(:problem_id)).to eq ['hello']
+    end
+
+    it 'records nothing for output that differs' do
+      answer(output: "hello\n4\n")
+      expect(json).to eq('correct' => false)
+      expect(learner.completions).to be_empty
+    end
+
+    it 'does not take a choice for a code problem' do
+      answer(choice: 'a')
+      expect([response.status, json]).to eq [400, { 'error' => 'output is missing' }]
     end
   end
 end

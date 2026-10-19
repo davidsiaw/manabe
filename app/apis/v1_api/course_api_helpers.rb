@@ -35,17 +35,26 @@ module CourseApiHelpers
     }
   end
 
-  # Never includes which choice is correct. In a revision the choices are
-  # shuffled, so that the answer is not remembered by its position; the order
-  # is fixed per revision and problem, so it does not change on a reload.
+  # Never includes which choice is correct, nor a code problem's expected
+  # output. In a revision the choices are shuffled, so that the answer is not
+  # remembered by its position; the order is fixed per revision and problem,
+  # so it does not change on a reload.
   def problem_json(problem, revision = nil)
     {
       id: problem.id, title: problem.title, body: problem.body, type: problem.type,
       question: problem.question,
-      choices: choices_for(problem, revision).map { |c| { id: c.id, text: c.text } },
+      **exercise_json(problem, revision),
       previous: problem_link(course.previous_of(problem.id)),
       next: problem_link(course.next_of(problem.id))
     }
+  end
+
+  def exercise_json(problem, revision)
+    if problem.code?
+      { language: problem.language, run: problem.run, starter_code: problem.starter_code }
+    else
+      { language: course.language, choices: choices_for(problem, revision).map { |c| { id: c.id, text: c.text } } }
+    end
   end
 
   def choices_for(problem, revision)

@@ -1,0 +1,33 @@
+id: comments
+title: Comments
+type: multiple_choice
+body: |
+  A comment is a note for people reading the code, which the compiler
+  ignores. In Rust a comment starts with two slashes and lasts until the end
+  of the line:
+
+    // So we are doing something complicated here, long enough that
+    // we need several lines of comments to do it.
+
+    let lucky_number = 7; // I am feeling lucky today
+
+  A comment that needs several lines has // at the start of each. It is more
+  usual to put a comment on its own line above the code it is about than at
+  the end of the line.
+
+  There is another kind, documentation comments, which start with three
+  slashes and become a crate's documentation; they come later.
+question: Which of these lines does the Rust compiler ignore?
+choices:
+  - id: a
+    text: '// the answer'
+    correct: true
+  - id: b
+    text: '# the answer'
+  - id: c
+    text: '-- the answer'
+  - id: d
+    text: "' the answer"
+explanation: |
+  Only // starts a comment. # starts comments in Ruby and Python, -- in SQL
+  and Lua, and ' in Visual Basic; in Rust they are all errors.

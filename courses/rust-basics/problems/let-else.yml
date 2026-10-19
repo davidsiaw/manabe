@@ -1,0 +1,83 @@
+id: let-else
+title: let...else
+type: code
+language: rust
+run: local
+body: |
+  A function often needs a value from inside a pattern, and should give up
+  if there is none. let...else does that without nesting the rest of the
+  function inside an if let:
+
+    let Coin::Quarter(state) = coin else {
+        return None;
+    };
+    // from here on, state is the quarter's state
+
+  If the pattern matches, its variables are available for the rest of the
+  function. If not, the else block runs, and it must leave: with return,
+  break, continue or a panic. It cannot carry on, because then state would
+  have no value.
+
+  This style keeps the "happy path", the normal case, at the left margin,
+  with the early exits out of the way at the top.
+
+  format! is like println!, but returns the text as a String instead of
+  printing it.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0308]: `else` clause of `let...else` does not diverge
+question: |
+  Make the else block leave the function, returning None, after its
+  println!. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  enum UsState {
+      Alabama,
+      Alaska,
+  }
+
+  impl UsState {
+      fn existed_in(&self, year: u16) -> bool {
+          match self {
+              UsState::Alabama => year >= 1819,
+              UsState::Alaska => year >= 1959,
+          }
+      }
+  }
+
+  enum Coin {
+      Penny,
+      Quarter(UsState),
+  }
+
+  fn describe_state_quarter(coin: Coin) -> Option<String> {
+      let Coin::Quarter(state) = coin else {
+          println!("that is not a quarter");
+      };
+
+      if state.existed_in(1900) {
+          Some(format!("{state:?} is pretty old, for America!"))
+      } else {
+          Some(format!("{state:?} is relatively new."))
+      }
+  }
+
+  fn main() {
+      for coin in [Coin::Quarter(UsState::Alabama), Coin::Penny, Coin::Quarter(UsState::Alaska)] {
+          println!("{:?}", describe_state_quarter(coin));
+      }
+  }
+expected_output: |
+  Some("Alabama is pretty old, for America!")
+  that is not a quarter
+  None
+  Some("Alaska is relatively new.")
+explanation: |
+  let Coin::Quarter(state) = coin else {
+      println!("that is not a quarter");
+      return None;
+  };
+
+  "Does not diverge" means the block could carry on to the next line. A
+  return makes it diverge: it never comes back.

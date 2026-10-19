@@ -1,0 +1,39 @@
+id: shadowing
+title: Shadowing
+type: multiple_choice
+body: |
+  A new let with the same name makes a new variable that hides, or shadows,
+  the old one from then on:
+
+    let x = 5;
+    let x = x + 1;    // a new x, 6
+
+  A variable made inside curly brackets lasts until the closing bracket. If
+  it shadows one from outside, the outer one is back after the bracket.
+
+  Shadowing is not the same as mut. Each let makes a new variable, so the
+  value can be calculated from the old one while the variable itself stays
+  immutable, and the new variable can even have a different type.
+question: |
+  What does this print?
+
+    let x = 5;
+    let x = x + 1;
+    {
+        let x = x * 2;
+        println!("inner: {x}");
+    }
+    println!("outer: {x}");
+choices:
+  - id: a
+    text: 'inner: 12, then outer: 6'
+    correct: true
+  - id: b
+    text: 'inner: 12, then outer: 12'
+  - id: c
+    text: 'inner: 10, then outer: 5'
+  - id: d
+    text: It does not compile, as x is not mut
+explanation: |
+  The first two lines leave x at 6. Inside the brackets a third x, 12,
+  shadows it until the closing bracket, after which x is 6 again.

@@ -1,0 +1,48 @@
+id: install-rust
+title: Rust on Your Computer
+type: code
+language: rust
+run: local
+body: |
+  Rust programs in this course run on your own computer, so first install
+  Rust. It is installed and kept up to date by rustup.
+
+  On macOS or Linux, open a terminal and run the command below, then follow
+  the instructions it prints:
+
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+  On Windows, download and run rustup-init.exe from
+  https://www.rust-lang.org/tools/install and follow its instructions. It may
+  ask you to install the Visual Studio C++ Build Tools first; do so.
+
+  When it has finished, open a new terminal (so that it finds the new
+  commands) and check that Rust is there:
+
+    rustc --version
+
+  It prints the version, for example rustc 1.99.1. If it says the command is
+  not found, close the terminal, open a new one and try again; restarting
+  your computer also helps.
+
+  Now make your first project. Cargo creates it with a program already in
+  src/main.rs, the one shown below:
+
+    cargo new hello
+    cd hello
+    cargo run
+question: |
+  Run cargo run in your hello project, then paste what it printed below and
+  check your answer. You can paste everything the terminal shows, including
+  Cargo's Compiling and Running lines.
+starter_code: |
+  fn main() {
+      println!("Hello, world!");
+  }
+expected_output: |
+  Hello, world!
+explanation: |
+  Rust works. cargo run compiled src/main.rs (the Compiling line), then ran
+  the program it built (the Running line), which printed Hello, world!. Keep
+  the hello project: many later problems ask you to put a program in its
+  src/main.rs.

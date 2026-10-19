@@ -1,0 +1,51 @@
+id: drop-order
+title: Watching Values Drop
+type: code
+language: rust
+run: local
+body: |
+  Dropping is invisible, so this program makes it visible. Noisy is a type
+  that prints a line when it is dropped; how it does that comes in a later
+  chapter.
+
+  Copy the program into src/main.rs in your hello project, replacing
+  everything in it, and run it. The compiler warns that first and second are
+  unused; that is fine. Look at the order of the lines: both are dropped
+  after end of main, at main's closing bracket, and in reverse order,
+  second before first. The last value made is the first dropped.
+question: |
+  Without changing the println! or the Noisy values, make Noisy 2 be
+  dropped before end of main is printed, while Noisy 1 is still dropped
+  after it. Hint: curly brackets make a scope. Run it and paste what it
+  printed.
+starter_code: |
+  struct Noisy(u32);
+
+  // Ignore how this works for now: it makes a Noisy print a line when it
+  // is dropped, that is, when its owner goes out of scope.
+  impl Drop for Noisy {
+      fn drop(&mut self) {
+          println!("Noisy {} is dropped", self.0);
+      }
+  }
+
+  fn main() {
+      let first = Noisy(1);
+      let second = Noisy(2);
+      println!("end of main");
+  }
+expected_output: |
+  Noisy 2 is dropped
+  end of main
+  Noisy 1 is dropped
+explanation: |
+  Put second in a block of its own:
+
+    let first = Noisy(1);
+    {
+        let second = Noisy(2);
+    }
+    println!("end of main");
+
+  second's scope ends at the block's closing bracket, so it is dropped
+  there.

@@ -1,0 +1,37 @@
+id: enum-anatomy
+title: Defining an Enum
+type: multiple_choice
+body: |
+  A struct says a value has this and that: a width and a height. An enum, or
+  enumeration, says a value is one of a fixed set of possibilities, its
+  variants: an IP address is either version 4 or version 6, never both.
+
+    enum IpAddrKind {       // enum, its name in CamelCase, a {
+        V4,                 // each variant, separated by commas
+        V6,
+    }
+
+  A value of an enum is one of its variants, named after the enum with a
+  double colon:
+
+    let four = IpAddrKind::V4;
+    let six = IpAddrKind::V6;
+
+  Both have the type IpAddrKind, so one function can take either:
+
+    fn route(ip_kind: IpAddrKind) {}
+question: Which of these makes a value of IpAddrKind?
+choices:
+  - id: a
+    text: let four = IpAddrKind::V4;
+    correct: true
+  - id: b
+    text: let four = V4;
+  - id: c
+    text: let four = IpAddrKind.V4;
+  - id: d
+    text: let four = IpAddrKind { V4 };
+explanation: |
+  Variants are named with the enum's name, a double colon and the variant.
+  The double colon is the same as in String::from: both reach inside a
+  type's namespace.

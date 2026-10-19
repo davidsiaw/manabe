@@ -1,0 +1,34 @@
+id: struct-anatomy
+title: Defining a Struct
+type: multiple_choice
+body: |
+  A struct groups related values under one name, like a tuple, except that
+  each value has a name of its own, a field. With names, the order does not
+  matter and the code says what each value means.
+
+  The pattern, piece by piece:
+
+    struct User {               // struct, its name in CamelCase, a {
+        active: bool,           // field name, colon, type, comma
+        username: String,
+        email: String,
+        sign_in_count: u64,     // a comma after the last one is usual
+    }                           // a }, and no semicolon
+
+  This only describes what a User looks like; it does not make one. A
+  definition like this goes outside every function, usually at the top of
+  the file.
+question: Which of these defines a struct correctly?
+choices:
+  - id: a
+    text: 'struct Point { x: i32, y: i32 }'
+    correct: true
+  - id: b
+    text: 'struct Point { x = i32, y = i32 }'
+  - id: c
+    text: 'struct Point { x: i32; y: i32; }'
+  - id: d
+    text: 'let struct Point { x: i32, y: i32 }'
+explanation: |
+  Fields are name: type, separated by commas, like a function's parameters.
+  Semicolons separate statements, and a struct's fields are not statements.

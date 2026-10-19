@@ -1,0 +1,32 @@
+id: borrows-end
+title: When a Borrow Ends
+type: multiple_choice
+body: |
+  A reference is in use only until the last place it is used. After that,
+  the value can be borrowed again in a different way, even though the old
+  reference's variable is still in scope.
+question: |
+  Does this compile?
+
+    let mut s = String::from("hello");
+
+    let r1 = &s;
+    let r2 = &s;
+    println!("{r1} and {r2}");
+
+    let r3 = &mut s;
+    r3.push_str("!");
+    println!("{r3}");
+choices:
+  - id: a
+    text: Yes
+    correct: true
+  - id: b
+    text: No; r1 and r2 are still in scope when r3 is made
+  - id: c
+    text: No; there cannot be two references to s
+  - id: d
+    text: No; println! cannot take references
+explanation: |
+  r1 and r2 are last used in the first println!, so their borrows end
+  there, before r3 is made. It prints hello and hello, then hello!.

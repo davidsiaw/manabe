@@ -1,0 +1,43 @@
+id: fix-struct-mut
+title: Changing a Field
+type: code
+language: rust
+run: local
+body: |
+  To change a field, assign to it: user1.email = String::from("...");. As
+  with any variable, the instance must be mut for that. Rust has no way to
+  make only some fields mutable: the whole instance is, or none of it is.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0594]: cannot assign to `user1.email`, as `user1` is not declared as mutable
+
+  Once it compiles, the compiler warns that some fields are never read. That
+  is fine; this program only uses two of them.
+question: |
+  Fix it, run it and paste what it printed.
+starter_code: |
+  struct User {
+      active: bool,
+      username: String,
+      email: String,
+      sign_in_count: u64,
+  }
+
+  fn main() {
+      let user1 = User {
+          active: true,
+          username: String::from("someusername123"),
+          email: String::from("someone@example.com"),
+          sign_in_count: 1,
+      };
+
+      user1.email = String::from("anotheremail@example.com");
+
+      println!("{} now uses {}", user1.username, user1.email);
+  }
+expected_output: |
+  someusername123 now uses anotheremail@example.com
+explanation: |
+  let mut user1 = User { ... };. The mut goes on the variable, not on a
+  field.

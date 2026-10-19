@@ -1,0 +1,46 @@
+id: loop-labels
+title: Loop Labels
+type: multiple_choice
+body: |
+  With a loop inside a loop, break and continue apply to the innermost one.
+  To break out of an outer loop instead, give it a label, a name starting
+  with a single quote, and name it after break or continue:
+
+    'outer: loop {
+        loop {
+            break 'outer;   // leaves both loops
+        }
+    }
+question: |
+  What does this print?
+
+    let mut count = 0;
+    'counting_up: loop {
+        let mut remaining = 10;
+        loop {
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+        count += 1;
+    }
+    println!("End count = {count}");
+choices:
+  - id: a
+    text: End count = 2
+    correct: true
+  - id: b
+    text: End count = 3
+  - id: c
+    text: End count = 10
+  - id: d
+    text: Nothing; it loops forever
+explanation: |
+  Each time round the outer loop, the inner one counts remaining down from
+  10 and the plain break leaves only the inner loop at 9, so count goes up.
+  When count reaches 2, break 'counting_up leaves both, and the program
+  prints End count = 2.

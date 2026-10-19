@@ -1,0 +1,56 @@
+id: struct-update
+title: Struct Update Syntax
+type: code
+language: rust
+run: local
+body: |
+  To make an instance that is mostly the same as another, list the fields
+  that differ, then ..other_instance for all the rest:
+
+    let user2 = User {
+        email: String::from("another@example.com"),
+        ..user1
+    };
+
+  The ..user1 must come last. It works like assignment, field by field:
+  fields of a Copy type, such as bool and u64, are copied, but a String is
+  moved. Here username moves from user1 into user2, and user1.username
+  cannot be used afterwards. The other fields of user1 still can.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: borrow of moved value: `user1.username`
+question: |
+  Give user2 a username of its own, anotherusername567, so that nothing is
+  moved out of user1. Keep ..user1 for the rest. Run it and paste what it
+  printed.
+starter_code: |
+  struct User {
+      active: bool,
+      username: String,
+      email: String,
+      sign_in_count: u64,
+  }
+
+  fn main() {
+      let user1 = User {
+          active: true,
+          username: String::from("someusername123"),
+          email: String::from("someone@example.com"),
+          sign_in_count: 1,
+      };
+
+      let user2 = User {
+          email: String::from("another@example.com"),
+          ..user1
+      };
+
+      println!("user1: {}, {}, {}", user1.username, user1.email, user1.sign_in_count);
+      println!("user2: {}, {}, {}", user2.username, user2.email, user2.sign_in_count);
+  }
+expected_output: |
+  user1: someusername123, someone@example.com, 1
+  user2: anotherusername567, another@example.com, 1
+explanation: |
+  With username: String::from("anotherusername567") added, ..user1 only
+  fills in active and sign_in_count, which are copied. user1 is untouched.

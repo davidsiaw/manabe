@@ -1,0 +1,46 @@
+id: fix-mut-method
+title: A Method That Changes Its Value
+type: code
+language: rust
+run: local
+body: |
+  double_width changes the rectangle, but it only borrows it with &self,
+  which is read-only. Copy the program into src/main.rs in your hello project
+  and run it:
+
+    error[E0594]: cannot assign to `self.width`, which is behind a `&` reference
+
+  When that is fixed, the compiler finds the next problem, in main. Fix them
+  one at a time, reading each message: they say what to change.
+question: |
+  Make double_width able to change the rectangle, and main able to call it.
+  Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  struct Rectangle {
+      width: u32,
+      height: u32,
+  }
+
+  impl Rectangle {
+      fn double_width(&self) {
+          self.width *= 2;
+      }
+  }
+
+  fn main() {
+      let rect = Rectangle {
+          width: 30,
+          height: 50,
+      };
+
+      rect.double_width();
+
+      println!("{rect:?}");
+  }
+expected_output: |
+  Rectangle { width: 60, height: 50 }
+explanation: |
+  fn double_width(&mut self), and let mut rect in main. Calling a &mut self
+  method borrows rect mutably, which a variable that is not mut does not
+  allow.

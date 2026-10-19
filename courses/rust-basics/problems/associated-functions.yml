@@ -1,0 +1,58 @@
+id: associated-functions
+title: Associated Functions
+type: code
+language: rust
+run: local
+body: |
+  A function in an impl block that has no self is an associated function,
+  not a method: it belongs to the type rather than to one value. They are
+  often used to make new values, and are called with the type's name and
+  ::
+
+    let s = String::from("hello");   // String::from is one
+
+  Many types have one called new, though the name is not special in Rust.
+  They usually return Self, the type of the impl block:
+
+    fn new(width: u32, height: u32) -> Self {
+        Self { width, height }
+    }
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0599]: no associated function or constant named `square` found for struct `Rectangle`
+question: |
+  Write square, which takes one size and returns a Rectangle with that width
+  and that height. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  struct Rectangle {
+      width: u32,
+      height: u32,
+  }
+
+  impl Rectangle {
+      fn area(&self) -> u32 {
+          self.width * self.height
+      }
+
+      // Add an associated function square here.
+  }
+
+  fn main() {
+      let sq = Rectangle::square(3);
+
+      println!("{sq:?} has an area of {}", sq.area());
+  }
+expected_output: |
+  Rectangle { width: 3, height: 3 } has an area of 9
+explanation: |
+  fn square(size: u32) -> Self {
+      Self {
+          width: size,
+          height: size,
+      }
+  }
+
+  Self can stand for Rectangle both as the return type and when making the
+  instance.

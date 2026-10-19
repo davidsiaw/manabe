@@ -1,0 +1,59 @@
+id: fibonacci
+title: Fibonacci Numbers
+type: code
+language: rust
+run: local
+body: |
+  Time to write a function of your own. In the Fibonacci sequence each
+  number is the sum of the two before it: 0, 1, 1, 2, 3, 5, 8, 13 and so on,
+  starting from 0 and 1.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run it. It compiles, with a warning that n is
+  unused, and then panics:
+
+    not yet implemented
+
+  todo!() is a macro that stands for code you have not written yet. It
+  compiles in place of any value, so the rest of the program can be built,
+  and panics if it is ever run.
+question: |
+  Replace todo!() so that fibonacci(n) returns the nth Fibonacci number,
+  with fibonacci(0) being 0 and fibonacci(1) being 1. Use a loop, not a
+  function that calls itself. Run the program and paste what it printed.
+starter_code: |
+  fn fibonacci(n: u32) -> u64 {
+      todo!()
+  }
+
+  fn main() {
+      for n in 0..=10 {
+          println!("fib({n}) = {}", fibonacci(n));
+      }
+  }
+expected_output: |
+  fib(0) = 0
+  fib(1) = 1
+  fib(2) = 1
+  fib(3) = 2
+  fib(4) = 3
+  fib(5) = 5
+  fib(6) = 8
+  fib(7) = 13
+  fib(8) = 21
+  fib(9) = 34
+  fib(10) = 55
+explanation: |
+  Keep the last two numbers, and move along n times:
+
+    let mut a = 0;
+    let mut b = 1;
+    for _ in 0..n {
+        let next = a + b;
+        a = b;
+        b = next;
+    }
+    a
+
+  _ is a loop variable you do not use. The function returns u64 because the
+  numbers grow fast: fibonacci(93) is the largest that fits.

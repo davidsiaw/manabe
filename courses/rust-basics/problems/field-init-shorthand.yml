@@ -1,0 +1,35 @@
+id: field-init-shorthand
+title: Field Init Shorthand
+type: multiple_choice
+body: |
+  Functions that make an instance often have parameters named like the
+  fields, and end up writing each name twice:
+
+    fn build_user(email: String, username: String) -> User {
+        User {
+            active: true,
+            username: username,
+            email: email,
+            sign_in_count: 1,
+        }
+    }
+
+  When a variable has the same name as the field, write the name once:
+  username: username can be just username. This is the field init
+  shorthand.
+question: |
+  Which is the same as User { active: true, username: username, email: email,
+  sign_in_count: 1 } ?
+choices:
+  - id: a
+    text: 'User { active: true, username, email, sign_in_count: 1 }'
+    correct: true
+  - id: b
+    text: 'User { true, username, email, 1 }'
+  - id: c
+    text: 'User(true, username, email, 1)'
+  - id: d
+    text: 'User { active: true, ..username, ..email, sign_in_count: 1 }'
+explanation: |
+  Only fields whose value is a variable of the same name can be shortened.
+  active: true and sign_in_count: 1 still need both parts.

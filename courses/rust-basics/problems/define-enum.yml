@@ -1,0 +1,52 @@
+id: define-enum
+title: Your First Enum
+type: code
+language: rust
+run: local
+body: |
+  The program below draws a route, one arrow per step, but the Direction it
+  uses does not exist yet. arrow decides what to draw with match, which the
+  next section explains: for now, read it as "if the direction is North,
+  then ^, and so on".
+
+  print! is println! without the new line at the end, and the println!() at
+  the end prints just a new line.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0425]: cannot find type `Direction` in this scope
+question: |
+  Define Direction where the comment is. Run it and paste what it printed.
+starter_code: |
+  // Define Direction here: North, East, South and West.
+
+  // This uses match, which comes in the next section.
+  fn arrow(direction: Direction) -> char {
+      match direction {
+          Direction::North => '^',
+          Direction::East => '>',
+          Direction::South => 'v',
+          Direction::West => '<',
+      }
+  }
+
+  fn main() {
+      let route = [Direction::North, Direction::East, Direction::South, Direction::South, Direction::West];
+
+      for direction in route {
+          print!("{}", arrow(direction));
+      }
+      println!();
+  }
+expected_output: |
+  ^>vv<
+explanation: |
+  enum Direction {
+      North,
+      East,
+      South,
+      West,
+  }
+
+  The definition and the uses must agree: arrow's match names each variant
+  as Direction::North and so on.

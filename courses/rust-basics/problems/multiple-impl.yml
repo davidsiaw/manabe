@@ -1,0 +1,34 @@
+id: multiple-impl
+title: Multiple impl Blocks
+type: multiple_choice
+body: |
+  A type can have more than one impl block:
+
+    impl Rectangle {
+        fn area(&self) -> u32 {
+            self.width * self.height
+        }
+    }
+
+    impl Rectangle {
+        fn can_hold(&self, other: &Rectangle) -> bool {
+            self.width > other.width && self.height > other.height
+        }
+    }
+
+  Here there is no reason to split them, but there are cases where it
+  helps, which come with generics and traits.
+question: Does the code above compile?
+choices:
+  - id: a
+    text: Yes; the methods from both blocks belong to Rectangle
+    correct: true
+  - id: b
+    text: No; a type can only have one impl block
+  - id: c
+    text: Yes, but only the second block's methods can be called
+  - id: d
+    text: No; the methods must be in the same block as the struct
+explanation: |
+  Methods can be spread over several impl blocks, and all of them can be
+  called on a Rectangle as usual.

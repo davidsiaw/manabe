@@ -1,0 +1,26 @@
+id: pretty-debug
+title: Pretty Debug Output
+type: multiple_choice
+body: |
+  {:?} prints a struct on one line. For a struct with many fields, {:#?}
+  spreads it out: one field to a line, indented, which is easier to read.
+question: |
+  With #[derive(Debug)] on Rectangle, what does println!("{rect1:#?}");
+  print for a Rectangle 30 wide and 50 high?
+choices:
+  - id: a
+    text: The name on the first line, then width and height on lines of their own, then a closing curly bracket
+    correct: true
+  - id: b
+    text: 'Rectangle { width: 30, height: 50 } on one line'
+  - id: c
+    text: '30, 50'
+  - id: d
+    text: It does not compile; # is not allowed there
+explanation: |
+  It prints
+
+    Rectangle {
+        width: 30,
+        height: 50,
+    }

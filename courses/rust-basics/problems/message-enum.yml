@@ -1,0 +1,31 @@
+id: message-enum
+title: Variants of Every Kind
+type: multiple_choice
+body: |
+  One enum can mix every kind of variant:
+
+    enum Message {
+        Quit,                         // no data
+        Move { x: i32, y: i32 },      // named fields, like a struct
+        Write(String),                // one value
+        ChangeColor(i32, i32, i32),   // several values, like a tuple
+    }
+
+  The same could be four different structs, but then no single function
+  could take any message. As an enum, they are all one type, Message.
+  Enums can also have methods, in an impl block, exactly like structs.
+question: Which of these makes a Message::Move?
+choices:
+  - id: a
+    text: 'let m = Message::Move { x: 1, y: 2 };'
+    correct: true
+  - id: b
+    text: let m = Message::Move(1, 2);
+  - id: c
+    text: 'let m = Move { x: 1, y: 2 };'
+  - id: d
+    text: let m = Message::Move;
+explanation: |
+  Move has named fields, so its values are written like a struct's, with
+  the enum's name in front. Message::Move(1, 2) is refused: "expected value,
+  found struct variant".

@@ -1,0 +1,49 @@
+id: borrow-noisy
+title: Borrowing
+type: code
+language: rust
+run: local
+body: |
+  A reference lets code use a value without taking ownership of it. &first
+  is a reference to first; a parameter of type &Noisy takes a reference to a
+  Noisy. Making a reference is called borrowing: like borrowing anything,
+  you have to give it back, and the owner keeps it.
+
+  When a function's reference goes out of scope, nothing is dropped, because
+  the function never owned the value.
+
+  This is the program from Moving into a Function. Copy it into src/main.rs
+  in your hello project and run it: Noisy 1 is dropped inside look_at,
+  before back in main.
+question: |
+  Change look_at to borrow the Noisy instead of taking it, so that it is
+  dropped at the end of main. Two things change: the parameter's type and
+  the call. Run it and paste what it printed.
+starter_code: |
+  struct Noisy(u32);
+
+  // Ignore how this works for now: it makes a Noisy print a line when it
+  // is dropped, that is, when its owner goes out of scope.
+  impl Drop for Noisy {
+      fn drop(&mut self) {
+          println!("Noisy {} is dropped", self.0);
+      }
+  }
+
+  fn look_at(noisy: Noisy) {
+      println!("looking at Noisy {}", noisy.0);
+  }
+
+  fn main() {
+      let first = Noisy(1);
+      look_at(first);
+      println!("back in main");
+  }
+expected_output: |
+  looking at Noisy 1
+  back in main
+  Noisy 1 is dropped
+explanation: |
+  fn look_at(noisy: &Noisy) and look_at(&first). main still owns first, so
+  it could use first after the call too, and it is dropped at main's closing
+  bracket.

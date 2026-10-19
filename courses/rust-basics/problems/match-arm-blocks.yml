@@ -1,0 +1,33 @@
+id: match-arm-blocks
+title: Arms with Several Lines
+type: multiple_choice
+body: |
+  An arm's code is one expression. For more than one line, put them in
+  curly brackets: a block, whose value is its last expression, as usual.
+
+    match coin {
+        Coin::Penny => {
+            println!("Lucky penny!");
+            1
+        }
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+
+  After a block the comma is optional, and usually left out.
+question: |
+  With the match above, what happens for a Coin::Penny?
+choices:
+  - id: a
+    text: It prints Lucky penny! and the match's value is 1
+    correct: true
+  - id: b
+    text: It prints Lucky penny! and the match's value is ()
+  - id: c
+    text: Only the println! runs; the 1 is ignored
+  - id: d
+    text: It does not compile, as an arm must be one line
+explanation: |
+  The block runs its lines in order, and 1, its last expression with no
+  semicolon, is its value and so the arm's.

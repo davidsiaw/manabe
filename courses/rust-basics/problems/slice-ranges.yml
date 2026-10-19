@@ -1,0 +1,35 @@
+id: slice-ranges
+title: String Slices
+type: multiple_choice
+body: |
+  A slice is a reference to part of something, such as some of the text of
+  a String. Like any reference it does not own anything. A string slice has
+  the type &str, and is made with a range of byte positions in square
+  brackets:
+
+    let s = String::from("hello world");
+    let hello = &s[0..5];    // "hello": bytes 0 to 4, the end is excluded
+    let world = &s[6..11];   // "world"
+
+  Either end of the range can be left out: [..5] starts at the beginning,
+  [6..] goes to the end, and [..] is all of it.
+
+  The positions count bytes, not characters. Letters such as é take two
+  bytes, and a slice that would cut one in half panics:
+
+    end byte index 2 is not a char boundary; it is inside 'é'
+question: |
+  Given let s = String::from("hello world"); what is &s[6..] ?
+choices:
+  - id: a
+    text: '"world"'
+    correct: true
+  - id: b
+    text: '" world"'
+  - id: c
+    text: '"hello "'
+  - id: d
+    text: '"orld"'
+explanation: |
+  Byte 6 is the w (h e l l o and the space are bytes 0 to 5), and [6..]
+  runs to the end: "world".

@@ -1,0 +1,74 @@
+id: if-let
+title: if let
+type: code
+language: rust
+run: local
+body: |
+  A match that cares about one pattern and ignores the rest has a lot of
+  ceremony: the _ => () arm is only there to make the compiler happy.
+
+    match config_max {
+        Some(max) => println!("The maximum is {max}"),
+        _ => (),
+    }
+
+  if let says the same in less:
+
+    if let Some(max) = config_max {
+        println!("The maximum is {max}");
+    }
+
+  It reads "if config_max matches the pattern Some(max), run this, with max
+  taken out". The pattern comes first, then =, then the value. An else block
+  runs when it does not match, like the _ arm of a match.
+
+  Copy the program into src/main.rs in your hello project and run it. It
+  compiles, with a warning that count does not need to be mut, and prints
+  that 0 coins are not quarters.
+question: |
+  Replace the match with if let, and add an else that counts the coins that
+  are not quarters. Run it and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  enum UsState {
+      Alabama,
+      Alaska,
+  }
+
+  enum Coin {
+      Penny,
+      Nickel,
+      Dime,
+      Quarter(UsState),
+  }
+
+  fn main() {
+      let purse = [
+          Coin::Penny,
+          Coin::Quarter(UsState::Alaska),
+          Coin::Dime,
+          Coin::Quarter(UsState::Alabama),
+          Coin::Nickel,
+      ];
+
+      let mut count = 0;
+      for coin in purse {
+          match coin {
+              Coin::Quarter(state) => println!("State quarter from {state:?}!"),
+              _ => (),
+          }
+      }
+      println!("{count} coins that are not quarters");
+  }
+expected_output: |
+  State quarter from Alaska!
+  State quarter from Alabama!
+  3 coins that are not quarters
+explanation: |
+  if let Coin::Quarter(state) = coin {
+      println!("State quarter from {state:?}!");
+  } else {
+      count += 1;
+  }
+
+  The warning about mut went away: count is now changed.

@@ -1,0 +1,36 @@
+id: arrays
+title: Arrays
+type: multiple_choice
+body: |
+  An array holds a fixed number of values of the same type, in square
+  brackets:
+
+    let a = [1, 2, 3, 4, 5];
+    let months = ["January", "February", "March"];
+
+  Its type is written as the type of the elements and their number:
+
+    let a: [i32; 5] = [1, 2, 3, 4, 5];
+
+  The same notation, with a value instead of a type, makes an array with
+  the value repeated:
+
+    let zeros = [0; 3];       // [0, 0, 0]
+
+  Elements are read with an index in square brackets, starting at 0, so
+  a[0] is the first element. An array cannot grow or shrink; when you need
+  a list that can, use a vector (Vec), which comes later.
+question: |
+  What is let a = [3; 5]; ?
+choices:
+  - id: a
+    text: '[3, 3, 3, 3, 3]'
+    correct: true
+  - id: b
+    text: '[3, 4, 5]'
+  - id: c
+    text: '[3, 5]'
+  - id: d
+    text: '[5, 5, 5]'
+explanation: |
+  [value; count] repeats the value: five 3s. Its type is [i32; 5].

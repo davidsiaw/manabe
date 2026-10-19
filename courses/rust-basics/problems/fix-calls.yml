@@ -1,0 +1,49 @@
+id: fix-calls
+title: Dot or Double Colon?
+type: code
+language: rust
+run: local
+body: |
+  The rule:
+
+    value.method()          a method, which has self, called on a value
+    Type::function()        an associated function, which has none
+
+  Mixing them up is one of the most common mistakes while the syntax is new.
+  This program does it twice. Copy it into src/main.rs in your hello project
+  and run it:
+
+    error[E0423]: cannot find value `Rectangle` in this scope
+    error[E0061]: this function takes 1 argument but 0 arguments were supplied
+
+  The first message's help line says what to use instead. The second means
+  area was called without the rectangle to work on.
+question: |
+  Fix both calls, run the program and paste what it printed.
+starter_code: |
+  #[derive(Debug)]
+  struct Rectangle {
+      width: u32,
+      height: u32,
+  }
+
+  impl Rectangle {
+      fn new(width: u32, height: u32) -> Self {
+          Self { width, height }
+      }
+
+      fn area(&self) -> u32 {
+          self.width * self.height
+      }
+  }
+
+  fn main() {
+      let rect = Rectangle.new(4, 5);
+
+      println!("{rect:?} has an area of {}", Rectangle::area());
+  }
+expected_output: |
+  Rectangle { width: 4, height: 5 } has an area of 20
+explanation: |
+  Rectangle::new(4, 5), as new has no self, and rect.area(), as area is a
+  method of that rectangle. Rectangle::area(&rect) would also work.

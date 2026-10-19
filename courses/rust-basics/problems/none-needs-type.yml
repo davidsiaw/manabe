@@ -1,0 +1,29 @@
+id: none-needs-type
+title: The Type of None
+type: code
+language: rust
+run: local
+body: |
+  From Some(5) the compiler can tell the type is Option<i32>, and from
+  Some('e') that it is Option<char>. From None alone it cannot: None of
+  what? You have to say.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0282]: type annotations needed for `Option<_>`
+question: |
+  Give absent_number the type Option<i32>. Run it and paste what it
+  printed.
+starter_code: |
+  fn main() {
+      let some_number = Some(5);
+      let some_char = Some('e');
+      let absent_number = None;
+
+      println!("{some_number:?} {some_char:?} {absent_number:?}");
+  }
+expected_output: |
+  Some(5) Some('e') None
+explanation: |
+  let absent_number: Option<i32> = None;. Option<i32> and Option<char> are
+  different types, so the compiler has to know which one each None is.

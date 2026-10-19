@@ -1,0 +1,42 @@
+id: fix-slice-borrow
+title: Slices Keep Their String Borrowed
+type: code
+language: rust
+run: local
+body: |
+  A slice borrows the String it came from, read-only, for as long as the
+  slice is in use. So the String cannot be changed in the meantime, and the
+  compiler catches a bug that would otherwise be silent: a word that no
+  longer matches its text.
+
+  s.clear() empties a String, and needs to borrow it mutably. Copy the
+  program into src/main.rs in your hello project and run it:
+
+    error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+question: |
+  Move the clear so that the first word is printed while s still holds the
+  text, and s is cleared afterwards. Run it and paste what it printed.
+starter_code: |
+  fn first_word(s: &str) -> &str {
+      match s.find(' ') {
+          Some(i) => &s[..i],
+          None => s,
+      }
+  }
+
+  fn main() {
+      let mut s = String::from("hello world");
+
+      let word = first_word(&s);
+
+      s.clear();
+
+      println!("the first word is: {word}");
+      println!("s is now {s:?}");
+  }
+expected_output: |
+  the first word is: hello
+  s is now ""
+explanation: |
+  Print word first, then call s.clear(). word is last used in that
+  println!, so its borrow has ended by the time clear borrows s mutably.

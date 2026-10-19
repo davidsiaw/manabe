@@ -1,0 +1,31 @@
+id: struct-ownership
+title: Structs Own Their Data
+type: multiple_choice
+body: |
+  User's text fields are String, not &str. That is a choice: a struct that
+  owns all its data is valid for as long as the struct is, with no
+  references that might outlive what they point to.
+
+  A struct can hold references, but then the compiler has to be told how
+  long they last, with lifetimes, which come in a later chapter. Until then,
+  use owned types such as String in structs.
+question: |
+  What happens with this definition?
+
+    struct User {
+        active: bool,
+        username: &str,
+    }
+choices:
+  - id: a
+    text: It does not compile, as the reference needs a lifetime
+    correct: true
+  - id: b
+    text: It compiles, and username is copied into each User
+  - id: c
+    text: It compiles, but a User cannot be printed
+  - id: d
+    text: It compiles, and username is a String
+explanation: |
+  The compiler says "missing lifetime specifier". Writing String instead
+  makes each User own its username, and the problem goes away.

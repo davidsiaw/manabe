@@ -1,0 +1,29 @@
+id: self-kinds
+title: '&self, &mut self and self'
+type: multiple_choice
+body: |
+  self is borrowed or taken just as any other parameter is:
+
+  - &self: the method only reads the value. The most common kind.
+  - &mut self: the method changes the value, so the variable it is called on
+    must be mut.
+  - self: the method takes ownership, and the value cannot be used after
+    the call. Rare; usually for a method that turns the value into
+    something else.
+question: |
+  A method makes a Rectangle twice as wide. Which first parameter does it
+  need?
+choices:
+  - id: a
+    text: '&mut self'
+    correct: true
+  - id: b
+    text: '&self'
+  - id: c
+    text: self
+  - id: d
+    text: 'rect: Rectangle'
+explanation: |
+  It changes the rectangle, but the caller should still have it afterwards,
+  so it borrows mutably. self would also allow the change, but would leave
+  the caller without a rectangle.

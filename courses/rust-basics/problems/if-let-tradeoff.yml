@@ -1,0 +1,29 @@
+id: if-let-tradeoff
+title: match or if let?
+type: multiple_choice
+body: |
+  if let is a match with one arm, plus an optional else for everything
+  else. It is shorter and reads well when only one case matters.
+
+  What it gives up is the checking. A match must cover every value, so the
+  compiler tells you when a new variant is not handled. An if let says, on
+  purpose, "only this one", so the compiler has nothing to check.
+
+  Use if let when there really is only one case you care about; use match
+  when each case needs its own handling.
+question: |
+  You switch a match on an enum to if let with an else. What do you lose?
+choices:
+  - id: a
+    text: The compiler no longer checks that every variant is handled
+    correct: true
+  - id: b
+    text: The values inside the variants can no longer be taken out
+  - id: c
+    text: It runs more slowly
+  - id: d
+    text: Nothing at all; they are the same
+explanation: |
+  The else catches every other variant, including any added later, without
+  a word from the compiler. Sometimes that is exactly what you want, and
+  sometimes it hides a case you forgot.

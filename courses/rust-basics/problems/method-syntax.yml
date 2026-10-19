@@ -1,0 +1,53 @@
+id: method-syntax
+title: Methods
+type: code
+language: rust
+run: local
+body: |
+  area only makes sense for a Rectangle, so it can belong to Rectangle as a
+  method. Methods go in an impl block (short for implementation) for the
+  type:
+
+    impl Rectangle {
+        fn area(&self) -> u32 {
+            self.width * self.height
+        }
+    }
+
+  A method's first parameter is always self, the value it is called on.
+  &self is short for self: &Self, and inside an impl block Self is the type
+  the block is for, so &self borrows the Rectangle, just as &Rectangle did.
+
+  Call it with a full stop after the value: rect1.area(). Copy the program
+  into src/main.rs in your hello project and run it:
+
+    error[E0599]: no method named `area` found for struct `Rectangle` in the current scope
+question: |
+  Add the impl block with the area method. Run it and paste what it
+  printed.
+starter_code: |
+  #[derive(Debug)]
+  struct Rectangle {
+      width: u32,
+      height: u32,
+  }
+
+  // Add an impl block with an area method here.
+
+  fn main() {
+      let rect1 = Rectangle {
+          width: 30,
+          height: 50,
+      };
+
+      println!(
+          "The area of the rectangle is {} square pixels.",
+          rect1.area()
+      );
+  }
+expected_output: |
+  The area of the rectangle is 1500 square pixels.
+explanation: |
+  The function from before, moved into impl Rectangle, with its parameter
+  replaced by &self and rectangle.width by self.width. Anyone reading the
+  code finds everything a Rectangle can do in its impl block.

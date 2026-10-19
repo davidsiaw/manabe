@@ -1,0 +1,55 @@
+id: rectangle-struct
+title: Refactoring with a Struct
+type: code
+language: rust
+run: local
+body: |
+  A program that works out a rectangle's area could start like this, with
+  two loose parameters:
+
+    fn area(width: u32, height: u32) -> u32
+
+  Nothing says the two belong together. A tuple, (u32, u32), groups them, but
+  then dimensions.0 and dimensions.1 do not say which is the width, which is
+  how mistakes creep in. A struct says it all:
+
+    struct Rectangle {
+        width: u32,
+        height: u32,
+    }
+
+  area should only read the rectangle, so it borrows one: its parameter is
+  &Rectangle, and main passes &rect1. main keeps ownership and can still use
+  rect1 afterwards.
+
+  Copy the program into src/main.rs in your hello project. It does not
+  compile yet: Rectangle and area are only comments.
+question: |
+  Write Rectangle and area where the comments are. Run it and paste what it
+  printed.
+starter_code: |
+  // Define Rectangle, with a width and a height, both u32.
+
+  // Write area, which takes a reference to a Rectangle and returns
+  // its width times its height.
+
+  fn main() {
+      let rect1 = Rectangle {
+          width: 30,
+          height: 50,
+      };
+
+      println!(
+          "The area of the rectangle is {} square pixels.",
+          area(&rect1)
+      );
+  }
+expected_output: |
+  The area of the rectangle is 1500 square pixels.
+explanation: |
+  fn area(rectangle: &Rectangle) -> u32 {
+      rectangle.width * rectangle.height
+  }
+
+  Reading a field through a reference uses the same full stop:
+  rectangle.width.

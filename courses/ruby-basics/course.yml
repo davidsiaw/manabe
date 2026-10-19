@@ -1,0 +1,18 @@
+id: ruby-basics
+title: Ruby Basics
+language: ruby
+description: |
+  Learn Ruby by writing it. Your programs run right here in your browser, on
+  mruby, a small implementation of Ruby; everything in this course works the
+  same way in the Ruby you would install on your computer.
+sections:
+  - title: Getting Started
+    problems: [hello-world, puts-and-p]
+  - title: Values
+    problems: [arithmetic, strings]
+  - title: Control Flow
+    problems: [conditionals, loops]
+  - title: Collections
+    problems: [arrays, blocks, hashes]
+  - title: Methods
+    problems: [methods]

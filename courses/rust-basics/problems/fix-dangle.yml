@@ -1,0 +1,37 @@
+id: fix-dangle
+title: Dangling References
+type: code
+language: rust
+run: local
+body: |
+  A dangling reference points at memory that has already been freed. In
+  some languages that is easy to do by accident: return a pointer to
+  something a function owned, and it is freed as the function ends. Rust's
+  compiler makes sure a reference can never outlive the value it refers to.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0106]: missing lifetime specifier
+
+  Lifetimes come in a later chapter. Among the compiler's suggestions is the
+  one that matters here: you are more likely to want to return an owned
+  value.
+question: |
+  make_greeting's s is dropped when the function ends, so it cannot return
+  a reference to it. Make it return the String itself instead. Run it and
+  paste what it printed.
+starter_code: |
+  fn main() {
+      let greeting = make_greeting();
+      println!("{greeting}");
+  }
+
+  fn make_greeting() -> &String {
+      let s = String::from("hello");
+      &s
+  }
+expected_output: |
+  hello
+explanation: |
+  fn make_greeting() -> String, ending with s (or with String::from("hello")
+  on its own). The String is moved out to the caller, so nothing is freed.

@@ -1,0 +1,45 @@
+id: countdown
+title: Counting Down with for
+type: code
+language: rust
+run: local
+body: |
+  A while loop can count down, but it is easy to get the condition or the
+  change to the counter wrong. A for loop over a range is shorter and
+  cannot go wrong that way:
+
+    for number in 1..4 {      // 1, 2, 3: the end is not included
+        println!("{number}");
+    }
+
+  1..=4 would include the 4. .rev() runs a range backwards, from the end to
+  the start.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run it. It counts down from 3 with a while loop.
+question: |
+  Rewrite it with a for loop over a range, counting down from 5 instead of
+  3, and nothing else changed. Run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let mut number = 3;
+
+      while number != 0 {
+          println!("{number}!");
+
+          number -= 1;
+      }
+
+      println!("LIFTOFF!!!");
+  }
+expected_output: |
+  5!
+  4!
+  3!
+  2!
+  1!
+  LIFTOFF!!!
+explanation: |
+  for number in (1..=5).rev() counts 5, 4, 3, 2, 1. Without mut and without
+  changing number by hand, there is nothing to forget. Rust programmers use
+  for for most loops.

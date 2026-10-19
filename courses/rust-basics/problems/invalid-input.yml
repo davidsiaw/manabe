@@ -1,0 +1,74 @@
+id: invalid-input
+title: Handling Invalid Input
+type: code
+language: rust
+run: local
+body: |
+  Run the finished game and type abc instead of a number. It stops with a
+  panic, something like:
+
+    thread 'main' panicked at src/main.rs:20:47:
+    Please type a number!: ParseIntError { kind: InvalidDigit }
+
+  parse() returned an Err, and expect stopped the program. A game should
+  ignore the bad guess and ask again. Instead of expect, match on the Result
+  that parse returns:
+
+    let guess: u32 = match guess.trim().parse() {
+        Ok(num) => num,
+        Err(_) => continue,
+    };
+
+  If parse worked, the Ok arm gives the number inside it. If it failed, the
+  Err arm runs continue, which skips the rest of this time round the loop
+  and goes back to asking. The _ means any error at all.
+question: |
+  Change the program so that it asks again after something that is not a
+  number. Run it, type abc and then 42, each followed by Enter, and paste
+  everything that appeared.
+starter_code: |
+  use std::cmp::Ordering;
+  use std::io;
+
+  fn main() {
+      println!("Guess the number!");
+
+      // The real game picks a random number; see the text above. A fixed
+      // number means the output can be checked.
+      let secret_number = 42;
+
+      loop {
+          println!("Please input your guess.");
+
+          let mut guess = String::new();
+
+          io::stdin()
+              .read_line(&mut guess)
+              .expect("Failed to read line");
+
+          let guess: u32 = guess.trim().parse().expect("Please type a number!");
+
+          println!("You guessed: {guess}");
+
+          match guess.cmp(&secret_number) {
+              Ordering::Less => println!("Too small!"),
+              Ordering::Greater => println!("Too big!"),
+              Ordering::Equal => {
+                  println!("You win!");
+                  break;
+              }
+          }
+      }
+  }
+expected_output: |
+  Guess the number!
+  Please input your guess.
+  abc
+  Please input your guess.
+  42
+  You guessed: 42
+  You win!
+explanation: |
+  That is the whole guessing game. Matching on a Result is the usual way to
+  handle errors in Rust: you say what happens in each case, and the
+  compiler makes sure you covered both.

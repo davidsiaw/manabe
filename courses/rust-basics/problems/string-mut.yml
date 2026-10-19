@@ -1,0 +1,35 @@
+id: string-mut
+title: The String Type
+type: code
+language: rust
+run: local
+body: |
+  String literals such as "hello" are fixed: they are part of the program
+  and cannot change. For text that can, there is String, which keeps its
+  text on the heap.
+
+    let s = String::from("hello");   // a String made from a literal
+
+  push_str adds text to the end of a String. Changing a String is changing
+  its variable's value, so the variable must be mut.
+
+  Copy the program into src/main.rs in your hello project, replacing
+  everything in it, and run it:
+
+    error[E0596]: cannot borrow `s` as mutable, as it is not declared as mutable
+question: |
+  Fix it, run it and paste what it printed.
+starter_code: |
+  fn main() {
+      let s = String::from("hello");
+
+      s.push_str(", world!");
+
+      println!("{s}");
+  }
+expected_output: |
+  hello, world!
+explanation: |
+  let mut s = String::from("hello"); and push_str can change it. The error
+  said "borrow": to change s, push_str borrows it, which is the subject of
+  the next section.

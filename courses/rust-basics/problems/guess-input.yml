@@ -1,0 +1,57 @@
+id: guess-input
+title: Reading Input
+type: code
+language: rust
+run: local
+body: |
+  The next few problems build a small game: the program picks a secret
+  number from 1 to 100, and you guess until you get it, with the program
+  saying whether each guess was too big or too small.
+
+  Start a new project for it:
+
+    cargo new guessing_game
+    cd guessing_game
+
+  The first step reads one guess from the keyboard. The program below:
+
+  - use std::io; brings the io (input and output) part of the standard
+    library into scope, so it can be called io.
+  - let mut guess = String::new(); makes a new, empty String: text that can
+    grow. It is mut because reading the input will change it.
+  - io::stdin().read_line(&mut guess) reads a line from the keyboard and
+    adds it to guess. &mut guess passes guess by reference, so read_line
+    can change it without taking it over; references are covered in more
+    detail later.
+  - .expect(...) deals with reading failing; the next problem is about it.
+  - println!("You guessed: {guess}"); puts the value of guess where {guess}
+    is.
+question: |
+  Put the program in src/main.rs, replacing what is there, and run it with
+  cargo run. When it asks for your guess, type 42 and press Enter. Paste
+  everything that appeared, including the 42 you typed.
+starter_code: |
+  use std::io;
+
+  fn main() {
+      println!("Guess the number!");
+
+      println!("Please input your guess.");
+
+      let mut guess = String::new();
+
+      io::stdin()
+          .read_line(&mut guess)
+          .expect("Failed to read line");
+
+      println!("You guessed: {guess}");
+  }
+expected_output: |
+  Guess the number!
+  Please input your guess.
+  42
+  You guessed: 42
+explanation: |
+  The line you typed ended with Enter, and read_line keeps that new line in
+  guess, which is why there is an empty line after You guessed: 42. The
+  next step removes it.

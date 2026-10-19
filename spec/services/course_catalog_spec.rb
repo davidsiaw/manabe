@@ -71,6 +71,12 @@ RSpec.describe CourseCatalog do
     it { expect { catalog.find('demo') }.to raise_error CourseCatalog::InvalidCourse, /not listed.*p3/ }
   end
 
+  context 'with a language that is not a slug' do
+    let(:course_yml) { super().merge('language' => '../ruby') }
+
+    it { expect { catalog.find('demo') }.to raise_error CourseCatalog::InvalidCourse, /language must be a slug/ }
+  end
+
   context 'with a problem listed twice' do
     let(:course_yml) { super().merge('sections' => [{ 'title' => 'A', 'problems' => %w[p1 p2 p1] }]) }
 
@@ -96,6 +102,57 @@ RSpec.describe CourseCatalog do
     let(:problems) { super().merge('p2' => problem_yml('p2', type: 'essay')) }
 
     it { expect { catalog.find('demo') }.to raise_error CourseCatalog::InvalidCourse, /type must be/ }
+  end
+
+  describe 'a code problem' do
+    let(:code) do
+      { 'type' => 'code', 'language' => 'ruby', 'expected_output' => "1\n2\n", 'choices' => nil }
+    end
+    let(:problems) { super().merge('p2' => problem_yml('p2', **code)) }
+
+    it 'compares output ignoring trailing whitespace and blank lines' do
+      problem = catalog.find('demo').problem('p2')
+      expect([problem.output_correct?("1 \r\n2"), problem.output_correct?("1\n2\n3\n"), problem.output_correct?(nil)])
+        .to eq [true, false, false]
+    end
+
+    context 'with a language there is no runtime for' do
+      let(:code) { super().merge('language' => 'cobol') }
+
+      it { expect { catalog.find('demo') }.to raise_error CourseCatalog::InvalidCourse, /language must be/ }
+    end
+
+    context 'without expected output' do
+      let(:code) { super().merge('expected_output' => nil) }
+
+      it { expect { catalog.find('demo') }.to raise_error CourseCatalog::InvalidCourse, /expected_output/ }
+    end
+
+    context 'when run on the learner\'s computer' do
+      let(:code) { super().merge('language' => 'rust', 'run' => 'local') }
+
+      it 'takes any language, as there is no browser runtime to need' do
+        expect(catalog.find('demo').problem('p2')).to have_attributes(language: 'rust', run: 'local')
+      end
+
+      it 'leaves out what cargo printed before running the program' do
+        pasted = ['$ cargo run', '   Compiling hello v0.1.0 (/tmp/hello)', '    Finished `dev` profile in 0.09s',
+                  '     Running `target/debug/hello`', '1', '2'].join("\n")
+        problem = catalog.find('demo').problem('p2')
+        answers = [pasted, "1\n2", "Running\n1\n2"]
+        expect(answers.map { |a| problem.output_correct?(a) }).to eq [true, true, false]
+      end
+    end
+
+    context 'with a run that is neither browser nor local' do
+      let(:code) { super().merge('run' => 'server') }
+
+      it { expect { catalog.find('demo') }.to raise_error CourseCatalog::InvalidCourse, /run must be/ }
+    end
+
+    it 'runs in the browser unless it says otherwise, which only some languages can' do
+      expect(catalog.find('demo').problem('p2').run).to eq 'browser'
+    end
   end
 
   # Fails the build when a real course has a mistake in it.

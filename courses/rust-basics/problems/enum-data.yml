@@ -1,0 +1,41 @@
+id: enum-data
+title: Data in Variants
+type: multiple_choice
+body: |
+  A variant can hold data, written like a tuple struct's fields. Instead of
+  an IpAddrKind plus a String stored next to it in a struct, the enum can
+  carry the address itself:
+
+    enum IpAddr {
+        V4(String),
+        V6(String),
+    }
+
+    let home = IpAddr::V4(String::from("127.0.0.1"));
+
+  The variant's name then works as a function that makes a value: IpAddr::V4
+  takes a String and returns an IpAddr.
+
+  Each variant can hold different data, of a different type or amount. A
+  version 4 address is four numbers from 0 to 255, so:
+
+    enum IpAddr {
+        V4(u8, u8, u8, u8),
+        V6(String),
+    }
+question: |
+  With that last definition, which of these does not compile?
+choices:
+  - id: a
+    text: let home = IpAddr::V4(String::from("127.0.0.1"));
+    correct: true
+  - id: b
+    text: let home = IpAddr::V4(127, 0, 0, 1);
+  - id: c
+    text: let loopback = IpAddr::V6(String::from("::1"));
+  - id: d
+    text: They all compile
+explanation: |
+  V4 now holds four u8 values, so it cannot be given a String. V6 still
+  holds a String. That is something a struct cannot do: a struct's fields
+  are the same for every value.

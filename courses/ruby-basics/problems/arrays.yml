@@ -1,0 +1,35 @@
+id: arrays
+title: Arrays
+type: code
+language: ruby
+body: |
+  An Array is an ordered list, written in square brackets. Indexes start at 0,
+  and negative ones count from the end:
+
+    fruits = ["apple", "banana", "cherry"]
+    fruits[0]          # => "apple"
+    fruits[-1]         # => "cherry"
+    fruits.length      # => 3
+    fruits << "date"   # adds to the end
+
+  each_with_index is like each, but gives the block the index too:
+
+    fruits.each_with_index do |fruit, i|
+      puts "#{i}: #{fruit}"
+    end
+question: |
+  Print the shopping list numbered from 1, with each item in capitals:
+  1. MILK, then 2. EGGS, and so on.
+starter_code: |
+  list = ["milk", "eggs", "bread", "tea"]
+expected_output: |
+  1. MILK
+  2. EGGS
+  3. BREAD
+  4. TEA
+explanation: |
+  The index starts at 0, so add one:
+
+    list.each_with_index do |item, i|
+      puts "#{i + 1}. #{item.upcase}"
+    end

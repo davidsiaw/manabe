@@ -1,0 +1,30 @@
+id: fix-mutability
+title: Fixing Mutability
+type: code
+language: rust
+run: local
+body: |
+  Variables in Rust cannot be changed after they are given a value, unless
+  they are declared with mut. That is not a rule you have to remember: the
+  compiler tells you when you break it.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run cargo run. Read the error: it says which line
+  changes the variable, where the variable was declared, and how to fix it.
+question: |
+  Fix the program so that it compiles and counts to three, then run it and
+  paste what it printed.
+starter_code: |
+  fn main() {
+      let count = 0;
+      for _ in 0..3 {
+          count += 1;
+      }
+      println!("count is {count}");
+  }
+expected_output: |
+  count is 3
+explanation: |
+  let mut count = 0; declares count as mutable, exactly as the compiler's
+  help line suggests. Only the declaration changes; count += 1 is fine once
+  count is mutable.

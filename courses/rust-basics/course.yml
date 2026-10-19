@@ -1,14 +1,54 @@
 id: rust-basics
 title: Rust Basics
+language: rust
 description: |
-  A first look at Rust through small questions: functions, numbers, variables
-  and control flow.
+  Rust from the start, following chapters 1 to 6 of The Rust Programming
+  Language (doc.rust-lang.org/book): installing Rust, Cargo, a guessing game,
+  the concepts every program uses, from variables and types to functions
+  and loops, ownership, borrowing and slices, structs and methods, and
+  enums and pattern matching. Some problems are questions; the others are programs
+  you build and run on your own computer, and the first ones show you how
+  to install everything. Some examples are adapted from the book.
 sections:
-  - title: Welcome
-    problems: [welcome, syntax]
-  - title: A Basic Calculator
+  - title: Getting Started
+    problems: [welcome, install-rust, hello-rustc, anatomy, cargo-project]
+  - title: A Guessing Game
+    problems: [guess-input, expect-result, placeholders, crates, guess-loop, invalid-input]
+  - title: Common Programming Concepts
     sections:
-      - title: Numbers
-        problems: [integers, literals, overflow, saturating, as-casting]
-      - title: Variables and Control Flow
-        problems: [variables, if-else, panics, while-loops, for-loops]
+      - title: Variables and Mutability
+        problems: [variables, fix-mutability, constants, shadowing, fix-shadowing]
+      - title: Integers
+        problems: [integers, literals, overflow, saturating, fix-overflow, panics, as-casting]
+      - title: Other Data Types
+        problems: [numeric-operations, bool-char, type-annotations, tuples, arrays, fix-array-index]
+      - title: Functions and Comments
+        problems: [syntax, parameters, statements-expressions, fix-return-value, comments]
+      - title: Control Flow
+        problems: [if-else, fix-if-condition, if-types, loop-values, loop-labels, while-loops, for-loops, countdown]
+      - title: Putting It Together
+        problems: [fizzbuzz, fibonacci, temperatures]
+  - title: Understanding Ownership
+    sections:
+      - title: What Is Ownership?
+        problems: [stack-heap, ownership-rules, drop-order, string-mut, fix-move, copy-types, move-into-function, give-back]
+      - title: References and Borrowing
+        problems: [borrow-noisy, fix-borrow-mut, fix-two-mutable, borrows-overlap, borrows-end, fix-dangle, reference-rules]
+      - title: Slices
+        problems: [slice-ranges, first-word, fix-slice-borrow, str-params, array-slices]
+  - title: Structs
+    sections:
+      - title: Defining and Instantiating Structs
+        problems: [struct-anatomy, define-struct, fix-struct-mut, field-init-shorthand, struct-update, tuple-structs, unit-struct, struct-ownership]
+      - title: An Example Program
+        problems: [rectangle-struct, derive-debug, pretty-debug, dbg-macro]
+      - title: Methods
+        problems: [method-syntax, self-kinds, fix-mut-method, method-params, auto-ref, associated-functions, fix-calls, multiple-impl, account]
+  - title: Enums and Pattern Matching
+    sections:
+      - title: Defining an Enum
+        problems: [enum-anatomy, define-enum, enum-data, message-enum, option-intro, none-needs-type]
+      - title: The match Expression
+        problems: [coin-match, match-arm-blocks, bind-values, match-option, enum-methods, non-exhaustive, fix-option-add, catch-all, catch-all-order]
+      - title: if let and let...else
+        problems: [if-let, if-let-tradeoff, let-else, calculator]

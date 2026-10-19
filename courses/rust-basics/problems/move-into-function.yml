@@ -1,0 +1,36 @@
+id: move-into-function
+title: Moving into a Function
+type: multiple_choice
+body: |
+  Passing a value to a function moves or copies it exactly as assigning it
+  does. A String passed to a function belongs to the function's parameter
+  from then on, and is dropped when the function ends, unless the function
+  gives it back.
+
+  Here is Noisy again, the type that prints when it is dropped. look_at takes
+  a Noisy as its parameter:
+
+    fn look_at(noisy: Noisy) {
+        println!("looking at Noisy {}", noisy.0);
+    }
+
+    fn main() {
+        let first = Noisy(1);
+        look_at(first);
+        println!("back in main");
+    }
+question: In what order are the lines printed?
+choices:
+  - id: a
+    text: looking at Noisy 1, Noisy 1 is dropped, back in main
+    correct: true
+  - id: b
+    text: looking at Noisy 1, back in main, Noisy 1 is dropped
+  - id: c
+    text: back in main, looking at Noisy 1, Noisy 1 is dropped
+  - id: d
+    text: It does not compile
+explanation: |
+  look_at(first) moves the Noisy into the parameter noisy, which goes out of
+  scope at the end of look_at. So it is dropped before main carries on, and
+  first cannot be used in main any more.

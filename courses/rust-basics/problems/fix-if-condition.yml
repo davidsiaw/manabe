@@ -1,0 +1,34 @@
+id: fix-if-condition
+title: Conditions Must Be bool
+type: code
+language: rust
+run: local
+body: |
+  An if runs its block when its condition is true, and an else block, if
+  there is one, otherwise. else if adds more conditions, tried in order;
+  only the first that is true runs.
+
+  The condition must be a bool. Some languages treat a number as true when
+  it is not zero; Rust does not, so you always say exactly what you are
+  testing.
+
+  Copy the program below into src/main.rs in your hello project, replacing
+  everything in it, and run cargo run. It does not compile:
+
+    expected `bool`, found integer
+question: |
+  Fix the condition so that the message is printed when number is not zero.
+  Run the program and paste what it printed.
+starter_code: |
+  fn main() {
+      let number = 3;
+
+      if number {
+          println!("number was something other than zero");
+      }
+  }
+expected_output: |
+  number was something other than zero
+explanation: |
+  if number != 0 says what is meant. != is "not equal to"; the others are
+  == < > <= and >=.

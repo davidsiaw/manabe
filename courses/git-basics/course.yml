@@ -1,5 +1,6 @@
 id: git-basics
 title: Git Basics
+language: shell
 description: |
   What Git keeps track of, and the handful of commands you use every day:
   status, add, commit, branch, switch and merge.

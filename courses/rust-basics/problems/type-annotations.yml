@@ -1,0 +1,33 @@
+id: type-annotations
+title: Type Annotations
+type: code
+language: rust
+run: local
+body: |
+  Rust is statically typed: every value's type is known when the program is
+  compiled. Usually the compiler works it out from how the value is used,
+  but sometimes there is more than one possibility, and then you have to
+  say which you mean with a type annotation, a colon and a type after the
+  name.
+
+  parse() is like that. It can turn text into many types: u8, i64, f32 and
+  more. Copy the program below into src/main.rs in your hello project,
+  replacing everything in it, and run cargo run:
+
+    error[E0284]: type annotations needed
+
+  The compiler cannot tell which type you want, and suggests giving guess
+  an explicit type.
+question: |
+  Make guess a u32, so that the program compiles, then run it and paste
+  what it printed.
+starter_code: |
+  fn main() {
+      let guess = "42".parse().expect("Not a number!");
+      println!("guess + 1 = {}", guess + 1);
+  }
+expected_output: |
+  guess + 1 = 43
+explanation: |
+  let guess: u32 = "42".parse().expect("Not a number!"); says which type
+  parse should make. The guessing game did the same with let guess: u32.

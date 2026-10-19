@@ -1,0 +1,36 @@
+id: hello-rustc
+title: Hello, rustc
+type: code
+language: rust
+run: local
+body: |
+  Cargo is how Rust projects are usually built, but underneath it is the
+  compiler, rustc, and it is worth using it directly once.
+
+  Make a new folder anywhere, outside your hello project. In it, create a
+  file called main.rs containing the program below. Rust source files end in
+  .rs, and file names with more than one word use underscores, as in
+  hello_world.rs.
+
+  Then compile it, and run the program the compiler made:
+
+    rustc main.rs
+    ./main
+
+  On Windows, run .\main.exe instead of ./main. Compiling and running are
+  separate steps: rustc writes an executable file next to main.rs, and you
+  can give that file to someone who has no Rust installed and they can run
+  it. That is what makes Rust an ahead-of-time compiled language.
+question: |
+  Change the program so that it prints Hello, rustc! instead, compile it
+  again and run it. Paste only what the program printed, not the commands.
+starter_code: |
+  fn main() {
+      println!("Hello, world!");
+  }
+expected_output: |
+  Hello, rustc!
+explanation: |
+  After a change you have to compile again: running ./main before rustc
+  main.rs still prints the old message, because the executable is only
+  replaced when you compile. cargo run does both steps for you.

@@ -1,0 +1,28 @@
+id: str-params
+title: '&str Parameters'
+type: multiple_choice
+body: |
+  A string literal such as "hello" is a &str too: a slice of text stored in
+  the program, which is why literals cannot be changed.
+
+  So for a function that only reads text, &str is the better parameter type
+  than &String: it accepts slices, literals, and a whole String, as &s or
+  &s[..] (a &String is turned into a &str automatically).
+
+    fn first_word(s: &str) -> &str
+question: |
+  fn count(s: &str) -> usize. Given let owned = String::from("hi"); which of
+  these calls does not compile?
+choices:
+  - id: a
+    text: None; all of them compile
+    correct: true
+  - id: b
+    text: count(&owned)
+  - id: c
+    text: count("hi")
+  - id: d
+    text: count(&owned[..1])
+explanation: |
+  All three are &str, or a &String that becomes one. Had the parameter been
+  &String, count("hi") would not compile: a literal is not a String.

@@ -1,0 +1,30 @@
+id: borrows-overlap
+title: Reading While Changing
+type: multiple_choice
+body: |
+  Any number of read-only references can be in use at once: reading the
+  same data from several places is safe. What is not allowed is a mutable
+  reference while any other reference is in use, read-only ones included.
+  Someone reading the value does not expect it to change underneath them.
+question: |
+  Does this compile?
+
+    let mut s = String::from("hello");
+    let r1 = &s;
+    let r2 = &mut s;
+    r2.push_str("!");
+    println!("{r1}");
+choices:
+  - id: a
+    text: No; r1 is still in use when r2 is made
+    correct: true
+  - id: b
+    text: Yes, and it prints hello!
+  - id: c
+    text: Yes, and it prints hello
+  - id: d
+    text: No; s is not mut
+explanation: |
+  The compiler says "cannot borrow `s` as mutable because it is also
+  borrowed as immutable". r1 is used in the last line, so it is in use the
+  whole time r2 is.

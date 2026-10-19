@@ -3,7 +3,9 @@
 class CourseCatalog
   # A course: metadata, a tree of sections, and the problems they list.
   class Course
-    attr_reader :id, :title, :description, :sections, :problems
+    # language: what the code in its text is written in, for highlighting
+    # (optional). Code problems name their own.
+    attr_reader :id, :title, :description, :language, :sections, :problems
 
     def self.load(dir)
       data = CourseCatalog.read_yaml(dir.join('course.yml'))
@@ -19,6 +21,7 @@ class CourseCatalog
       @id = require_string(data, 'id')
       @title = require_string(data, 'title')
       @description = data['description'].to_s
+      @language = data['language']&.to_s
       @problems = problems
       @sections = Array(data['sections']).map { |s| build_section(s) }
       validate!
@@ -58,6 +61,7 @@ class CourseCatalog
     def validate!
       fail_with('id must match the directory name') unless @id == @source.basename.to_s
       fail_with('has no sections') if @sections.empty?
+      fail_with('language must be a slug') if @language && !Problem::LANGUAGE_FORMAT.match?(@language)
       validate_problem_references!
     end
 

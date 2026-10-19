@@ -1,0 +1,44 @@
+id: give-back
+title: Giving Ownership Back
+type: code
+language: rust
+run: local
+body: |
+  If a function takes ownership of a String, the caller can only have it
+  back if the function returns it. A function can return several values in
+  a tuple, so it can return the String together with its answer.
+
+  Copy the program into src/main.rs in your hello project and run it:
+
+    error[E0382]: borrow of moved value: `s`
+
+  calculate_length took s, so main cannot print it afterwards. The compiler
+  mentions borrowing, which is the better fix and the next section; for now,
+  give the String back.
+question: |
+  Change calculate_length to return the String as well as its length, as a
+  tuple (String, usize), and main to take both back. Run it and paste what it
+  printed.
+starter_code: |
+  fn main() {
+      let s = String::from("hello");
+
+      let len = calculate_length(s);
+
+      println!("The length of '{s}' is {len}.");
+  }
+
+  fn calculate_length(s: String) -> usize {
+      s.len()
+  }
+expected_output: |
+  The length of 'hello' is 5.
+explanation: |
+  fn calculate_length(s: String) -> (String, usize) {
+      let length = s.len();
+      (s, length)
+  }
+
+  and in main, let (s, len) = calculate_length(s);. It works, but passing
+  ownership back and forth for every function is tedious; references are
+  how Rust avoids it.

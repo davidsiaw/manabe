@@ -1,0 +1,41 @@
+id: dbg-macro
+title: The dbg! Macro
+type: multiple_choice
+body: |
+  dbg! is println! for debugging, with extras. It prints the file and line
+  it is on, the code you gave it and that code's value, and then returns the
+  value, so it can go in the middle of an expression:
+
+    let scale = 2;
+    let rect1 = Rectangle {
+        width: dbg!(30 * scale),
+        height: 50,
+    };
+    dbg!(&rect1);
+
+  prints something like
+
+    [src/main.rs:10:16] 30 * scale = 60
+    [src/main.rs:14:5] &rect1 = Rectangle {
+        width: 60,
+        height: 50,
+    }
+
+  It takes ownership of what it is given and hands it back, so pass a
+  reference, &rect1, when you want to keep using the value. It needs the
+  type to have Debug.
+question: Where does dbg! print?
+choices:
+  - id: a
+    text: To standard error, not standard output, unlike println!
+    correct: true
+  - id: b
+    text: To standard output, like println!
+  - id: c
+    text: To a log file next to the program
+  - id: d
+    text: Nowhere, unless the program is built with --release
+explanation: |
+  dbg! writes to standard error, which the terminal shows too, but which is
+  kept apart from the program's real output, for instance when output is
+  redirected to a file. Remove dbg! calls when you are done with them.

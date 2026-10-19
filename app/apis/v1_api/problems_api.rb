@@ -21,6 +21,15 @@ class ProblemsApi < Grape::API
       error!({ error: :round_not_current }, 409) unless progress.answerable_round?(round)
       current_learner.revisions.find_by!(course_id: course.id, number: round)
     end
+
+    # Whether the answer in the request is right: the choice for multiple
+    # choice, or what the learner's program printed for code.
+    def answer_correct?(problem)
+      key = problem.code? ? :output : :choice
+      error!({ error: "#{key} is missing" }, 400) if params[key].nil?
+
+      problem.code? ? problem.output_correct?(params[:output]) : problem.correct?(params[:choice])
+    end
   end
 
   namespace 'courses/:course_id/problems/:problem_id' do
@@ -34,14 +43,15 @@ class ProblemsApi < Grape::API
 
     desc 'Answer a problem in round 1 or the current revision. A correct answer is recorded as solved.'
     params do
-      requires :choice, type: String
+      optional :choice, type: String, desc: 'multiple_choice: the chosen choice id'
+      optional :output, type: String, desc: 'code: what the program printed'
       optional :round, type: Integer, values: 1..
     end
     post :answer do
       problem = course.problem(params[:problem_id])
       revision_for_round
       status 200
-      if problem.correct?(params[:choice])
+      if answer_correct?(problem)
         progress.record!(problem.id, round)
         { correct: true, explanation: problem.explanation, progress: progress.as_json }
       else

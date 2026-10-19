@@ -1,0 +1,47 @@
+id: derive-debug
+title: Printing a Struct
+type: code
+language: rust
+run: local
+body: |
+  println! with {} uses a type's Display formatting, meant for people to
+  read. Numbers and strings have it, but how should a Rectangle look? Rust
+  does not guess, so structs have no Display.
+
+  For printing while you write and debug code there is {:?}, which uses
+  Debug formatting. Structs do not have that either until you ask for it,
+  with an attribute written just above the definition:
+
+    #[derive(Debug)]
+    struct Rectangle {
+
+  derive makes the compiler write the code for you. Copy the program into
+  src/main.rs in your hello project and run it:
+
+    error[E0277]: `Rectangle` doesn't implement `std::fmt::Display`
+
+  Read the rest of the message too: the compiler suggests {:?}, and when you
+  try that, it says what is still missing.
+question: |
+  Print rect1 with Debug formatting. Run it and paste what it printed. (A
+  warning that the fields are never read is fine: printing with Debug does
+  not count as reading them.)
+starter_code: |
+  struct Rectangle {
+      width: u32,
+      height: u32,
+  }
+
+  fn main() {
+      let rect1 = Rectangle {
+          width: 30,
+          height: 50,
+      };
+
+      println!("rect1 is {rect1}");
+  }
+expected_output: |
+  rect1 is Rectangle { width: 30, height: 50 }
+explanation: |
+  Two changes: #[derive(Debug)] above struct Rectangle, and {rect1:?} in
+  the println!. {:?} with the value after the text works too.

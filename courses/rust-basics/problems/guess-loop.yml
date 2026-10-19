@@ -1,0 +1,82 @@
+id: guess-loop
+title: Comparing and Looping
+type: code
+language: rust
+run: local
+body: |
+  The program below is the whole game, apart from one thing. Compared with
+  reading a single guess, it adds:
+
+  - A secret number. A real game uses rand::random_range(1..=100); here it is
+    always 42, so that what the game prints can be checked. Swap in rand
+    afterwards if you like.
+  - let guess: u32 = guess.trim().parse().expect(...) turns the text into a
+    number. trim() removes the new line from Enter (and any spaces), and
+    parse() converts the text to the type written after guess:, u32. The
+    new guess replaces, or shadows, the old String one.
+  - guess.cmp(&secret_number) compares two values and gives an Ordering:
+    Less, Greater or Equal. match runs the arm whose pattern matches it.
+  - loop { ... } repeats its body forever, asking for guess after guess.
+
+  Put it in src/main.rs in your guessing_game project and run it. It never
+  stops, even after you win: press Ctrl+C to stop it.
+question: |
+  Make the game stop when the guess is right: in the Equal arm, print
+  You win! and then break out of the loop. An arm can run several lines when
+  they are in curly brackets. Then run it, type 50, 25 and 42, each followed
+  by Enter, and paste everything that appeared.
+starter_code: |
+  use std::cmp::Ordering;
+  use std::io;
+
+  fn main() {
+      println!("Guess the number!");
+
+      // The real game picks a random number; see the text above. A fixed
+      // number means the output can be checked.
+      let secret_number = 42;
+
+      loop {
+          println!("Please input your guess.");
+
+          let mut guess = String::new();
+
+          io::stdin()
+              .read_line(&mut guess)
+              .expect("Failed to read line");
+
+          let guess: u32 = guess.trim().parse().expect("Please type a number!");
+
+          println!("You guessed: {guess}");
+
+          match guess.cmp(&secret_number) {
+              Ordering::Less => println!("Too small!"),
+              Ordering::Greater => println!("Too big!"),
+              Ordering::Equal => println!("You win!"),
+          }
+      }
+  }
+expected_output: |
+  Guess the number!
+  Please input your guess.
+  50
+  You guessed: 50
+  Too big!
+  Please input your guess.
+  25
+  You guessed: 25
+  Too small!
+  Please input your guess.
+  42
+  You guessed: 42
+  You win!
+explanation: |
+  The Equal arm becomes
+
+    Ordering::Equal => {
+        println!("You win!");
+        break;
+    }
+
+  break leaves the loop, and as nothing follows the loop, main ends and the
+  program exits.

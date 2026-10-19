@@ -1,5 +1,6 @@
 id: sample
 title: Sample Course
+language: rust
 description: For specs.
 sections:
   - title: First
