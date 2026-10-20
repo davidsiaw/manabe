@@ -36,7 +36,7 @@ The browser's previous anonymous session is not touched, and its progress is not
 | RP id | `WEBAUTHN_RP_ID` | the host of the first origin |
 | RP name | fixed | `Manabase` |
 
-Heighliner.config sets the origin to `https://manafe.<suffix>` and the RP id to `manafe.<suffix>`: the frontend's site, because that is the page the browser runs the ceremony on. Passkeys need HTTPS (or `localhost`). Changing the RP id orphans every existing passkey.
+Heighliner.config allows two origins, the frontend's `https://manafe.<suffix>` and the mobile frontend's `https://manamo.<suffix>`, and sets the RP id to `<suffix>`, their common parent domain, so that one passkey logs in on both. Passkeys belong to the site the browser runs the ceremony on, and an RP id may be that site's host or any parent of it short of a public suffix. In production, serve both frontends from one domain, or from subdomains of one, for the same reason. Passkeys need HTTPS (or `localhost`). Changing the RP id orphans every existing passkey.
 
 ## Gem notes (webauthn 3.4)
 

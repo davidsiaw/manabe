@@ -18,15 +18,17 @@ heighliner login bundle exec rspec
 
 ## Configuration
 
+For a production deployment with docker compose see `docker-compose.prod.yml` and `.env.example`.
+
 | Variable | Used for | In Heighliner.config |
 |---|---|---|
 | `DATABASE_URL` | PostgreSQL | `postgres://postgres:postgres@manabe-db` |
 | `REDIS_URL` | Sidekiq, Action Cable | `redis://manabe-redis:6379/0` |
-| `WEBAUTHN_ORIGINS`, `WEBAUTHN_RP_ID` | passkeys (accounts.md) | the frontend's `https://manafe.<suffix>` |
-| `FRONTEND_HOST` | CORS allowed origin | unset, so any origin |
+| `WEBAUTHN_ORIGINS`, `WEBAUTHN_RP_ID` | passkeys (accounts.md) | the origins `https://manafe.<suffix>` and `https://manamo.<suffix>`; the RP id `<suffix>` |
+| `FRONTEND_HOSTS` | CORS allowed origins, comma separated (`FRONTEND_HOST` still read) | unset, so any origin |
 | `CHROME_HOSTNAME`, `TEST_HOST` | browser specs (testing.md) | the shared chrome container, by the name heighliner gives it (`<%= @config[:shared_names][:chrome] %>`: `heighliner-chrome`, or `kaiser-chrome` on hosts upgraded from kaiser), and `manabe-app` |
 
-The names `manabe` and `manafe` are written into both projects' Heighliner.config. Renaming either environment means editing both.
+The names `manabe`, `manafe` and `manamo` (the mobile frontend, `../mobile`) are written into the projects' Heighliner.config files. Renaming an environment means editing them all.
 
 The databases are `manabase_development` and `manabase_test` (`config/database.yml`). They were called `rails_zen_*` before the rename; the dev databases were renamed in place with `ALTER DATABASE`.
 

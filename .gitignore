@@ -36,3 +36,6 @@
 .pi-sessions/
 coverage/
 .pirag/
+
+# Secrets for docker-compose.prod.yml
+.env
