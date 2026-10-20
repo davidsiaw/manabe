@@ -1,19 +1,8 @@
 id: zig-basics
-title: Zig 0.17 Basics
+title: Zig Basics
 language: zig
 description: |
-  Zig from the start, in your browser: your programs are compiled by the real
-  Zig compiler (0.17), running right here, and you see everything it says.
-  Covers all 17 chapters of Introduction to Zig: a project-based book, by
-  Pedro Duarte Faria (pedropark99.github.io/zig-book), licensed CC BY 4.0:
-  values and types, arrays, slices and strings, control flow, structs,
-  memory and allocators, a first project, a Base64 encoder and decoder,
-  debugging, pointers and optionals, a second project, an HTTP server
-  (which you run on your own computer), unit tests, the build system,
-  error handling and unions, data structures, a third project, a generic
-  stack, with comptime, files and input/output, calling C, a fourth
-  project, an image filter, threads, and vectors and SIMD. The text here is rewritten and shortened, and the
-  examples are changed into exercises.
+  Learn and practice all the basics of Zig through 168 problems. Based on Zig 0.17 and the book by Pedro Duarte Faria.
 sections:
   - title: Introducing Zig
     sections:

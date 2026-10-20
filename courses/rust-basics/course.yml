@@ -2,20 +2,7 @@ id: rust-basics
 title: Rust Basics
 language: rust
 description: |
-  Rust from the start, following all 21 chapters of The Rust Programming
-  Language (doc.rust-lang.org/book): installing Rust, Cargo, a guessing game,
-  the concepts every program uses, from variables and types to functions
-  and loops, ownership, borrowing and slices, structs and methods, enums
-  and pattern matching, organising code in packages, crates and modules,
-  the collections: vectors, strings and hash maps, error handling,
-  generics, traits and lifetimes, writing automated tests, a command-line
-  project, minigrep, closures and iterators, more about Cargo, smart
-  pointers, concurrency, async and await, object-oriented features,
-  patterns and matching, advanced features: unsafe code, advanced traits
-  and types, function pointers and macros, and a final project, a
-  multithreaded web server. Some problems are questions; the others are programs
-  you build and run on your own computer, and the first ones show you how
-  to install everything. Some examples are adapted from the book.
+  Learn Rust from the basics up. 312 problems in this problem set to get you started on the language. Based on the The Rust Book.
 sections:
   - title: Getting Started
     problems: [welcome, install-rust, hello-rustc, anatomy, cargo-project]

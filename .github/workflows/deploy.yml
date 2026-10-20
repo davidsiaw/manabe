@@ -3,7 +3,7 @@ name: buildndeploy
 'on':
   push:
     branches:
-    - production
+    - master
   workflow_dispatch:
 
 permissions:
