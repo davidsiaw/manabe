@@ -18,7 +18,7 @@ heighliner login bundle exec rspec
 
 ## Configuration
 
-For a production deployment with docker compose see `docker-compose.prod.yml` and `.env.example`.
+Production is configured differently: see [deployment.md](deployment.md).
 
 | Variable | Used for | In Heighliner.config |
 |---|---|---|
