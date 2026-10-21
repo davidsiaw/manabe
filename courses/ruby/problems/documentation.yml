@@ -1,0 +1,35 @@
+id: documentation
+title: Finding Documentation
+type: multiple_choice
+body: |
+  Nobody remembers every method. The documentation for Ruby's classes is
+  online at docs.ruby-lang.org, and a Ruby installation comes with ri, a
+  command that shows the same documentation in a terminal, with no
+  internet needed:
+
+    ri String
+    ri String#upcase
+    ri Integer#times
+
+  The documentation is written in comments in Ruby's own source code, and
+  turned into web pages and ri pages by a tool called RDoc.
+
+  Notice the # in String#upcase. Written about Ruby, Class#method means a
+  method you call on an object of that class: String#upcase is the upcase
+  you call on a string, as in 'hi'.upcase. This is only a way of writing
+  about methods; it is not Ruby code. Some methods are called on the class
+  itself rather than on its objects, and are written with a dot, as in
+  File.open, which a later lesson uses.
+question: In Ruby documentation, what does String#reverse refer to?
+choices:
+  - id: a
+    text: The reverse method that you call on a string, such as 'abc'.reverse
+    correct: true
+  - id: b
+    text: A comment about reverse inside the String class
+  - id: c
+    text: A method called on the class itself, as String.reverse
+  - id: d
+    text: The Ruby code needed to call reverse
+explanation: |
+  The # names a method you call on an object of the class, here a string.

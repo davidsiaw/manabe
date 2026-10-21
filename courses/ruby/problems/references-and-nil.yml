@@ -1,0 +1,45 @@
+id: references-and-nil
+title: Variables Hold References
+type: multiple_choice
+body: |
+  Objects are created in an area of memory called the heap. A variable
+  does not hold the object itself, but a reference to it, something like
+  its address. So assigning one variable to another copies the reference,
+  not the object:
+
+    d = Dog.new('Labrador', 'Benzy')
+    d1 = d          # d and d1 now refer to the same dog
+
+  Assigning nil to a variable makes it refer to nothing at all. Calling a
+  method on it then fails, as nil has no such method; the program stops
+  with a NoMethodError:
+
+    d = nil
+    d.bark          # NoMethodError: undefined method 'bark' for nil
+
+  When no variable refers to an object any more, the object is abandoned.
+  Ruby's garbage collector finds such objects from time to time and frees
+  their memory. It works in two stages, mark and sweep: first it marks
+  every object that can still be reached from a variable in use, then it
+  sweeps away the rest. You never free memory yourself, and there is no
+  telling exactly when an abandoned object will be collected.
+question: |
+  With the Dog class from the previous lesson, what does this print?
+
+    d = Dog.new('Labrador', 'Benzy')
+    d1 = d
+    d = nil
+    d1.display
+choices:
+  - id: a
+    text: I am a Labrador and my name is Benzy
+    correct: true
+  - id: b
+    text: Nothing; d1 is nil too
+  - id: c
+    text: A NoMethodError
+  - id: d
+    text: Nothing; the dog was garbage collected
+explanation: |
+  d = nil changes only what d refers to. d1 still refers to the dog, so
+  the dog is not abandoned and still works.

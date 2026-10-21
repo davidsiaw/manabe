@@ -1,0 +1,73 @@
+id: modules
+title: Modules as Namespaces
+type: code
+language: ruby
+body: |
+  A module is like a class that cannot make objects. It holds methods,
+  constants, and even classes, and is written with module instead of
+  class:
+
+    module Trig
+      PI = 3.1416
+
+      def Trig.double_pi
+        PI * 2
+      end
+    end
+
+    module Moral
+      VERY_BAD = 0
+
+      def Moral.sin(badness)
+        badness == VERY_BAD ? 'grave' : 'venial'
+      end
+    end
+
+    puts Trig::PI           # 3.1416
+    puts Trig.double_pi     # 6.2832
+    puts Moral.sin(Moral::VERY_BAD)
+
+  The first job of a module is to be a namespace. Trig and Moral can both
+  have a method called sin, or a constant called PI, without clashing,
+  because you always say which module you mean. A module is also a good
+  home for a set of related constants.
+
+  def Trig.double_pi defines a method on the module itself, called as
+  Trig.double_pi. Inside the module, self is the module, so you can also
+  write it def self.double_pi. :: reaches a constant inside a module or
+  class: Trig::PI, and Float::INFINITY, a constant in Ruby's Float class.
+
+  Inside the module, its own constants need no prefix, which is why
+  Moral.sin can say just VERY_BAD.
+question: |
+  Write a module Units with a constant CM_PER_INCH, 254 (in tenths of a
+  millimetre, to keep to integers), and module methods to_tenths_mm(inches)
+  and to_inches(tenths_mm), with integer division. Make the starter print
+  the expected output.
+starter_code: |
+  # module Units ...
+
+  puts Units::CM_PER_INCH
+  puts Units.to_tenths_mm(10)
+  puts Units.to_inches(2540)
+expected_output: |
+  254
+  2540
+  10
+explanation: |
+  One way to write it:
+
+    module Units
+      CM_PER_INCH = 254
+
+      def self.to_tenths_mm(inches)
+        inches * CM_PER_INCH
+      end
+
+      def self.to_inches(tenths_mm)
+        tenths_mm / CM_PER_INCH
+      end
+    end
+
+  (The constant's name is a little wrong for what it holds; naming things
+  is hard.)

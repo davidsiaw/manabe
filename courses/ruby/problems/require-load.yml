@@ -1,0 +1,51 @@
+id: require-load
+title: Including Other Files
+type: multiple_choice
+body: |
+  As programs grow, you split them into files. Three methods bring the
+  code from another file into a program:
+
+  - require 'name' loads a library once. Calling it again for the same
+    file does nothing. Leave out the .rb: some libraries are written in C
+    and stored in other kinds of file, and Ruby works out which file is
+    meant. It searches the folders listed in the global variable $:.
+  - require_relative 'name' does the same for a file whose place you give
+    relative to the current file, such as one in the same folder.
+  - load 'name.rb' runs the file every time it is called, which is useful
+    when the file may have changed.
+
+  require also gives you the libraries that come with Ruby but are not
+  loaded until asked for:
+
+    require 'logger'
+
+  A program in two files, side by side:
+
+    # motorcycle.rb
+    class MotorCycle
+      def start_engine
+        puts 'Engine idle'
+      end
+    end
+
+    # ride.rb
+    require_relative 'motorcycle'
+    MotorCycle.new.start_engine
+
+  The browser here runs a single file, so it has no require.
+question: |
+  A program calls require 'helpers' three times. How many times is
+  helpers.rb run?
+choices:
+  - id: a
+    text: Once
+    correct: true
+  - id: b
+    text: Three times
+  - id: c
+    text: None, as the .rb was left out
+  - id: d
+    text: Twice
+explanation: |
+  require remembers what it has loaded and skips it the next time. load
+  would run the file each time.

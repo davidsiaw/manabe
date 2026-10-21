@@ -1,0 +1,77 @@
+id: inheritance
+title: Inheritance
+type: code
+language: ruby
+body: |
+  All cats are mammals, and all mammals breathe. Inheritance says this in
+  code: a class can be a more specialised version of another, getting all
+  its methods and adding its own. < names the class to inherit from:
+
+    class Mammal
+      def breathe
+        puts 'inhale and exhale'
+      end
+    end
+
+    class Cat < Mammal
+      def speak
+        puts 'Meow'
+      end
+    end
+
+    rani = Cat.new
+    rani.breathe     # inherited from Mammal
+    rani.speak
+
+  Cat is a subclass (or child class) of Mammal, and Mammal is the
+  superclass (or parent class) of Cat. A class has exactly one
+  superclass: Ruby has no multiple inheritance. But the chain can be long:
+  a class can inherit from one that inherits from another.
+
+  A class that names no superclass inherits from Object, whose methods,
+  such as class and respond_to?, every object therefore has. Object in
+  turn inherits from BasicObject, the root of every class. superclass
+  returns a class's superclass, and ancestors the whole chain, including
+  the modules met later:
+
+    p Cat.superclass     # Mammal
+
+  initialize is inherited like any other method, and is_a? is true for
+  any class in the chain: rani.is_a?(Mammal) is true.
+question: |
+  Write a class Vehicle with a method wheels that returns 4 and a method
+  describe that returns "I have N wheels", using wheels. Write a class
+  Truck that inherits from Vehicle and adds a method honk that returns
+  Honk!. Make the starter print the expected output.
+starter_code: |
+  # class Vehicle ...
+  # class Truck ...
+
+  t = Truck.new
+  puts t.describe
+  puts t.honk
+  puts t.is_a?(Vehicle)
+  p Truck.superclass
+expected_output: |
+  I have 4 wheels
+  Honk!
+  true
+  Vehicle
+explanation: |
+  One way to write it:
+
+    class Vehicle
+      def wheels
+        4
+      end
+
+      def describe
+        "I have #{wheels} wheels"
+      end
+    end
+
+    class Truck < Vehicle
+      def honk
+        'Honk!'
+      end
+    end

@@ -1,0 +1,54 @@
+id: protected-methods
+title: Protected Methods
+type: multiple_choice
+body: |
+  A protected method is in between. Like a private one, it cannot be
+  called from just anywhere. But an object can call it on another object,
+  with an explicit receiver, as long as both are of the class that defines
+  it (or its subclasses). It keeps access within the family.
+
+  That is just what comparisons need:
+
+    class Person
+      def initialize(age)
+        @age = age
+      end
+
+      def older_than?(other)
+        other.age < age
+      end
+
+      protected
+
+      def age
+        @age
+      end
+    end
+
+    chris = Person.new(25)
+    marcos = Person.new(34)
+    puts marcos.older_than?(chris)    # true
+    puts chris.age                    # NoMethodError
+
+  Inside older_than?, marcos asks chris for chris's age. If age were
+  private, other.age would fail, as it has an explicit receiver. Being
+  protected, it is allowed there, as self and other are both People, but
+  not from the top of the program.
+
+  Protected methods are rarely needed. (The mruby in this browser gets
+  them wrong, which is why this lesson has no program.)
+question: |
+  With Person as above, which call works?
+choices:
+  - id: a
+    text: chris.older_than?(marcos), called at the top of the program
+    correct: true
+  - id: b
+    text: chris.age, called at the top of the program
+  - id: c
+    text: Both
+  - id: d
+    text: Neither
+explanation: |
+  older_than? is public, and inside it other.age is allowed, because the
+  caller is a Person too. chris.age from outside is refused.

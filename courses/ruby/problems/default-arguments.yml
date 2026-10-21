@@ -1,0 +1,48 @@
+id: default-arguments
+title: Default Arguments
+type: code
+language: ruby
+body: |
+  A parameter can have a default value, used when the caller leaves that
+  argument out. Give it with =:
+
+    def greet(name = 'friend', greeting = 'Hello')
+      "#{greeting}, #{name}!"
+    end
+
+    puts greet                       # Hello, friend!
+    puts greet('Ruby')               # Hello, Ruby!
+    puts greet('Ruby', 'Goodbye')    # Goodbye, Ruby!
+
+  Arguments are matched to parameters from left to right, so there is no
+  way to give greeting while leaving name to its default.
+
+  Defaults are worked out from left to right as well, each when the method
+  is called, so a default can use the parameters before it:
+
+    def range_text(low = 1, high = low + 9)
+      "#{low} to #{high}"
+    end
+
+    puts range_text       # 1 to 10
+    puts range_text(5)    # 5 to 14
+question: |
+  Write a method price(amount, tax = 10) that returns the amount plus tax
+  percent of it, as an integer (use integer arithmetic: amount * tax /
+  100). Print price(200), then price(200, 5).
+starter_code: |
+  def price(amount, tax = 10)
+    # your code here
+  end
+expected_output: |
+  220
+  210
+explanation: |
+  One way to write it:
+
+    def price(amount, tax = 10)
+      amount + amount * tax / 100
+    end
+
+    puts price(200)
+    puts price(200, 5)

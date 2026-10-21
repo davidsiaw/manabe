@@ -1,0 +1,36 @@
+id: modulus
+title: The Remainder Operator
+type: multiple_choice
+body: |
+  % gives the remainder of a division:
+
+    puts 7 % 3      # 1, as 7 is 2 * 3 + 1
+    puts 10 % 5     # 0
+
+  With negative numbers, Ruby's rule is that the remainder always has the
+  same sign as the number you divide by (the one on the right):
+
+    puts(5 % 3)     # 2
+    puts(-5 % 3)    # 1
+    puts(5 % -3)    # -1
+    puts(-5 % -3)   # -2
+
+  That differs from C and Java, where -7 % 3 is -1. In Ruby, -7 % 3 is 2,
+  because -7 is -3 * 3 + 2.
+
+  The parentheses after puts are there because puts -5 % 3, without them,
+  makes Ruby wonder whether you meant to subtract something from puts.
+  With them, there is no doubt that -5 % 3 is the argument.
+question: What does puts(-10 % 4) print?
+choices:
+  - id: a
+    text: "-2"
+  - id: b
+    text: "2"
+    correct: true
+  - id: c
+    text: "-3"
+  - id: d
+    text: "3"
+explanation: |
+  The divisor, 4, is positive, so the remainder is too: -10 is -3 * 4 + 2.

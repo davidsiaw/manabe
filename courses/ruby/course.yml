@@ -1,0 +1,60 @@
+id: ruby
+title: Ruby
+language: ruby
+description: |
+  The whole of Core Ruby, from your first program to classes, exceptions
+  and modules, in 86 short lessons. It follows the topics of Satish Talim's
+  Ruby Study Notes at rubylearning.com, rewritten and put in an order where
+  every piece of syntax is explained before it is used. Your programs run
+  here in your browser, on mruby, a small implementation of Ruby; the few
+  topics mruby cannot run (regular expressions, files on disk, logging)
+  are taught with questions instead.
+sections:
+  - title: Getting Started
+    problems: [first-program, comments, print-and-p]
+  - title: Numbers
+    problems: [integers-and-floats, big-numbers, modulus, precedence]
+  - title: Strings
+    problems: [string-literals, puts-calls-to-s]
+  - title: Variables and Assignment
+    problems: [variables, conversions, appending, parallel-assignment,
+               constants-intro, interpolation, everything-is-an-object]
+  - title: Simple Constructs
+    problems: [if-else, elsif-and-or, or-operator, while-loop,
+               unless-and-modifiers, ternary, case-expressions, nil-and-false]
+  - title: Methods
+    problems: [defining-methods, default-arguments, alias-methods, names,
+               scope, self-main, bang-and-query]
+  - title: More on Strings
+    problems: [string-methods, quotes-and-escapes, string-equality,
+               encodings, documentation]
+  - title: Blocks
+    problems: [times-and-blocks, yield, block-given, block-variables]
+  - title: Arrays
+    problems: [arrays, each, splat, multiple-return]
+  - title: Ranges
+    problems: [ranges, case-equality]
+  - title: Symbols and Hashes
+    problems: [symbols, hashes, symbol-keys]
+  - title: Random Numbers, Files and Input
+    problems: [random-numbers, files, outside-world]
+  - title: Regular Expressions
+    problems: [regex-match, regex-classes, regex-captures]
+  - title: Classes and Objects
+    problems: [first-class, references-and-nil, object-abilities,
+               class-objects, setter-methods, attr-accessors]
+  - title: More About Methods and Classes
+    problems: [method-missing, procs, require-load, open-classes]
+  - title: Inheritance
+    problems: [inheritance, overriding-super, instance-variables-inheritance,
+               overloading, abstract-classes]
+  - title: Access Control
+    problems: [private-methods, protected-methods, top-level-methods]
+  - title: Exceptions
+    problems: [raise, rescue, ensure-and-else, custom-exceptions]
+  - title: Logging and Time
+    problems: [logging, time]
+  - title: Ruby Idioms
+    problems: [duck-typing, freeze, marshal]
+  - title: Modules, self and Constants
+    problems: [modules, mixins, self, constants]

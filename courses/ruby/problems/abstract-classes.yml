@@ -1,0 +1,83 @@
+id: abstract-classes
+title: Abstract Classes
+type: code
+language: ruby
+body: |
+  A class can call methods that it does not define itself, leaving them
+  for its subclasses to write. Such a class is called abstract: it is not
+  meant to be used on its own, only as the parent of classes that fill in
+  the gaps. Ruby needs no special syntax for this.
+
+    class Greeting
+      def welcome
+        puts "#{hello} #{name}"
+      end
+    end
+
+    class RubyGreeting < Greeting
+      def hello
+        'Hello'
+      end
+
+      def name
+        'Ruby students'
+      end
+    end
+
+    RubyGreeting.new.welcome    # Hello Ruby students
+
+  Greeting.new.welcome would fail with a NameError, as Greeting has no
+  hello. When welcome runs on a RubyGreeting, self is a RubyGreeting, so
+  hello and name are found in the subclass.
+question: |
+  The starter has an abstract class Shape. Write the subclasses Square,
+  with a side, and Circle3, a pretend circle with a radius whose area is
+  3 times the radius squared, so that the starter prints the expected
+  output.
+starter_code: |
+  class Shape
+    def report
+      "#{name} with area #{area}"
+    end
+  end
+
+  # class Square ...
+  # class Circle3 ...
+
+  puts Square.new(4).report
+  puts Circle3.new(2).report
+expected_output: |
+  Square with area 16
+  Circle3 with area 12
+explanation: |
+  One way to write it:
+
+    class Square < Shape
+      def initialize(side)
+        @side = side
+      end
+
+      def name
+        'Square'
+      end
+
+      def area
+        @side * @side
+      end
+    end
+
+    class Circle3 < Shape
+      def initialize(radius)
+        @radius = radius
+      end
+
+      def name
+        'Circle3'
+      end
+
+      def area
+        3 * @radius * @radius
+      end
+    end
+
+  name could also be self.class.to_s, written once in Shape.

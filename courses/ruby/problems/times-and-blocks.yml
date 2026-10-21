@@ -1,0 +1,67 @@
+id: times-and-blocks
+title: Blocks
+type: code
+language: ruby
+body: |
+  A block is a chunk of code that you hand to a method when you call it, a
+  little as if it were one more argument. The method then decides when to
+  run it, and how often. Integer's times method runs its block that many
+  times:
+
+    3.times { puts 'Hello' }
+
+  Blocks are written either between braces, or between do and end. The
+  convention is braces for a block on one line, and do and end for one
+  that spans several:
+
+    3.times do
+      puts 'Hip'
+      puts 'Hooray'
+    end
+
+  A block can take parameters, listed between vertical bars at its start.
+  times passes the number of the round, counting from 0:
+
+    3.times do |i|
+      puts "Round #{i}"
+    end
+    # Round 0, Round 1, Round 2
+
+  A block can only appear right after a method call; it starts on the same
+  line as the call. The code in it does not run where it is written. Ruby
+  remembers it, along with the local variables around it, and the method
+  runs it when it chooses.
+
+  One detail: braces bind more tightly than do and end. When a method's
+  arguments are not in parentheses, a block in braces goes to the last
+  argument, and a do and end block goes to the method. If you are unsure,
+  put the arguments in parentheses.
+question: |
+  A legend says a king rewarded a chess inventor with rice: one grain on
+  the first square, two on the second, four on the third, doubling each
+  time. With 10.times and a block, print the first ten squares as shown.
+starter_code: |
+  grains = 1
+expected_output: |
+  On square 1 are 1 grain(s)
+  On square 2 are 2 grain(s)
+  On square 3 are 4 grain(s)
+  On square 4 are 8 grain(s)
+  On square 5 are 16 grain(s)
+  On square 6 are 32 grain(s)
+  On square 7 are 64 grain(s)
+  On square 8 are 128 grain(s)
+  On square 9 are 256 grain(s)
+  On square 10 are 512 grain(s)
+explanation: |
+  One way to write it:
+
+    grains = 1
+    10.times do |square|
+      puts "On square #{square + 1} are #{grains} grain(s)"
+      grains *= 2
+    end
+
+  The block can change grains because it sees the local variables around
+  it. Try 64.times: Ruby's integers have no trouble with the last square's
+  9223372036854775808 grains.

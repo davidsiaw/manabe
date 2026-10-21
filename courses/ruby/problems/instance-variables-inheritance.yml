@@ -1,0 +1,73 @@
+id: instance-variables-inheritance
+title: Instance Variables and Inheritance
+type: multiple_choice
+body: |
+  It can look as if subclasses inherit their superclass's instance
+  variables. They do not, exactly. Instance variables belong to each
+  object, not to its class, and an object gets one when some method first
+  assigns to it. A class never declares them.
+
+  What subclasses inherit is methods. When an inherited method assigns
+  @breed, the object it runs on gets an @breed, and any of that object's
+  methods, in either class, can use it:
+
+    class Dog
+      def initialize(breed)
+        @breed = breed
+      end
+    end
+
+    class Lab < Dog
+      def initialize(breed, name)
+        super(breed)
+        @name = name
+      end
+
+      def to_s
+        "(#{@breed}, #{@name})"
+      end
+    end
+
+    puts Lab.new('Labrador', 'Benzy')    # (Labrador, Benzy)
+
+  (to_s is what puts calls to turn an object into a string, so defining it
+  decides how puts shows your objects.)
+
+  As there is only one @breed per object, a subclass that uses the same
+  name as its superclass does not get a separate variable. It shares, and
+  can overwrite, the same one.
+question: |
+  What does this print?
+
+    class Counter
+      def initialize
+        @n = 100
+      end
+
+      def increase
+        @n *= 20
+      end
+    end
+
+    class ShowCounter < Counter
+      def show
+        puts "n is #{@n}"
+      end
+    end
+
+    c = ShowCounter.new
+    c.increase
+    c.show
+choices:
+  - id: a
+    text: n is 2000
+    correct: true
+  - id: b
+    text: n is 100
+  - id: c
+    text: n is
+  - id: d
+    text: An error, as @n is not defined in ShowCounter
+explanation: |
+  The inherited initialize gave c its @n of 100, and the inherited
+  increase changed that same @n. show reads it: 2000.

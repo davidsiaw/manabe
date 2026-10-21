@@ -1,0 +1,55 @@
+id: string-methods
+title: More on Strings
+type: code
+language: ruby
+body: |
+  The String class has well over a hundred methods. You do not need to
+  learn them all, but a handful come up all the time:
+
+    s = 'hello World'
+    s.length        # 11
+    s.reverse       # 'dlroW olleh'
+    s.upcase        # 'HELLO WORLD'
+    s.downcase      # 'hello world'
+    s.swapcase      # 'HELLO wORLD'
+    s.capitalize    # 'Hello world': first letter up, the rest down
+    s.slice(0, 5)   # 'hello': 5 characters, starting at position 0
+
+  Positions in a string count from 0. None of these change s; each returns
+  a new string. upcase!, downcase!, swapcase! and capitalize! are the
+  versions that change the string in place, which saves memory when the
+  original is not needed.
+
+  As every method returns an object, you can call another method on the
+  result straight away. This is chaining:
+
+    puts 'ruby'.reverse.upcase    # YBUR
+question: |
+  Write a method palindrome?(word) that returns true when a word reads the
+  same backwards, ignoring upper and lower case. Then print the method's
+  answer for Level, Ruby and Racecar, one per line, followed by Ruby
+  reversed and capitalized (Ybur).
+starter_code: |
+  def palindrome?(word)
+    # your code here
+  end
+
+  puts palindrome?('Level')
+  puts palindrome?('Ruby')
+  puts palindrome?('Racecar')
+expected_output: |
+  true
+  false
+  true
+  Ybur
+explanation: |
+  One way to write it:
+
+    def palindrome?(word)
+      word.downcase == word.downcase.reverse
+    end
+
+    puts palindrome?('Level')
+    puts palindrome?('Ruby')
+    puts palindrome?('Racecar')
+    puts 'Ruby'.reverse.capitalize

@@ -1,0 +1,68 @@
+id: ensure-and-else
+title: Several rescues, else and ensure
+type: code
+language: ruby
+body: |
+  A begin can have several rescue clauses. Ruby tries them in order and
+  uses the first whose class matches, so put the more specific classes
+  first: NoMethodError before NameError, its superclass, and both before
+  StandardError.
+
+    begin
+      # ...
+    rescue NoMethodError
+      # ...
+    rescue NameError, TypeError     # one rescue can list several
+      # ...
+    else
+      # runs only if nothing was raised
+    ensure
+      # always runs, at the very end, whatever happened
+    end
+
+  ensure is for clean-up that must happen whether or not something went
+  wrong, such as closing a file. else is rarely used.
+
+  Inside a rescue, raise with no arguments raises the same exception
+  again, for when you want to note a problem but still let it stop the
+  program.
+
+  The exception's backtrace method returns the list of places in the code
+  it passed through. It is useful while debugging, but never show it to
+  the users of a real application: it tells an attacker how your program
+  is built.
+question: |
+  Write a method attempt(value) that tries value.upcase and prints the
+  result. If value has no upcase, it prints no upcase for that value. If
+  nothing went wrong, it prints ok, and whatever happened, it prints a
+  line of three dashes at the end. Call it on each value in the starter.
+starter_code: |
+  def attempt(value)
+    # your code here
+  end
+
+  attempt('ruby')
+  attempt(42)
+expected_output: |
+  RUBY
+  ok
+  ---
+  no upcase for 42
+  ---
+explanation: |
+  One way to write it:
+
+    def attempt(value)
+      begin
+        puts value.upcase
+      rescue NoMethodError
+        puts "no upcase for #{value}"
+      else
+        puts 'ok'
+      ensure
+        puts '---'
+      end
+    end
+
+  As a method body already acts as a begin, the rescue, else and ensure
+  could also go straight into the def.

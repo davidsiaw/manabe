@@ -1,0 +1,72 @@
+id: procs
+title: Procs and Lambdas
+type: code
+language: ruby
+body: |
+  A block is not an object: you cannot keep one in a variable. But it can
+  be turned into one, of class Proc. lambda takes a block and returns it
+  as a Proc, which you run with its call method:
+
+    say_hello = lambda { puts 'Hello' }
+    say_hello.call                    # Hello
+
+    greet = lambda { |x| "Hello #{x}!" }
+    puts greet.call('World')          # Hello World!
+
+  Methods cannot be passed to other methods, or returned from them, but
+  procs can, as they are ordinary objects:
+
+    def run_twice(action)
+      action.call
+      action.call
+    end
+
+    run_twice(say_hello)
+
+  A proc made by lambda checks its arguments like a method: call greet
+  with no argument, or two, and you get an ArgumentError. Proc.new { ... }
+  makes a looser proc, which fills missing parameters with nil.
+
+  A method can also take its block as a proc, by naming a last parameter
+  with an & in front:
+
+    def keep(&block)
+      block
+    end
+
+    shout = keep { |s| s.upcase }
+    puts shout.call('hi')             # HI
+
+  That is why you will often see method_missing written with a third
+  parameter: def method_missing(name, *args, &block).
+question: |
+  Write a method make_multiplier(n) that returns a lambda that multiplies
+  its argument by n. Use it to make double and triple, and print the
+  results shown.
+starter_code: |
+  def make_multiplier(n)
+    # your code here
+  end
+
+  double = make_multiplier(2)
+  triple = make_multiplier(3)
+expected_output: |
+  10
+  15
+  14
+explanation: |
+  One way to write it:
+
+    def make_multiplier(n)
+      lambda { |x| x * n }
+    end
+
+    double = make_multiplier(2)
+    triple = make_multiplier(3)
+    puts double.call(5)
+    puts triple.call(5)
+    puts double.call(7)
+
+  The lambda remembers n after make_multiplier has returned: a block keeps
+  the local variables around it. That is why blocks are also called
+  closures.

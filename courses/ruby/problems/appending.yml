@@ -1,0 +1,63 @@
+id: appending
+title: Changing Strings and Numbers
+type: code
+language: ruby
+body: |
+  Strings in Ruby can be changed after they are made. << appends to the
+  end of a string, changing that same string:
+
+    a = 'hello '.dup
+    a << 'world'
+    puts a          # hello world
+
+  What is the .dup for? dup makes a copy of an object, and here it makes a
+  changeable copy of the string 'hello '. Ruby 3.4 still lets you change a
+  string written straight into the program, a string literal, but string
+  literals are expected to become frozen, unchangeable, in a future
+  version, and with warnings turned on Ruby 3.4 already says literal
+  string will be frozen in the future. So when you mean to change a
+  string, start from a copy. (A file can also start with the magic comment
+  frozen_string_literal: true, written after a #, which freezes its
+  literals today.)
+
+  For numbers, and for strings too, there is a shorthand for "work out a
+  new value from the old one and store it back":
+
+    count = 10
+    count += 5      # the same as count = count + 5
+    count -= 3      # count = count - 3
+    count *= 2      # count = count * 2
+    puts count      # 24
+
+  This is what Ruby uses instead of ++ and --: count += 1.
+
+  For a string that runs over several lines, use a here document. <<
+  followed by a word of your choice starts it, the string begins on the
+  next line, and it ends at a line holding only that word:
+
+    poem = <<END_POEM
+    Roses are red,
+    Ruby is too.
+    END_POEM
+    puts poem
+question: |
+  Start with the string in the starter. Use << twice to make it read
+  Ruby is fun and fast, and print it. Then, starting from score = 10, use
+  += and *= to make score 30 and print it.
+starter_code: |
+  sentence = 'Ruby is'.dup
+  score = 10
+expected_output: |
+  Ruby is fun and fast
+  30
+explanation: |
+  One way to write it:
+
+    sentence << ' fun'
+    sentence << ' and fast'
+    puts sentence
+    score += 5
+    score *= 2
+    puts score
+
+  Any steps that end at 30 will do, such as score *= 3.

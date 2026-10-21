@@ -1,0 +1,31 @@
+id: constants-intro
+title: Constants
+type: multiple_choice
+body: |
+  A name that starts with an uppercase letter is a constant: a name for a
+  value that is not meant to change while the program runs.
+
+    PI = 3.1416
+    MAX_PLAYERS = 4
+    puts PI * 2
+
+  By convention constants are written in capitals with underscores between
+  words, as above.
+
+  Ruby does not actually stop you from assigning a constant a second time,
+  but it prints a warning, already initialized constant, because doing so
+  is almost always a mistake. A later lesson shows more about constants.
+question: Which of these names is a constant?
+choices:
+  - id: a
+    text: speed_limit
+  - id: b
+    text: _limit
+  - id: c
+    text: SPEED_LIMIT
+    correct: true
+  - id: d
+    text: speedLimit
+explanation: |
+  Only SPEED_LIMIT starts with an uppercase letter. speedLimit is a local
+  variable, written in a style Rubyists avoid in favour of speed_limit.

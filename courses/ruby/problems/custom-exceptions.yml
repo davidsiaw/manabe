@@ -1,0 +1,80 @@
+id: custom-exceptions
+title: Validating with Exceptions
+type: code
+language: ruby
+body: |
+  A setter method is a good place to refuse bad data, by raising an
+  exception before it gets into the object. raise also accepts an
+  exception object, made with new:
+
+    class Name
+      attr_reader :first
+
+      def initialize(first)
+        self.first = first     # use the setter, so the check runs
+      end
+
+      def first=(first)
+        if first.nil? || first.size == 0
+          raise ArgumentError.new('Everyone must have a first name.')
+        end
+        first = first.dup
+        first[0] = first[0].upcase
+        @first = first
+      end
+    end
+
+  A few new pieces here:
+
+  - nil? is true only for nil.
+  - dup returns a copy of an object. The setter changes the string, and
+    without dup it would change the caller's string too.
+  - first[0] reads the string's first character, and first[0] = ...
+    replaces it, as with an array.
+
+  initialize calls self.first = rather than assigning @first, so that the
+  same rule applies to every Name, however it got its first name.
+question: |
+  Define an exception class InvalidAgeError, a subclass of StandardError.
+  Write a class Person with a reader age and a setter age= that raises
+  InvalidAgeError with the message age must be 0 to 150 for anything
+  outside that range, and an initialize that uses the setter. Then make
+  the starter print the expected output.
+starter_code: |
+  # class InvalidAgeError ...
+  # class Person ...
+
+  p1 = Person.new(30)
+  puts p1.age
+  begin
+    p1.age = 200
+  rescue InvalidAgeError => e
+    puts "#{e.class}: #{e.message}"
+  end
+  puts p1.age
+expected_output: |
+  30
+  InvalidAgeError: age must be 0 to 150
+  30
+explanation: |
+  One way to write it:
+
+    class InvalidAgeError < StandardError
+    end
+
+    class Person
+      attr_reader :age
+
+      def initialize(age)
+        self.age = age
+      end
+
+      def age=(age)
+        unless (0..150).include?(age)
+          raise InvalidAgeError, 'age must be 0 to 150'
+        end
+        @age = age
+      end
+    end
+
+  The raise came before @age was assigned, so the person keeps the age 30.

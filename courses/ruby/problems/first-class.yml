@@ -1,0 +1,78 @@
+id: first-class
+title: Writing Your Own Class
+type: code
+language: ruby
+body: |
+  So far, programs have been steps working on values. Object-oriented
+  programs are organised around objects instead: you ask objects to do
+  things and to tell you things. When you design a class, think about what
+  its objects know and what they do.
+
+  - What an object knows are its instance variables, whose names start
+    with @. They are its state, and each object has its own.
+  - What an object does are its methods.
+
+  A class is the blueprint, and each object made from it is an instance of
+  the class:
+
+    class Dog
+      def initialize(breed, name)
+        @breed = breed
+        @name = name
+      end
+
+      def bark
+        puts 'Ruff! Ruff!'
+      end
+
+      def display
+        puts "I am a #{@breed} and my name is #{@name}"
+      end
+    end
+
+    d = Dog.new('Labrador', 'Benzy')
+    d.bark
+    d.display
+
+  class Dog ... end defines the class; its name is a constant, so it
+  starts with a capital. Dog.new makes a new Dog, and then calls the new
+  object's initialize method with the arguments given to new. That is the
+  place to set up the instance variables. The methods defined inside the
+  class can then be called on any Dog, and each sees that dog's own
+  instance variables.
+question: |
+  Write a class Rectangle whose initialize takes a width and a height, with
+  a method area that returns width times height and a method describe that
+  returns a string as shown. Make the starter's lines print the expected
+  output.
+starter_code: |
+  # class Rectangle ...
+
+  r = Rectangle.new(3, 4)
+  puts r.area
+  puts r.describe
+  puts Rectangle.new(10, 2).describe
+expected_output: |
+  12
+  3 by 4, area 12
+  10 by 2, area 20
+explanation: |
+  One way to write it:
+
+    class Rectangle
+      def initialize(width, height)
+        @width = width
+        @height = height
+      end
+
+      def area
+        @width * @height
+      end
+
+      def describe
+        "#{@width} by #{@height}, area #{area}"
+      end
+    end
+
+  Inside describe, area with no receiver calls the area method on the same
+  object.

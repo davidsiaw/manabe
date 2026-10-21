@@ -1,0 +1,62 @@
+id: case-expressions
+title: case Expressions
+type: code
+language: ruby
+body: |
+  case picks the first of a list of conditions that is true, like a chain
+  of elsifs but easier to read. Each condition starts with when, then
+  optionally separates it from the result, and else catches anything left
+  over:
+
+    year = 2000
+    leap = case
+           when year % 400 == 0 then true
+           when year % 100 == 0 then false
+           else year % 4 == 0
+           end
+    puts leap    # true
+
+  case is an expression: it has a value, the value of the branch that ran,
+  so it can be assigned, as leap is above. (So does if, as it happens.)
+
+  Give case a value to compare, and each when lists what it might be,
+  separated by commas:
+
+    day = 'Sat'
+    case day
+    when 'Sat', 'Sun'
+      puts 'Weekend'
+    else
+      puts 'Weekday'
+    end
+question: |
+  For each year from 1896 to 1904, print the year and whether it is a leap
+  year, as shown, using a while loop and a case. A year divisible by 400 is
+  a leap year; otherwise one divisible by 100 is not; otherwise one
+  divisible by 4 is.
+starter_code: |
+  year = 1896
+expected_output: |
+  1896 leap
+  1897 not leap
+  1898 not leap
+  1899 not leap
+  1900 not leap
+  1901 not leap
+  1902 not leap
+  1903 not leap
+  1904 leap
+explanation: |
+  One way to write it:
+
+    year = 1896
+    while year <= 1904
+      kind = case
+             when year % 400 == 0 then 'leap'
+             when year % 100 == 0 then 'not leap'
+             when year % 4 == 0 then 'leap'
+             else 'not leap'
+             end
+      puts "#{year} #{kind}"
+      year += 1
+    end

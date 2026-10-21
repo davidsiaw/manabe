@@ -1,0 +1,33 @@
+id: random-numbers
+title: Random Numbers
+type: multiple_choice
+body: |
+  rand gives a random number. Called with nothing, it returns a float from
+  0.0 up to, but not including, 1.0. Called with an integer n, it returns
+  an integer from 0 up to, but not including, n:
+
+    rand        # such as 0.6324...
+    rand(6)     # one of 0, 1, 2, 3, 4 or 5
+
+  So to roll a die, add 1: rand(6) + 1. To pick from an array, use a
+  random index:
+
+    words = ['win-win', 'web-based', 'pervasive']
+    puts words[rand(words.length)]
+
+  Random numbers make a program print something different every time,
+  which is why the exercises here never print them: what a program prints
+  has to be the same every time to be checked.
+question: Which numbers can rand(3) + 1 give?
+choices:
+  - id: a
+    text: 1, 2 and 3
+    correct: true
+  - id: b
+    text: 0, 1, 2 and 3
+  - id: c
+    text: 1, 2, 3 and 4
+  - id: d
+    text: Any float from 1.0 to 4.0
+explanation: |
+  rand(3) gives 0, 1 or 2, and adding 1 makes those 1, 2 or 3.

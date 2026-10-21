@@ -1,0 +1,48 @@
+id: comments
+title: Comments and Layout
+type: multiple_choice
+body: |
+  Ruby has two kinds of comment. A # comments out the rest of its line, and
+  can come after code:
+
+    puts 'Hi'   # this part is ignored
+
+  For several lines, put them between =begin and =end. Both must start at
+  the very beginning of a line:
+
+    =begin
+    Everything between these
+    two lines is a comment.
+    =end
+
+  A few more things about how Ruby code is laid out:
+
+  - Each statement normally goes on its own line, and the end of the line
+    ends it. No semicolon is needed. You can put two statements on one line
+    by separating them with a semicolon: puts 'a'; puts 'b'
+  - Indentation does not change what a program does, but Rubyists indent by
+    two spaces, and you will make friends by doing the same.
+  - Ruby is case sensitive: puts is a method Ruby knows, Puts is not.
+  - About 41 words, such as def, if and end, are keywords: they are part of
+    the language itself, and you cannot use them as names of your own.
+question: |
+  What does this program print?
+
+    puts 'one'
+    =begin
+    puts 'two'
+    =end
+    puts 'three'   # puts 'four'
+choices:
+  - id: a
+    text: one, three
+    correct: true
+  - id: b
+    text: one, two, three
+  - id: c
+    text: one, three, four
+  - id: d
+    text: one, two, three, four
+explanation: |
+  The middle puts is inside an =begin/=end comment, and puts 'four' comes
+  after a #, so only one and three are printed, each on its own line.

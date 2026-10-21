@@ -1,0 +1,45 @@
+id: variables
+title: Variables and Assignment
+type: code
+language: ruby
+body: |
+  To keep a value for later, give it a name. = assigns a value to a
+  variable, and the variable springs into existence the moment Ruby sees
+  that assignment:
+
+    city = 'Pune'
+    population = 3_100_000
+    puts city
+    puts population * 2
+
+  Names of ordinary variables (local variables) start with a lowercase
+  letter or an underscore, and contain only letters, digits and
+  underscores: city, _total, max_speed_2. Rubyists separate words with
+  underscores. Keywords, such as end, cannot be used as names.
+
+  A variable has no fixed type. It is just a name for whatever object it
+  was last given, and it can be given something else later:
+
+    x = 7          # x names an integer
+    x = 'house'    # now it names a string
+
+  Use a variable before giving it a value and the program stops with a
+  NameError, as Ruby cannot tell what the name means.
+
+  Style: put spaces around =, and assign one variable per line.
+question: |
+  The starter gives the width and height of a room in metres. Store the
+  area (width times height) in a variable called area, then print the area,
+  and on the next line the area of four such rooms, using the variable.
+starter_code: |
+  width = 4
+  height = 3
+expected_output: |
+  12
+  48
+explanation: |
+  One way to write it:
+
+    area = width * height
+    puts area
+    puts area * 4

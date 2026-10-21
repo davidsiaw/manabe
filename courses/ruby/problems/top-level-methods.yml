@@ -1,0 +1,36 @@
+id: top-level-methods
+title: Top-Level Methods
+type: multiple_choice
+body: |
+  A method defined at the top of a program, outside any class, belongs to
+  some class all the same: it becomes a private method of Object. As every
+  class inherits from Object, every object has the method, so it can be
+  called from anywhere: from the top level, or inside any other method.
+  But it is private, so it can never be called with a receiver.
+
+    def talk
+      puts 'Hello'
+    end
+
+    talk               # works
+    'text'.talk        # NoMethodError: private method 'talk'
+
+  puts and print work the same way. They are private methods of Kernel, a
+  module that Object includes (modules come later), which is why you
+  always call them with no receiver.
+question: |
+  A program defines def helper ... end at the top level, and a class with
+  a method that calls helper. What happens when that method runs?
+choices:
+  - id: a
+    text: helper runs, as every object has it
+    correct: true
+  - id: b
+    text: A NameError, as helper is outside the class
+  - id: c
+    text: A NoMethodError, as helper is private
+  - id: d
+    text: helper runs only if the class inherits from main
+explanation: |
+  helper is a private method of Object, so every object has it, and a call
+  without a receiver is allowed for private methods.

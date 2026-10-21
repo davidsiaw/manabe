@@ -1,0 +1,66 @@
+id: open-classes
+title: Open Classes
+type: code
+language: ruby
+body: |
+  A class is never closed. Write class Name ... end for a class that
+  already exists, and what you write is added to it. Objects that already
+  exist get the new methods too:
+
+    class Dog
+      def big_bark
+        puts 'Woof! Woof!'
+      end
+    end
+
+  This works for Ruby's own classes too. Inside an instance method, self
+  is the object the method was called on, so a method added to String can
+  work on the string itself:
+
+    class String
+      def write_size
+        self.size
+      end
+    end
+
+    puts 'Tell me my size!'.write_size    # 16
+
+  self. is optional there: size alone also calls the method on self.
+
+  Use this with care. Only add a method to a class like String if it is
+  generally useful, and sure not to clash with a method some library adds.
+  Otherwise, it is safer to make a new class, as the next lessons show.
+
+  For the exercise: a string's each_char method runs a block once for each
+  of its characters, passing the character, as a one-character string.
+question: |
+  Add two methods to String: shout, which returns the string in capitals
+  with ! after it, and words, which returns the number of words, counted
+  as the number of spaces plus one. Make the starter print the expected
+  output.
+starter_code: |
+  # class String ...
+
+  puts 'hello'.shout
+  puts 'the quick brown fox'.words
+expected_output: |
+  HELLO!
+  4
+explanation: |
+  One way to write it:
+
+    class String
+      def shout
+        upcase + '!'
+      end
+
+      def words
+        spaces = 0
+        each_char { |c| spaces += 1 if c == ' ' }
+        spaces + 1
+      end
+    end
+
+  Ruby also has count(' '),
+  which counts the spaces for you, and split, which splits a string into
+  an array of words: split.length works too.

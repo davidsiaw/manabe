@@ -1,0 +1,41 @@
+id: string-literals
+title: Fun with Strings
+type: code
+language: ruby
+body: |
+  A string literal is text written between quotes, single or double:
+
+    puts 'Hello World'
+    puts "Hello World"
+
+  Both print the same thing; the difference between them comes in a later
+  lesson. Two quotes with nothing between them, '' or "", make an empty
+  string.
+
+  + joins two strings into a new one, and * repeats a string:
+
+    puts 'I like' + ' Ruby'   # I like Ruby
+    puts 'Ha' * 3             # HaHaHa
+
+  To put a single quote inside a single-quoted string, put a backslash in
+  front of it, so that Ruby does not take it for the end of the string:
+
+    puts 'It\'s my Ruby'      # It's my Ruby
+
+  The backslash is the escape character: it changes the meaning of the
+  character after it. \\ is how you write one backslash itself.
+question: |
+  Print a line of 20 = signs, then It's my Ruby, then another line of 20 =
+  signs. Make the lines of = signs with *, not by typing 20 of them.
+starter_code: |
+  # 20 = signs, It's my Ruby, 20 = signs
+expected_output: |
+  ====================
+  It's my Ruby
+  ====================
+explanation: |
+  One way to write it:
+
+    puts '=' * 20
+    puts 'It\'s my Ruby'
+    puts '=' * 20

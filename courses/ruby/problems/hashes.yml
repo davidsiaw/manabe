@@ -1,0 +1,53 @@
+id: hashes
+title: Hashes
+type: code
+language: ruby
+body: |
+  A hash is like an array, but indexed by keys of your choice instead of
+  by position. Each entry is a key and its value, written key => value,
+  between braces:
+
+    h = {'dog' => 'canine', 'cat' => 'feline', 12 => 'dodecine'}
+    puts h.length     # 3
+    puts h['dog']     # canine
+    puts h[12]        # dodecine
+    p h['cow']        # nil: no such key
+
+  Keys can be any objects, as can values. Assigning to a key adds it, or
+  replaces its value:
+
+    h['cow'] = 'bovine'
+
+  Hash.new makes an empty hash. Asking a hash for a missing key gives its
+  default value, which is nil unless you give Hash.new another one. That
+  is handy for counting:
+
+    counts = Hash.new(0)
+    counts['a'] += 1     # counts['a'] was 0, the default; now it is 1
+
+  each gives the block two parameters, a key and its value, in the order
+  they were added:
+
+    h.each do |key, value|
+      puts "#{key} is #{value}"
+    end
+question: |
+  Count how many times each word appears in the array in the starter, with
+  Hash.new(0). Then print each word and its count, as shown, with each.
+starter_code: |
+  words = %w{the cat sat on the mat the end}
+expected_output: |
+  the: 3
+  cat: 1
+  sat: 1
+  on: 1
+  mat: 1
+  end: 1
+explanation: |
+  One way to write it:
+
+    counts = Hash.new(0)
+    words.each { |w| counts[w] += 1 }
+    counts.each do |word, count|
+      puts "#{word}: #{count}"
+    end

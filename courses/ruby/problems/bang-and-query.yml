@@ -1,0 +1,54 @@
+id: bang-and-query
+title: Methods Ending in ! and ?
+type: multiple_choice
+body: |
+  Many methods come in pairs, one with a ! (a "bang") at the end. The plain
+  one returns a new object and leaves its receiver alone. The bang one
+  changes the receiver itself, in place:
+
+    word = 'Hello'
+    puts word.upcase     # HELLO
+    puts word            # Hello: unchanged
+    word.upcase!
+    puts word            # HELLO: changed
+
+  The ! is a warning label: this one is the dangerous version. upcase and
+  upcase!, downcase and downcase!, and reverse and reverse! are such
+  pairs.
+
+  A name ending in ? asks a question, and usually returns true or false:
+
+    puts ''.empty?        # true
+    puts 7.zero?          # false
+
+  You can name your own methods this way too: def even?(n) or def
+  shout!(s).
+
+  This matters because variables refer to objects; they are not copies of
+  them. A method that is passed a string gets the same string object the
+  caller has, so calling a bang method on it changes the caller's string
+  too.
+question: |
+  What does this print?
+
+    def quieten(text)
+      text.downcase!
+    end
+
+    message = 'STOP'
+    quieten(message)
+    puts message
+choices:
+  - id: a
+    text: STOP
+  - id: b
+    text: stop
+    correct: true
+  - id: c
+    text: nil
+  - id: d
+    text: Nothing; it stops with an error
+explanation: |
+  text and message are two names for the same string object, and downcase!
+  changes that object. With text.downcase, without the !, a new string
+  would be made and message would still be STOP.

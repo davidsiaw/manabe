@@ -1,0 +1,37 @@
+id: precedence
+title: Operator Precedence
+type: multiple_choice
+body: |
+  When an expression has several operators, some are worked out before
+  others, just as in school arithmetic. From first to last, the ones met so
+  far go:
+
+  1. ** (power)
+  2. - in front of a number, as in -5
+  3. *, / and %
+  4. + and -
+
+  Anything in parentheses is worked out first, so you can always add them
+  to make the order clear, or to change it:
+
+    puts 2 + 3 * 4      # 14
+    puts((2 + 3) * 4)   # 20
+
+  Operators of the same level are worked out left to right: 12 / 2 * 3 is
+  (12 / 2) * 3, which is 18.
+
+  If you know C or Java, note that Ruby has no ++ or -- operator, before or
+  after a variable. You will see shorter ways to add to a number soon.
+question: What does puts 2 + 2 ** 3 * 2 print?
+choices:
+  - id: a
+    text: "18"
+    correct: true
+  - id: b
+    text: "130"
+  - id: c
+    text: "64"
+  - id: d
+    text: "4096"
+explanation: |
+  ** comes first: 2 ** 3 is 8. Then *: 8 * 2 is 16. Then +: 2 + 16 is 18.

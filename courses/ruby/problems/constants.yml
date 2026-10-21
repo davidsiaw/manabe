@@ -1,0 +1,81 @@
+id: constants
+title: Constants and Class Variables
+type: code
+language: ruby
+body: |
+  A constant is not frozen. It is a name for one object, and Ruby warns if
+  you point the name at another object. But the object can still change,
+  if it is mutable:
+
+    A_CONST = 'Doshi'
+    B_CONST = A_CONST
+    A_CONST[0] = 'J'    # changes the string itself
+    puts A_CONST        # Joshi
+    puts B_CONST        # Joshi: the same string
+
+  A constant does not exist until it is assigned, and a constant should not
+  be assigned inside a method. Constants are usually set in a class or
+  module, and reached from outside with ::.
+
+  A class variable, whose name starts with @@, belongs to a class and is
+  shared by all its objects, and by its class methods. There is only one
+  of each per class. A class method can read and set it:
+
+    class TestVar
+      @@count = 0
+
+      def initialize
+        @@count += 1
+      end
+
+      def self.count
+        @@count
+      end
+
+      def self.count=(value)
+        @@count = value
+      end
+    end
+
+  Each new TestVar adds one to the shared @@count, and TestVar.count = 10
+  calls the class's setter, just as an instance's setter is called.
+question: |
+  Write a class Ticket with a constant PREFIX, 'TKT', and a class variable
+  that counts tickets made. Each ticket gets the next number when it is
+  made; its code method returns PREFIX, a dash and the number. A class
+  method issued returns how many tickets were made. Make the starter
+  print the expected output.
+starter_code: |
+  # class Ticket ...
+
+  a = Ticket.new
+  b = Ticket.new
+  puts a.code
+  puts b.code
+  puts Ticket.issued
+  puts Ticket::PREFIX
+expected_output: |
+  TKT-1
+  TKT-2
+  2
+  TKT
+explanation: |
+  One way to write it:
+
+    class Ticket
+      PREFIX = 'TKT'
+      @@issued = 0
+
+      def initialize
+        @@issued += 1
+        @number = @@issued
+      end
+
+      def code
+        "#{PREFIX}-#{@number}"
+      end
+
+      def self.issued
+        @@issued
+      end
+    end

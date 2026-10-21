@@ -1,0 +1,59 @@
+id: elsif-and-or
+title: elsif, and, or, not
+type: code
+language: ruby
+body: |
+  To choose between more than two paths, add elsif ("else if") branches.
+  Ruby tries each condition in turn and runs the first branch whose
+  condition is true:
+
+    name = 'Sunil'
+    if name == 'Satish'
+      puts 'What a nice name!'
+    elsif name == 'Sunil'
+      puts 'Another nice name!'
+    else
+      puts 'Hello, stranger.'
+    end
+
+  Conditions can be combined:
+
+  - a && b is true when both are true ("and").
+  - a || b is true when at least one is true ("or").
+  - !a is true when a is false ("not").
+
+    if name == 'Satish' || name == 'Sunil'
+      puts 'What a nice name!'
+    end
+
+  Ruby also has the words and, or and not, which do the same jobs but bind
+  more loosely than everything else, which matters in the next lesson. In
+  conditions like these, use && and ||.
+question: |
+  The starter has a score out of 100. Print A for 80 or more, B for 60 up
+  to 79, C for 40 up to 59 and Fail below 40. Then print Perfect! if the
+  score is exactly 100, and Keep going otherwise, using a second if.
+  Test it with a few scores, then leave it at 85.
+starter_code: |
+  score = 85
+expected_output: |
+  A
+  Keep going
+explanation: |
+  One way to write it:
+
+    if score >= 80
+      puts 'A'
+    elsif score >= 60
+      puts 'B'
+    elsif score >= 40
+      puts 'C'
+    else
+      puts 'Fail'
+    end
+
+    if score == 100
+      puts 'Perfect!'
+    else
+      puts 'Keep going'
+    end

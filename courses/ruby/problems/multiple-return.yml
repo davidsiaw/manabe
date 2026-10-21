@@ -1,0 +1,48 @@
+id: multiple-return
+title: Returning Several Values
+type: code
+language: ruby
+body: |
+  Give return more than one value and the method returns them in an
+  array. Parallel assignment then unpacks the array into variables:
+
+    def first_square_over(limit)
+      10.times do |num|
+        square = num * num
+        return num, square if square > limit
+      end
+    end
+
+    num, square = first_square_over(30)
+    puts num       # 6
+    puts square    # 36
+
+  The return inside the block leaves the whole method, not just the block.
+
+  The same rules work in any assignment:
+
+    a = 1, 2, 3      # a is [1, 2, 3]
+    b, c = [4, 5]    # b is 4, c is 5: the array is unpacked
+    d, = 6, 7        # d is 6: the comma makes it a list of one
+question: |
+  Write a method min_max(*numbers) that returns the smallest and the
+  largest of its arguments (use sort). Collect them with parallel
+  assignment, and print Smallest: 2 and Largest: 9 for 5, 2, 9, 4.
+starter_code: |
+  def min_max(*numbers)
+    # your code here
+  end
+expected_output: |
+  Smallest: 2
+  Largest: 9
+explanation: |
+  One way to write it:
+
+    def min_max(*numbers)
+      sorted = numbers.sort
+      return sorted.first, sorted.last
+    end
+
+    low, high = min_max(5, 2, 9, 4)
+    puts "Smallest: #{low}"
+    puts "Largest: #{high}"

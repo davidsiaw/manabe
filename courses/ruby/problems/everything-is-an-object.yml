@@ -1,0 +1,39 @@
+id: everything-is-an-object
+title: Everything Is an Object
+type: multiple_choice
+body: |
+  In Ruby, every value you work with is an object: numbers, strings, even
+  nothing at all. Each object belongs to a class, which says what kind of
+  thing it is and which methods it has. Ask any object for its class with
+  the class method:
+
+    puts 7.class          # Integer
+    puts 7.5.class        # Float
+    puts 'hi'.class       # String
+
+  nil is Ruby's value for "nothing" or "no value", and it is an object too:
+
+    puts nil.class        # NilClass
+
+  Objects are like the nouns of a program, and methods are the verbs that
+  they do. Strings, for instance, can tell you their length and give you
+  an uppercase copy of themselves:
+
+    puts 'I love Ruby'.length     # 11
+    puts 'ruby'.upcase            # RUBY
+
+  If the language you know has "primitive" types that are not objects,
+  Ruby has none.
+question: What does puts 'Elephants Like Peanuts'.length print?
+choices:
+  - id: a
+    text: "20"
+  - id: b
+    text: "22"
+    correct: true
+  - id: c
+    text: "3"
+  - id: d
+    text: String
+explanation: |
+  length counts every character, spaces included: 9 + 1 + 4 + 1 + 7 = 22.

@@ -1,0 +1,44 @@
+id: symbols
+title: Symbols
+type: multiple_choice
+body: |
+  A symbol looks like a name with a colon in front: :action, :line_items,
+  :yes. You do not declare or assign one; writing it is enough. Read the
+  colon as "the thing named": :id is the name id, where plain id would be
+  the value of a variable called id.
+
+  For any name there is exactly one symbol object, wherever it appears in
+  the program. Strings are different: each string literal makes a new
+  object, even with the same characters.
+
+    puts 'yes'.object_id == 'yes'.object_id    # false: two strings
+    puts :yes.object_id == :yes.object_id      # true: one symbol
+
+  That makes symbols cheap to compare and to keep, so Ruby uses them for
+  names: of methods, of variables, of options. A rule of thumb:
+
+  - when the characters matter, use a string;
+  - when it is a name or a label, and only its identity matters, use a
+    symbol.
+
+    answer = :yes
+    puts 'You are a Rubyist' if answer == :yes
+
+  to_sym turns a string into a symbol, and to_s a symbol into a string:
+
+    p 'string'.to_sym    # :string
+    p :symbol.to_s       # "symbol"
+question: What does puts :name.to_s.class print?
+choices:
+  - id: a
+    text: String
+    correct: true
+  - id: b
+    text: Symbol
+  - id: c
+    text: name
+  - id: d
+    text: ":name"
+explanation: |
+  The methods run left to right: :name.to_s is the string 'name', and its
+  class is String.

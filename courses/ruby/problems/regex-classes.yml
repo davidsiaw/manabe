@@ -1,0 +1,43 @@
+id: regex-classes
+title: Character Classes
+type: multiple_choice
+body: |
+  Most characters in a regexp simply match themselves: /a/ matches any
+  string with an a in it. A few have special meanings:
+  ^ $ ? . / \ [ ] { } ( ) + * and |. To match one of those as itself, put
+  a backslash in front: /\?/ matches a question mark.
+
+  A dot matches any one character except a new line, so /.ejected/
+  matches dejected, rejected, and also 8ejected.
+
+  To allow only some characters, list them in square brackets. That is a
+  character class:
+
+    /[dr]ejected/     # dejected or rejected, and nothing else
+    /[a-z]/           # any lowercase letter: - makes a range
+    /[A-Fa-f0-9]/     # any hexadecimal digit
+    /[^A-Fa-f0-9]/    # ^ first means: any character NOT listed
+
+  Some classes are common enough to have short names:
+
+  - \d is any digit, the same as [0-9];
+  - \w is any letter, digit or underscore;
+  - \s is any whitespace: a space, tab or new line.
+
+  In capitals they mean the opposite: \D is anything but a digit, \W
+  anything but a letter, digit or underscore, \S anything but whitespace.
+question: Which string does /[^aeiou]at/ match?
+choices:
+  - id: a
+    text: cat
+    correct: true
+  - id: b
+    text: eat
+  - id: c
+    text: at
+  - id: d
+    text: oat
+explanation: |
+  The pattern needs exactly one character that is not a vowel, followed by
+  at. eat and oat start with a vowel, and at has no character before the
+  at at all.

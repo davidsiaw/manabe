@@ -1,0 +1,33 @@
+id: self-main
+title: Where Is the Object?
+type: multiple_choice
+body: |
+  Every method is called on an object, the receiver: in 'hi'.upcase, it is
+  'hi'. So what is the receiver of puts, or of a method you wrote at the
+  top of your program, called with no dot at all?
+
+  When a method is called without a receiver, it is called on whatever
+  object is current at that point. Ruby always has a current object, and
+  calls it self. At the top of a program, outside everything else, self is
+  a special object that Ruby creates to stand for the program itself, and
+  that object calls itself main:
+
+    puts self      # main
+
+  So puts 'Hi' means "call puts on self, with 'Hi' as the argument".
+  self will change once you start writing classes; a later lesson is all
+  about it.
+question: What does puts self print at the top level of a program?
+choices:
+  - id: a
+    text: main
+    correct: true
+  - id: b
+    text: nil
+  - id: c
+    text: Object
+  - id: d
+    text: Nothing, as self is not defined there
+explanation: |
+  At the top level, self is the main object, which describes itself as
+  main.

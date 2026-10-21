@@ -1,0 +1,33 @@
+id: big-numbers
+title: Numbers Without Limits
+type: multiple_choice
+body: |
+  In many languages an integer has a fixed size, and a sum that grows too
+  big overflows into nonsense. Ruby's integers grow as large as they need
+  to:
+
+    puts 2 ** 64     # 18446744073709551616
+    puts 2 ** 100    # 1267650600228229401496703205376
+
+  Ruby keeps small integers in a fast, compact form and switches to a
+  bigger one when a number outgrows it. Old Ruby versions called the two
+  forms Fixnum and Bignum; today both are simply Integer, and you never
+  have to think about which one you have.
+
+  Floats are different: they have a fixed size, the same double-precision
+  numbers most languages use, so they hold about 15 significant digits and
+  are not always exact.
+question: What does puts 10 ** 20 print?
+choices:
+  - id: a
+    text: "100000000000000000000"
+    correct: true
+  - id: b
+    text: "1.0e+20"
+  - id: c
+    text: A negative number, because the integer overflowed
+  - id: d
+    text: An error
+explanation: |
+  10 and 20 are integers, so the result is an integer, and Ruby's integers
+  have no upper limit: a 1 followed by twenty zeros.

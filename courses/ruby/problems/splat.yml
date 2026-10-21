@@ -1,0 +1,53 @@
+id: splat
+title: Any Number of Arguments
+type: code
+language: ruby
+body: |
+  A parameter with an asterisk in front, the splat, collects any number of
+  arguments into an array. With it, a method can be called with many
+  arguments, or none:
+
+    def show(*items)
+      items.inspect
+    end
+
+    puts show('hello', 'world')    # ["hello", "world"]
+    puts show                      # []
+
+  inspect returns the string that p would print. p is in fact puts with
+  inspect instead of to_s.
+
+  The splat parameter can go anywhere in the list; the other parameters
+  take their arguments first:
+
+    def ends(first, *middle, last)
+      "#{first} #{middle.length} #{last}"
+    end
+
+    puts ends(1, 2, 3, 4)          # 1 2 4
+
+  There is no limit to how many arguments a method can take.
+question: |
+  Write a method total(*numbers) that returns the sum of all its
+  arguments, and 0 when there are none. Print total(1, 2, 3), total(10)
+  and total.
+starter_code: |
+  def total(*numbers)
+    # your code here
+  end
+expected_output: |
+  6
+  10
+  0
+explanation: |
+  One way to write it:
+
+    def total(*numbers)
+      sum = 0
+      numbers.each { |n| sum += n }
+      sum
+    end
+
+    puts total(1, 2, 3)
+    puts total(10)
+    puts total

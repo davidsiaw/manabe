@@ -1,0 +1,38 @@
+id: print-and-p
+title: puts, print and p
+type: code
+language: ruby
+body: |
+  puts is not the only way to show something. There are three you will see
+  all the time:
+
+    puts 'Hi'    # Hi, then a new line
+    print 'Hi'   # Hi, and no new line
+    p 'Hi'       # "Hi", then a new line
+
+  print leaves the cursor where the text ended, so the next thing printed
+  carries on along the same line. p shows a value the way you would write it
+  in Ruby, so a string comes out with quotes around it. That makes p handy
+  for checking exactly what something is.
+
+  puts, print and p are methods: named pieces of code that do a job. The
+  text after the name is the argument, what you give the method to work on.
+  The parentheses around arguments are usually optional, so these two lines
+  are the same:
+
+    puts 'Hi'
+    puts('Hi')
+question: |
+  Using print twice and then puts once, print Hello, Ruby world on a single
+  line. (Each of the three should print one word, with the spaces and comma
+  where they need to be.)
+starter_code: |
+  print 'Hello, '
+expected_output: |
+  Hello, Ruby world
+explanation: |
+  print does not end the line, so the three pieces join up:
+
+    print 'Hello, '
+    print 'Ruby '
+    puts 'world'

@@ -1,0 +1,50 @@
+id: scope
+title: Scope
+type: multiple_choice
+body: |
+  A variable's scope is the part of the program where its name means
+  something. A def starts a new local scope: local variables from outside
+  the method cannot be seen inside it, and the method's own local
+  variables, its parameters included, vanish when it returns.
+
+    greeting = 'Hello'
+
+    def say_hi
+      puts greeting    # NameError: greeting means nothing in here
+    end
+
+  To get a value into a method, pass it as an argument. To get one out,
+  return it.
+
+  Global variables, whose names start with $, can be seen everywhere, and
+  never go out of scope. That is exactly why experienced Rubyists avoid
+  them: any part of a program can change one, so parts of the program
+  become tangled together. Ruby itself sets a few, such as $0, the name of
+  the program file being run.
+
+  The class and module definitions met later start new local scopes too.
+question: |
+  What happens when this runs?
+
+    count = 5
+
+    def show_count
+      count = 10
+      puts count
+    end
+
+    show_count
+    puts count
+choices:
+  - id: a
+    text: It prints 10, then 5
+    correct: true
+  - id: b
+    text: It prints 10, then 10
+  - id: c
+    text: It prints 5, then 5
+  - id: d
+    text: It stops with a NameError
+explanation: |
+  The count inside the method is a different variable, local to the
+  method. Assigning it does not touch the count outside.

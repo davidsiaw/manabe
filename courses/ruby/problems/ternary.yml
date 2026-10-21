@@ -1,0 +1,36 @@
+id: ternary
+title: "The ?: Operator"
+type: code
+language: ruby
+body: |
+  For an if and else that each just give a value, there is a compact form,
+  the conditional operator:
+
+    condition ? value_if_true : value_if_false
+
+  Ruby works out the condition. If it counts as true, the whole expression
+  is the value after the ?; otherwise it is the value after the :.
+
+    age = 15
+    puts age < 18 ? 'minor' : 'adult'        # minor
+
+    status = age < 18 ? 'minor' : 'adult'    # it can be assigned, too
+
+  It is called the ternary operator, as it is the only one with three
+  parts. Keep it for short choices; an if reads better for anything long.
+question: |
+  Use ?: twice. First print even or odd for the number in the starter. Then
+  store in a variable called word either item or items, depending on
+  whether count is 1, and print the line You have 3 items using it.
+starter_code: |
+  number = 7
+  count = 3
+expected_output: |
+  odd
+  You have 3 items
+explanation: |
+  One way to write it:
+
+    puts number % 2 == 0 ? 'even' : 'odd'
+    word = count == 1 ? 'item' : 'items'
+    puts "You have #{count} #{word}"

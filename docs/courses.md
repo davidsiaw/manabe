@@ -20,7 +20,7 @@ The courses are described below, under "The courses". Text is plain: the fronten
 | Course | Language | Problems | What it is |
 |---|---|---|---|
 | `rust-basics` | rust | 312, 169 of them programs run on the learner's computer | All 21 chapters of The Rust Programming Language |
-| `ruby-basics` | ruby | 10, 8 of them programs run in the browser | Ruby from puts to methods, on mruby |
+| `ruby` | ruby | 86, 51 of them programs run in the browser | All of Core Ruby, following the topics of RubyLearning's Ruby Study Notes |
 | `zig-basics` | zig | 168, 100 of them programs: 89 compiled and run in the browser, 11 run on the learner's computer | All 17 chapters of Introduction to Zig |
 | `git-basics` | shell | 6, all multiple choice | What Git tracks, and the everyday commands |
 
@@ -45,6 +45,16 @@ How the chapters are written, so that the next ones match:
 - **Problem ids are never renamed or removed**, as completions refer to them; reordering sections is fine. Adding problems makes earlier completions incomplete (progress.md), which is expected.
 
 Every program was checked with rustc 1.99.1 (courses/README.md, "Checking code problems"). Nothing re-checks them automatically yet (roadmap.md).
+
+### ruby: where it stands
+
+It covers the topics of [Satish Talim's Ruby Study Notes](https://rubylearning.com/satishtalim/tutorial.html), from "First Ruby Program" to "Constants"; the installation pages are left out. That material is not openly licensed, so the text is original and the examples are new or changed; the course description names the source.
+
+- **Every piece of syntax is explained before it is used**, in the body of the lesson that introduces it or an earlier one. The original does not do this (its Features page shows blocks, modules and classes on page two, and Numbers uses `def`, splats and `if`), so the order differs: interpolation and `if`/`while` come early, `attr_reader` comes before the inheritance lessons that use it, and `%w`, splats and `Hash.new` wait for arrays and hashes. Keep it that way when editing: a new lesson's examples, starter and choices may only use what came before it.
+- **What mruby cannot run is multiple choice**: regular expressions (mruby is built without `Regexp`), `require`, `Logger`, `Marshal`, `strftime`, `gets`/`ARGV`/`ENV`, and `protected` and singleton methods defined at the top level, which mruby 3.4 gets wrong (both come out private). `files` does run: mruby's `File` works on the browser's in-memory filesystem.
+- Ruby 3.4 behaviour is taught where it differs from the original (Ruby 1.9): one `Integer` class rather than Fixnum and Bignum, `FrozenError`, the `{key: value}` inspect format, and literal strings that warn when changed (`appending` uses `.dup`).
+
+Every code problem's solution was run on the frontend's mruby and on CRuby 3.4 with `-w`, every starter was checked not to pass already, and every solution was submitted through the mobile app.
 
 ### zig-basics: where it stands
 

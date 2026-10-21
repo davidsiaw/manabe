@@ -1,0 +1,82 @@
+id: self
+title: self, the Current Object
+type: code
+language: ruby
+body: |
+  At every moment while a program runs, there is exactly one self, the
+  current object. Calls with no receiver go to it, and instance variables
+  belong to it. Which object it is follows a few rules:
+
+  - At the top level, outside any class or module, self is main, an
+    Object Ruby makes to stand for the program. A def there makes a
+    private method of Object.
+  - Inside a class or module definition, but outside its methods, self is
+    the class or module itself.
+  - Inside an instance method, self is the object the method was called
+    on.
+  - Inside a method defined on one particular object, self is that
+    object.
+
+    class S
+      puts self       # S
+      module M
+        puts self     # S::M: M is nested inside S
+      end
+
+      def m
+        self          # whichever S m is called on
+      end
+    end
+
+  A method can be defined on one single object, by naming the object in
+  the def: def obj.show. This is a singleton method, and only that object
+  has it. Class methods are just that, singleton methods of a class
+  object:
+
+    class S
+      def S.x         # or def self.x, as self is S here
+        puts self
+      end
+    end
+
+    S.x               # S
+question: |
+  Fill in the class Counter so that the starter prints the expected
+  output: a class method create that returns a new Counter, a method
+  increment that adds 1 to @count and returns self (so that calls can be
+  chained), and a reader count. Note what the class body itself prints.
+starter_code: |
+  class Counter
+    puts "Defining #{self}"
+    # ...
+  end
+
+  c = Counter.create
+  puts c.increment.increment.increment.count
+  puts c.increment.equal?(c)
+expected_output: |
+  Defining Counter
+  3
+  true
+explanation: |
+  One way to write it:
+
+    class Counter
+      puts "Defining #{self}"
+      attr_reader :count
+
+      def self.create
+        new
+      end
+
+      def initialize
+        @count = 0
+      end
+
+      def increment
+        @count += 1
+        self
+      end
+    end
+
+  Inside self.create, self is Counter, so new on its own is Counter.new.

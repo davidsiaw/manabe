@@ -1,0 +1,42 @@
+id: nil-and-false
+title: nil and false
+type: multiple_choice
+body: |
+  nil and false both count as false in a condition, and they are the only
+  two values that do. They are not the same thing, though:
+
+  - false is the answer "no", for example from 1 > 2. Its class is
+    FalseClass.
+  - nil means "no value at all". Its class is NilClass.
+
+  Both are ordinary objects, with methods you can call, like any other
+  value:
+
+    puts nil.class      # NilClass
+    puts false.class    # FalseClass
+    p nil.to_s          # "": nil as a string is empty
+
+  An if can fit on one line by putting then after the condition, as
+  case does: if ready then puts 'go' end.
+
+  Old tutorials also show NIL and FALSE. Those were spare names for nil
+  and false, and they were removed from Ruby long ago.
+question: |
+  Which of these prints yes?
+
+    if 0 then puts 'yes' end
+    if nil then puts 'yes' end
+    if false then puts 'yes' end
+choices:
+  - id: a
+    text: All three
+  - id: b
+    text: Only the first
+    correct: true
+  - id: c
+    text: Only the second
+  - id: d
+    text: None of them
+explanation: |
+  0 is an ordinary object, so it counts as true. Only nil and false count
+  as false.

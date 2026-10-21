@@ -1,0 +1,48 @@
+id: outside-world
+title: Input and the Outside World
+type: multiple_choice
+body: |
+  A program run in a terminal can talk to the person using it, and to the
+  system around it. In the browser here, a program can do none of these,
+  but you will use them on your own computer.
+
+  gets ("get string") waits for a line typed at the keyboard and returns
+  it, with the new line from the Enter key at the end. The string method
+  chomp returns a copy without that new line:
+
+    puts 'In which city do you stay?'
+    STDOUT.flush
+    city = gets.chomp
+    puts 'The city is ' + city
+
+  STDOUT is a constant for the program's standard output, where puts
+  writes. Ruby may hold output back and write it in batches, and flush
+  writes out anything held back, so the question shows before the program
+  waits.
+
+  Other links to the outside:
+
+  - ARGV is an array of the words typed after the program's name: after
+    ruby prog.rb 23 45, ARGV is ['23', '45'].
+  - ENV is a hash of the environment variables, so ENV['HOME'] is your
+    home directory.
+  - A string in backticks is run as a command, and its value is what the
+    command printed: puts `ls`. system('ls') runs a command too, and
+    returns whether it succeeded, as true, false or nil.
+  - exit ends the program straight away.
+question: |
+  A user runs a program with gets and types Pune, then presses Enter. What
+  does p gets show?
+choices:
+  - id: a
+    text: '"Pune\n"'
+    correct: true
+  - id: b
+    text: '"Pune"'
+  - id: c
+    text: Pune
+  - id: d
+    text: nil
+explanation: |
+  gets keeps the new line from the Enter key. gets.chomp would give
+  "Pune".

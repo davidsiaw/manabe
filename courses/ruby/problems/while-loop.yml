@@ -1,0 +1,52 @@
+id: while-loop
+title: while Loops
+type: code
+language: ruby
+body: |
+  while repeats its lines for as long as its condition stays true, checking
+  the condition before every round:
+
+    count = 0
+    while count < 3
+      puts count
+      count += 1
+    end
+    # prints 0, 1 and 2
+
+  If nothing in the loop ever makes the condition false, it runs forever.
+  Here, programs that run too long are stopped after a few seconds.
+
+  until is while turned around: it repeats as long as its condition is
+  false.
+
+    count = 3
+    until count == 0
+      puts count
+      count -= 1
+    end
+    # prints 3, 2 and 1
+question: |
+  Print a countdown from 10 to 1, one number per line, then Liftoff!
+starter_code: |
+  n = 10
+expected_output: |
+  10
+  9
+  8
+  7
+  6
+  5
+  4
+  3
+  2
+  1
+  Liftoff!
+explanation: |
+  One way to write it:
+
+    n = 10
+    while n > 0
+      puts n
+      n -= 1
+    end
+    puts 'Liftoff!'

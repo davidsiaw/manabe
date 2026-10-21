@@ -1,0 +1,60 @@
+id: freeze
+title: Frozen Objects
+type: code
+language: ruby
+body: |
+  A mutable object can change after it is made, as a string does with <<.
+  An immutable one never changes. Immutable objects are easier to reason
+  about: you can hand one to other code without fear of it being changed
+  behind your back, and they make good hash keys.
+
+  In Ruby, mutability belongs to each object, not to a class. Any object
+  can be made immutable by calling freeze, after which trying to change it
+  raises a FrozenError. frozen? tells you whether an object is frozen.
+
+    str = 'A simple string.'
+    str.freeze
+    begin
+      str << ' More.'
+    rescue => err
+      puts err.class          # FrozenError
+    end
+
+  rescue => err, with no class, rescues any StandardError into err.
+
+  freeze applies to the object, not to the variable. Anything that makes a
+  new object still works, and the variable can be pointed at the new one:
+
+    str += ' More.'           # a new string; str now refers to it
+
+  An assignment can be chained, as a = b = 'x', which makes a and b refer
+  to the same object.
+
+  Ruby itself copies and freezes the strings you use as hash keys, so that
+  changing the original string later does not change the key.
+question: |
+  Run the starter, and change only the line marked change me so that the
+  program prints the expected output: still frozen, but str grown to
+  ruby rocks.
+starter_code: |
+  a = b = 'ruby'
+  b.freeze
+  puts a.frozen?
+  str = a
+  str << ' rocks'   # change me
+  puts str
+  puts str.frozen?
+  puts a
+expected_output: |
+  true
+  ruby rocks
+  false
+  ruby
+explanation: |
+  One way to write it:
+
+    str += ' rocks'
+
+  << tries to change the frozen string a, b and str all refer to, and
+  raises. += makes a new, unfrozen string and points str at it, leaving
+  the frozen one alone.

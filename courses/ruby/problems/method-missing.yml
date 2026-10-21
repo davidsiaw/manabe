@@ -1,0 +1,47 @@
+id: method-missing
+title: method_missing
+type: code
+language: ruby
+body: |
+  When an object is sent a message, it looks for a method with that name,
+  in its class and then further up. If there is none, the program stops
+  with a NoMethodError, unless the object has a method called
+  method_missing. Then Ruby calls that instead, with the missing method's
+  name as a symbol, and the arguments that were passed:
+
+    class Dummy
+      def method_missing(name, *args)
+        puts "There's no method called #{name} here."
+      end
+    end
+
+    Dummy.new.anything    # There's no method called anything here.
+
+  method_missing is a safety net, a way to catch messages an object cannot
+  answer and handle them gracefully. It can also make an object answer
+  whole families of messages that it never defined.
+question: |
+  Write a class Echo whose objects answer any message by returning the
+  message's name followed by its arguments, separated by spaces, as
+  shown. Use method_missing.
+starter_code: |
+  # class Echo ...
+
+  e = Echo.new
+  puts e.hello
+  puts e.add(1, 2)
+  puts e.say('good', 'morning')
+expected_output: |
+  hello
+  add 1 2
+  say good morning
+explanation: |
+  One way to write it:
+
+    class Echo
+      def method_missing(name, *args)
+        text = name.to_s
+        args.each { |a| text += " #{a}" }
+        text
+      end
+    end

@@ -1,0 +1,61 @@
+id: arrays
+title: Arrays
+type: code
+language: ruby
+body: |
+  An array is a list of objects, in order, written between square
+  brackets with commas between them. Square brackets after an array read
+  one of its elements, by position, its index, counting from 0:
+
+    fruit = ['mango', 'apple', 'orange']
+    puts fruit[0]      # mango
+    puts fruit[2]      # orange
+    puts fruit[-1]     # orange: negative indexes count from the end
+    p fruit[3]         # nil: reading past the end is not an error
+
+  Each slot works like a variable. Assigning to one makes it point to a
+  different object, and assigning past the end makes the array grow:
+
+    fruit[1] = 'banana'
+    fruit[3] = 'kiwi'
+
+  An array can hold any mix of objects, other arrays included, and a
+  trailing comma after the last element is ignored:
+
+    mixed = [80.5, 'mango', [true, false],]
+
+  Some methods arrays have:
+
+    numbers = [45, 23, 1, 90]
+    numbers.length     # 4 (size is the same method)
+    numbers.first      # 45
+    numbers.last       # 90
+    numbers.sort       # [1, 23, 45, 90]: a new, sorted array
+    numbers.delete(23) # removes every 23, and the array closes up
+
+  puts prints each element of an array on its own line; p prints the
+  array as you would write it.
+
+    p numbers          # [45, 1, 90]
+question: |
+  Starting from the array in the starter: print its first element, its
+  last, and its length, one per line. Then replace 'Java' with 'Ruby',
+  delete 'Cobol', add 'Zig' at the end by assigning to the index after the
+  last, and print the sorted array with p.
+starter_code: |
+  languages = ['Python', 'Java', 'Cobol', 'Go']
+expected_output: |
+  Python
+  Go
+  4
+  ["Go", "Python", "Ruby", "Zig"]
+explanation: |
+  One way to write it:
+
+    puts languages.first
+    puts languages.last
+    puts languages.length
+    languages[1] = 'Ruby'
+    languages.delete('Cobol')
+    languages[languages.length] = 'Zig'
+    p languages.sort

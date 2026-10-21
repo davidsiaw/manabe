@@ -1,0 +1,40 @@
+id: class-objects
+title: Classes Are Objects Too
+type: multiple_choice
+body: |
+  Here is a brain bender: classes are objects too. Each one is an instance
+  of a class called Class. class Dog ... end makes a new Class object and
+  assigns it to the constant Dog.
+
+  So Dog.new is an ordinary method call: new is a method of the class
+  object Dog. It first allocates memory for a new object (with a method
+  called allocate) and then calls initialize on it. Making the object and
+  initializing it are separate steps, so initialize is not a constructor
+  in the sense of other languages; it only sets up an object that already
+  exists.
+
+  A method like new, called on the class rather than on its instances, is
+  a class method. Individual dogs do not have new: it would make no sense
+  for one dog to make another. A later lesson shows how to write class
+  methods of your own.
+
+  Remember the notation from the documentation lesson: Dog#bark is an
+  instance method, called on a dog, and Dog.new is a class method, called
+  on Dog. (Dog::new is another way to write a class method call.)
+
+  Some classes can also make objects without new, from a literal:
+  'hello' makes a String, :hello a Symbol, [1, 2] an Array,
+  {'IN' => 'India'} a Hash and 3..7 a Range.
+question: What does puts Dog.class print?
+choices:
+  - id: a
+    text: Class
+    correct: true
+  - id: b
+    text: Dog
+  - id: c
+    text: Object
+  - id: d
+    text: NilClass
+explanation: |
+  Dog is a class, and every class is an instance of Class.

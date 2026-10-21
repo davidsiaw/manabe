@@ -1,0 +1,52 @@
+id: logging
+title: Logging
+type: multiple_choice
+body: |
+  A program running on a server has nobody watching its output. Instead it
+  writes a log, a file of messages about what it did. Ruby's standard
+  library has a Logger class for this:
+
+    require 'logger'
+    log = Logger.new('app.log')
+
+    log.debug('Numerator: 10, denominator: 0')
+    log.error('Error in division!')
+
+  Each message has a severity. From least to most severe, the methods are
+  debug, info, warn, error and fatal. A logger has a level, and ignores
+  messages below it:
+
+    log.level = Logger::WARN    # now debug and info messages are dropped
+
+  So you write every message you might want, and choose at run time how
+  much to see. DEBUG is for step by step diagnosis; production
+  applications usually run at INFO or WARN. ERROR suits an exception the
+  program handled but someone should look at, and FATAL a problem the
+  program cannot recover from.
+
+  A logger can also start a new file every day or month, or whenever the
+  file gets too big:
+
+    Logger.new('app.log', 'daily')
+
+  Logger is not available in the browser here.
+question: |
+  A logger's level is Logger::ERROR. Which of these calls write a message?
+
+    log.info('starting')
+    log.warn('disk nearly full')
+    log.error('cannot save')
+    log.fatal('shutting down')
+choices:
+  - id: a
+    text: Only error and fatal
+    correct: true
+  - id: b
+    text: Only error
+  - id: c
+    text: All four
+  - id: d
+    text: warn, error and fatal
+explanation: |
+  The level is the lowest severity written. error is at that level and
+  fatal above it; info and warn are below it.

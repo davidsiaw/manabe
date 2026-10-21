@@ -1,0 +1,78 @@
+id: duck-typing
+title: Duck Typing
+type: code
+language: ruby
+body: |
+  Ruby cares less about what class an object is than about what it can
+  do. If an object walks like a duck and quacks like a duck, Ruby is happy
+  to treat it as a duck. This is duck typing:
+
+    class Duck
+      def quack
+        'Quack!'
+      end
+    end
+
+    class DuckRecording
+      def quack
+        play
+      end
+
+      def play
+        'Quack!'
+      end
+    end
+
+    def make_it_quack(duck)
+      duck.quack
+    end
+
+    puts make_it_quack(Duck.new)
+    puts make_it_quack(DuckRecording.new)
+
+  make_it_quack never checks a class. Anything with a quack method will
+  do; give it anything else and the NoMethodError tells you so. When you
+  do need to check, ask what the object can do, with respond_to?, rather
+  than what it is.
+question: |
+  Write classes Duck, Goose and Robot. Ducks and geese can swim, and
+  return Paddle paddle and Splash splash from swim; a robot cannot.
+  Then, for each object in the starter's array, print what it does when
+  told to swim, or that it cannot swim, using respond_to?.
+starter_code: |
+  # class Duck ...
+  # class Goose ...
+  # class Robot ...
+
+  [Duck.new, Goose.new, Robot.new].each do |thing|
+    # ...
+  end
+expected_output: |
+  Paddle paddle
+  Splash splash
+  Robot cannot swim
+explanation: |
+  One way to write it:
+
+    class Duck
+      def swim
+        'Paddle paddle'
+      end
+    end
+
+    class Goose
+      def swim
+        'Splash splash'
+      end
+    end
+
+    class Robot
+    end
+
+    [Duck.new, Goose.new, Robot.new].each do |thing|
+      if thing.respond_to?(:swim)
+        puts thing.swim
+      else
+        puts "#{thing.class} cannot swim"
+      end
+    end

@@ -1,0 +1,52 @@
+id: case-equality
+title: Ranges as Intervals
+type: code
+language: ruby
+body: |
+  A range can also be used as an interval, to test whether a value falls
+  inside it. === asks a range just that:
+
+    (1..10) === 5          # true
+    (1..10) === 15         # false
+    (1..10) === 3.14       # true
+    ('a'..'j') === 'c'     # true
+
+  === is the case equality operator, and case uses it to compare the value
+  with each when. A when that lists a range therefore matches any value in
+  the range:
+
+    case age
+    when 0..12 then 'child'
+    when 13..19 then 'teenager'
+    else 'adult'
+    end
+
+  With a string or a number in a when, === is the same as ==, which is why
+  the earlier case examples worked.
+question: |
+  Use each over the array in the starter, and a case with ranges, to print
+  each temperature and whether it is freezing (below 0), cold (0 to 14),
+  mild (15 to 24) or hot (25 and over), as shown.
+starter_code: |
+  temperatures = [-5, 0, 14, 15, 24, 30]
+expected_output: |
+  -5 freezing
+  0 cold
+  14 cold
+  15 mild
+  24 mild
+  30 hot
+explanation: |
+  One way to write it:
+
+    temperatures.each do |t|
+      kind = case t
+             when 0..14 then 'cold'
+             when 15..24 then 'mild'
+             else t < 0 ? 'freezing' : 'hot'
+             end
+      puts "#{t} #{kind}"
+    end
+
+  Ranges can be open ended, too: when ..-1 and when 25.. match everything
+  up to -1 and everything from 25.

@@ -1,0 +1,44 @@
+id: regex-match
+title: Regular Expressions
+type: multiple_choice
+body: |
+  A regular expression, or regexp, describes a pattern of characters to
+  look for in a string. Regexps look cryptic at first, but even the basics
+  are useful, and Ruby has them built in. You write one between slashes:
+
+    /Pune|Ruby/
+
+  This matches any string containing Pune or Ruby: | means "the thing on
+  the left or the thing on the right". A regexp is an object, of class
+  Regexp.
+
+  There are two everyday ways to test a string against a pattern:
+
+  - match, which both strings and regexps have, returns nil if there is
+    no match, and a MatchData object describing the match if there is.
+  - =~ returns the position where the match starts, or nil.
+
+    m = /Ruby/.match('The future is Ruby')
+    puts m.class                              # MatchData
+    puts 'The future is Ruby' =~ /Ruby/       # 14
+
+  As a MatchData counts as true and nil as false, either works as an if
+  condition.
+
+  The Ruby that runs programs in this browser, mruby, is built without
+  regular expressions, so the three regexp lessons are questions rather
+  than programs. Try the examples on your own computer.
+question: What does puts 'I love Ruby' =~ /love/ print?
+choices:
+  - id: a
+    text: "2"
+    correct: true
+  - id: b
+    text: "true"
+  - id: c
+    text: love
+  - id: d
+    text: "1"
+explanation: |
+  =~ gives the position of the first character of the match, counting
+  from 0: I is 0, the space 1, and love starts at 2.

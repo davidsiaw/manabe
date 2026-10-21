@@ -1,0 +1,46 @@
+id: or-operator
+title: What || Really Returns
+type: multiple_choice
+body: |
+  || does not just answer true or false. It returns its left side if that
+  counts as true, and otherwise its right side:
+
+    puts nil || 2008       # 2008
+    puts false || 2008     # 2008
+    puts 'ruby' || 2008    # ruby
+
+  That makes it a neat way to fall back on a default. And just as x += 1
+  is short for x = x + 1, x ||= value is short for x = x || value. It gives
+  x a value only if it does not have one that counts as true yet:
+
+    color = nil
+    color ||= 'blue'     # color was nil, so now it is 'blue'
+    color ||= 'red'      # color is already 'blue', so it stays 'blue'
+
+  && works the same way the other way round: it returns its left side if
+  that counts as false, and otherwise its right side.
+
+  The only difference between || and or (and between && and and) is
+  precedence: or and and bind more loosely than =. So x = nil or 5 means
+  (x = nil) or 5, and x ends up nil. That is why || is the one to use for
+  defaults.
+question: |
+  What does this print?
+
+    size = nil
+    size ||= 10
+    size ||= 20
+    puts size
+choices:
+  - id: a
+    text: "10"
+    correct: true
+  - id: b
+    text: "20"
+  - id: c
+    text: nothing, as size is nil
+  - id: d
+    text: "true"
+explanation: |
+  The first ||= finds size is nil and sets it to 10. The second finds 10,
+  which counts as true, and leaves it alone.

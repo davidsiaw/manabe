@@ -1,0 +1,43 @@
+id: quotes-and-escapes
+title: Single and Double Quotes
+type: multiple_choice
+body: |
+  Single and double quotes differ in how much work Ruby does on the string
+  while reading it.
+
+  In single quotes, Ruby does almost nothing. A backslash only means
+  something before another backslash or a single quote, and everything
+  else is kept exactly as typed. 'a\b' and 'a\\b' are the same string, a
+  backslash b.
+
+  In double quotes, Ruby does two things:
+
+  - Escape sequences starting with a backslash become special
+    characters: \n is a new line, \t a tab, \" a double quote and \\ a
+    backslash.
+  - #{ } is interpolated, as you have seen.
+
+    puts "Line one\nLine two"     # two lines
+    puts 'Line one\nLine two'     # one line, with \n in it
+
+  Each time a string literal is run, Ruby makes a new String object, so
+  two identical literals give two separate objects. The next lesson shows
+  why that can matter.
+question: |
+  What does this print?
+
+    n = 3
+    puts 'n is #{n}\n'
+choices:
+  - id: a
+    text: "n is 3, then an empty line"
+  - id: b
+    text: "n is #{n}\\n"
+    correct: true
+  - id: c
+    text: "n is 3\\n"
+  - id: d
+    text: "n is #{n}, then an empty line"
+explanation: |
+  Neither interpolation nor \n happens in single quotes, so the string is
+  printed exactly as it was typed.

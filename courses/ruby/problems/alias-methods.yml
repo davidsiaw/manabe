@@ -1,0 +1,40 @@
+id: alias-methods
+title: Aliasing a Method
+type: multiple_choice
+body: |
+  alias gives a method a second name:
+
+    alias new_name old_name
+
+  The new name does not refer to the old name. It refers to the method
+  body as it is at the moment alias runs. If old_name is later defined
+  again, old_name gets the new body, and new_name keeps the original.
+
+    def color
+      'red'
+    end
+
+    alias original_color color
+
+    def color
+      'blue'
+    end
+
+  Defining a method a second time, as color is here, is allowed: the new
+  definition simply replaces the old one.
+question: |
+  After the code above, what do puts color and then puts original_color
+  print?
+choices:
+  - id: a
+    text: blue, then red
+    correct: true
+  - id: b
+    text: blue, then blue
+  - id: c
+    text: red, then red
+  - id: d
+    text: An error, because color is defined twice
+explanation: |
+  original_color was made while color still returned 'red', and keeps that
+  body. The second def replaces only color.

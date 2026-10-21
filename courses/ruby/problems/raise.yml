@@ -1,0 +1,60 @@
+id: raise
+title: Raising Exceptions
+type: multiple_choice
+body: |
+  When something goes wrong, Ruby raises an exception: an object, of the
+  class Exception or one of its subclasses, that describes the problem.
+  Raising one stops what the program was doing. Unless some code is set
+  up to handle it, which is the next lesson, the program ends, and Ruby
+  prints the exception's message and where it happened.
+
+  You can raise one yourself with raise. Given just a message, it raises a
+  RuntimeError:
+
+    def check_age(age)
+      raise 'Age cannot be negative' if age < 0
+      puts "Age is #{age}"
+    end
+
+  Give it a class as well to raise something more specific:
+
+    raise ArgumentError, 'Argument is not numeric' unless x.is_a?(Numeric)
+
+  (Numeric is the superclass of Integer and Float, so is_a?(Numeric) is
+  true for any number.)
+
+  Ruby's built-in exceptions form a tree of classes. Most come from
+  StandardError: the "normal" errors programs are expected to handle, such
+  as ArgumentError, NameError and its subclass NoMethodError, TypeError,
+  ZeroDivisionError, IOError, and RuntimeError itself. The others report
+  deeper problems that programs normally leave alone.
+
+  To be more specific still, define an exception class of your own, as a
+  subclass of StandardError. It needs no body:
+
+    class NotInvertibleError < StandardError
+    end
+question: |
+  What does this print, before Ruby's error message?
+
+    def risky
+      puts 'before'
+      raise 'Oops'
+      puts 'after'
+    end
+
+    risky
+    puts 'done'
+choices:
+  - id: a
+    text: before
+    correct: true
+  - id: b
+    text: before, after
+  - id: c
+    text: before, done
+  - id: d
+    text: before, after, done
+explanation: |
+  raise stops the method on the spot, and as nothing handles the
+  exception, it ends the program too. Neither after nor done is printed.

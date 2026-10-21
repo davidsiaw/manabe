@@ -1,0 +1,70 @@
+id: setter-methods
+title: Setter Methods
+type: code
+language: ruby
+body: |
+  Instance variables cannot be reached from outside an object. To let
+  other code read one, give the class a method that returns it; to let
+  other code change one, give it a method that sets it:
+
+    class Dog
+      def initialize(breed)
+        @breed = breed
+      end
+
+      def name
+        @name
+      end
+
+      def set_name(new_name)
+        @name = new_name
+      end
+    end
+
+  A method name may end in =, so a nicer name for set_name is name=:
+
+    def name=(new_name)
+      @name = new_name
+    end
+
+  You could call it as d.name=('Benzy'), but Ruby lets you write
+
+    d.name = 'Benzy'
+
+  When Ruby sees a method name followed by a space and =, it reads it as
+  a call to the name= method, with the right-hand side as the argument.
+  Special rules like this one, which make code read better without being
+  strictly necessary, are called syntactic sugar.
+
+  An instance variable that has not been assigned yet is nil, so here
+  d.name is nil until a name is set.
+question: |
+  Write a class Thermostat that starts at 20 degrees, with a method
+  temperature that returns the temperature and a setter temperature= that
+  changes it. Make the starter print the expected output.
+starter_code: |
+  # class Thermostat ...
+
+  t = Thermostat.new
+  puts t.temperature
+  t.temperature = 23
+  puts t.temperature
+expected_output: |
+  20
+  23
+explanation: |
+  One way to write it:
+
+    class Thermostat
+      def initialize
+        @temperature = 20
+      end
+
+      def temperature
+        @temperature
+      end
+
+      def temperature=(degrees)
+        @temperature = degrees
+      end
+    end

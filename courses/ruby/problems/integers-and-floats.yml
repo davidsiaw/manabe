@@ -1,0 +1,48 @@
+id: integers-and-floats
+title: Integers and Floats
+type: code
+language: ruby
+body: |
+  Ruby has two everyday kinds of number. A number without a decimal point,
+  such as 0, 42 or -7, is an integer. A number with one, such as 3.14, is a
+  floating-point number, or float. A float needs at least one digit before
+  the point: write 0.5, not .5.
+
+  Underscores inside a number are ignored, so you can use them to group
+  digits the way you would use commas: 1_000_000 is a million.
+
+  The usual arithmetic works, and puts prints the result:
+
+    puts 1 + 2      # 3
+    puts 2 * 3      # 6
+    puts 10 - 11    # -1
+    puts 2 ** 10    # 1024: ** raises to a power
+
+  Division is where you have to pay attention. When both numbers are
+  integers, the answer is an integer too, and anything after the decimal
+  point is thrown away:
+
+    puts 7 / 2      # 3
+    puts 7.0 / 2    # 3.5
+
+  If either number is a float, the answer is a float.
+question: |
+  Print the number of seconds in a week (7 days of 24 hours of 60 minutes of
+  60 seconds), then on the next line how many whole hours there are in
+  1_000_000 seconds, then on the third line 9 divided by 2 as a float.
+  Let Ruby do the arithmetic.
+starter_code: |
+  # seconds in a week
+expected_output: |
+  604800
+  277
+  4.5
+explanation: |
+  One way to write it:
+
+    puts 7 * 24 * 60 * 60
+    puts 1_000_000 / (60 * 60)
+    puts 9.0 / 2
+
+  The second line is integer division: 1_000_000 / 3600 is 277.77..., and
+  the .77... is dropped.

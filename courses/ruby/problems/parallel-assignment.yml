@@ -1,0 +1,37 @@
+id: parallel-assignment
+title: Parallel Assignment
+type: code
+language: ruby
+body: |
+  One = can assign several variables at once. Put commas between the
+  names on the left and between the values on the right:
+
+    a, b = 1, 2       # a is 1, b is 2
+
+  All the values on the right are worked out first, and only then
+  assigned. That makes swapping two variables a one-liner, with no
+  temporary variable:
+
+    x, y = y, x
+
+  If there are more values than names, the extra values are dropped:
+
+    a, b = 1, 2, 3, 4    # a is 1, b is 2
+
+  Parallel assignment is neat, but for simple setup Rubyists still write
+  one assignment per line.
+question: |
+  The starter puts the values the wrong way round. Swap them in one
+  assignment, then print first and then second.
+starter_code: |
+  first = 'second'
+  second = 'first'
+expected_output: |
+  first
+  second
+explanation: |
+  One way to write it:
+
+    first, second = second, first
+    puts first
+    puts second

@@ -1,0 +1,61 @@
+id: defining-methods
+title: Writing Your Own Methods
+type: code
+language: ruby
+body: |
+  def starts a method definition and end finishes it. The parameters, the
+  names its arguments will have inside it, go in parentheses after the
+  method's name:
+
+    def hello
+      'Hello'
+    end
+
+    def greet(name)
+      'Hello ' + name
+    end
+
+    puts hello              # Hello
+    puts greet('Satish')    # Hello Satish
+
+  There is no return type to declare. A method returns the value of the
+  last expression it ran, so greet returns the joined string. return
+  leaves a method straight away with a value, which is only needed to
+  leave early:
+
+    def sign(n)
+      return 'negative' if n < 0
+      'not negative'
+    end
+
+  Parentheses are optional here too: def greet name and greet 'Satish'
+  work. The usual style is to use them when a method has parameters and
+  leave them out when it has none, and to leave a blank line between
+  method definitions.
+
+  A method must be defined before the line that calls it runs.
+question: |
+  Write a method square(n) that returns n times n. Then use a while loop to
+  print the line 1 squared is 1, and so on, for 1 to 5.
+starter_code: |
+  def square(n)
+    # your code here
+  end
+expected_output: |
+  1 squared is 1
+  2 squared is 4
+  3 squared is 9
+  4 squared is 16
+  5 squared is 25
+explanation: |
+  One way to write it:
+
+    def square(n)
+      n * n
+    end
+
+    i = 1
+    while i <= 5
+      puts "#{i} squared is #{square(i)}"
+      i += 1
+    end

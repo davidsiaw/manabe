@@ -1,0 +1,59 @@
+id: rescue
+title: Handling Exceptions with rescue
+type: code
+language: ruby
+body: |
+  To handle an exception, put the code that might raise it between begin
+  and end, and add a rescue clause. If anything in the begin part raises,
+  Ruby jumps to the rescue part, then carries on after the end:
+
+    begin
+      puts 'before the raise'
+      raise 'An error has occurred.'
+      puts 'never printed'
+    rescue
+      puts 'I am rescued.'
+    end
+    puts 'after the begin block'
+
+  A bare rescue handles any StandardError. Name a class to handle only
+  that kind, and add => and a variable to get the exception object, whose
+  message method returns its message:
+
+    begin
+      10 / 0
+    rescue ZeroDivisionError => e
+      puts "Problem: #{e.message}"    # Problem: divided by 0
+    end
+
+  A rescue matches the class it names and all its subclasses, so
+  rescue StandardError catches nearly everything.
+
+  A method's body works as if it were already inside a begin, so a rescue
+  can go straight into a def, before its end:
+
+    def safe_inverse(x)
+      1.0 / x
+    rescue TypeError
+      'not a number'
+    end
+question: |
+  Write a method divide(a, b) that returns a / b, but returns the string
+  cannot divide by zero when b is 0, by rescuing ZeroDivisionError. Print
+  the division of 100 by each number in the starter's array.
+starter_code: |
+  divisors = [4, 0, 25]
+expected_output: |
+  25
+  cannot divide by zero
+  4
+explanation: |
+  One way to write it:
+
+    def divide(a, b)
+      a / b
+    rescue ZeroDivisionError
+      'cannot divide by zero'
+    end
+
+    divisors.each { |d| puts divide(100, d) }

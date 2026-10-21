@@ -1,0 +1,40 @@
+id: string-equality
+title: Comparing Strings
+type: multiple_choice
+body: |
+  There are three ways to compare two strings:
+
+  - a == b is true when they have the same characters. This is the one you
+    will nearly always want.
+  - a.eql?(b) also compares the characters, and for strings gives the same
+    answer as ==.
+  - a.equal?(b) is true only when a and b are the very same object.
+
+  Every object has a number that identifies it, its object_id, and
+  equal? compares those:
+
+    s1 = 'Jonathan'
+    s2 = 'Jonathan'
+    s3 = s1
+
+    puts s1 == s2         # true: same characters
+    puts s1.equal?(s2)    # false: two literals made two objects
+    puts s1.equal?(s3)    # true: s3 names the object s1 names
+
+  s3 = s1 does not copy the string. It makes s3 another name for the same
+  object.
+question: |
+  With s1, s2 and s3 as above, what does puts s1.object_id ==
+  s3.object_id print?
+choices:
+  - id: a
+    text: "true"
+    correct: true
+  - id: b
+    text: "false"
+  - id: c
+    text: It depends on the string's contents
+  - id: d
+    text: An error
+explanation: |
+  s1 and s3 are names for the same object, which has one object_id.

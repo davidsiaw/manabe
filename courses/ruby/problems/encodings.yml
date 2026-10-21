@@ -1,0 +1,41 @@
+id: encodings
+title: Characters and Encodings
+type: multiple_choice
+body: |
+  To a computer, text is numbers. A character set gives each character a
+  number, its code point. Unicode, the set used almost everywhere today,
+  has room for over a million of them, and writes them as U+ followed by
+  hexadecimal digits. Hello is these five code points:
+
+    U+0048 U+0065 U+006C U+006C U+006F
+
+  An encoding says how code points are stored as bytes. UTF-8, the most
+  common, stores code points 0 to 127 in a single byte each, and larger
+  ones in two to four bytes. Code points 0 to 127 are the old ASCII
+  characters, so English text is the same bytes in ASCII and in UTF-8.
+
+  A string's bytes mean nothing unless you know their encoding. Ruby keeps
+  an encoding with every string, and reads source files as UTF-8 unless a
+  magic comment on the first line says otherwise:
+
+    # encoding: utf-8
+
+  ord gives the code point of a string's first character, as a decimal
+  number, and chr turns a number back into a character:
+
+    puts 'H'.ord     # 72, which is 48 in hexadecimal
+    puts 101.chr     # e
+question: What does puts 'A'.ord print, given that 'a'.ord is 97?
+choices:
+  - id: a
+    text: "65"
+    correct: true
+  - id: b
+    text: "97"
+  - id: c
+    text: "1"
+  - id: d
+    text: "U+0041"
+explanation: |
+  The uppercase letters come 32 places before the lowercase ones: A is 65,
+  or U+0041. ord returns a plain Integer.

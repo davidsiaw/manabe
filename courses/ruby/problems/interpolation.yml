@@ -1,0 +1,30 @@
+id: interpolation
+title: String Interpolation
+type: code
+language: ruby
+body: |
+  Building strings with + and to_s gets tiresome. Inside a double-quoted
+  string, #{ } runs the Ruby expression between the braces and puts its
+  value into the string, already converted to a string:
+
+    name = 'Satish'
+    puts "Hello, #{name}!"            # Hello, Satish!
+    puts "100 * 5 = #{100 * 5}"       # 100 * 5 = 500
+
+  This is interpolation, and it only happens in double quotes. In single
+  quotes, #{name} is just those seven characters:
+
+    puts 'Hello, #{name}!'            # Hello, #{name}!
+question: |
+  Using the two variables in the starter and interpolation, print
+  Asha is 30 years old and will be 40 in ten years. Work out the 40 inside
+  the string, from age.
+starter_code: |
+  name = 'Asha'
+  age = 30
+expected_output: |
+  Asha is 30 years old and will be 40 in ten years.
+explanation: |
+  One way to write it:
+
+    puts "#{name} is #{age} years old and will be #{age + 10} in ten years."

@@ -1,0 +1,42 @@
+id: time
+title: The Time Class
+type: multiple_choice
+body: |
+  A Time object is a moment. Time.now is the current one, and its methods
+  give its parts:
+
+    t = Time.now
+    puts t.year
+    puts t.month
+    puts t.hour
+
+  Ruby counts time from the first second of 1 January 1970, GMT, so
+  Time.at(0) is that moment.
+
+  strftime ("string format time") turns a time into text, following a
+  pattern in which % codes stand for parts of the time:
+
+    t.strftime('%d/%m/%Y %H:%M:%S')    # 10/09/2006 10:06:31
+    t.strftime('%A')                   # Sunday: the full day name
+    t.strftime('%B')                   # September: the full month
+    t.strftime('%a %b')                # Sun Sep: abbreviated
+    t.strftime('at %H:%M %Z')          # %Z: the time zone's name
+
+  Time is fine for everyday programs. For dates far in the past, there is
+  the Date class in the standard library. (The mruby in this browser has
+  Time but not strftime, and Time.now would make output that changes
+  every run, which is why this lesson has no program.)
+question: What does Time.now.strftime('%Y-%m-%d') return on 5 March 2025?
+choices:
+  - id: a
+    text: "2025-03-05"
+    correct: true
+  - id: b
+    text: "05-03-2025"
+  - id: c
+    text: "2025-3-5"
+  - id: d
+    text: "March 5, 2025"
+explanation: |
+  %Y is the year with its century, and %m and %d are the month and the day,
+  each as two digits.

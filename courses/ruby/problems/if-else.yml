@@ -1,0 +1,49 @@
+id: if-else
+title: if and else
+type: code
+language: ruby
+body: |
+  Comparisons give true or false:
+
+    5 > 4     # true
+    5 == 6    # false: == asks "is equal?"; a single = assigns
+    5 != 6    # true: != is "not equal"
+
+  The others are <, <=, >= and >. if runs some lines only when a condition
+  is true, else runs others when it is not, and end closes the whole thing:
+
+    temperature = 31
+    if temperature > 30
+      puts 'Hot'
+      puts 'Drink some water'
+    else
+      puts 'Not hot'
+    end
+
+  No parentheses are needed around the condition. You can put an if inside
+  another one; each needs its own end.
+
+  Anything can be a condition, not just a comparison. Only false and nil
+  count as false. Everything else counts as true, including 0 and the
+  empty string, which is a surprise if you come from a language where 0 is
+  false.
+question: |
+  The starter has a number of items in a basket. If there are more than 10,
+  print Free delivery, otherwise print Delivery costs 5. Then, after the
+  if, and whatever the count, print Thank you.
+starter_code: |
+  items = 12
+expected_output: |
+  Free delivery
+  Thank you
+explanation: |
+  One way to write it:
+
+    if items > 10
+      puts 'Free delivery'
+    else
+      puts 'Delivery costs 5'
+    end
+    puts 'Thank you'
+
+  Try items = 3 too: the program should then say Delivery costs 5.

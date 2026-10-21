@@ -1,0 +1,42 @@
+id: each
+title: Going Through an Array with each
+type: code
+language: ruby
+body: |
+  each runs a block once for every element of an array, passing the
+  element to the block's parameter. You do not need to count positions:
+
+    locations = ['Pune', 'Mumbai', 'Bangalore']
+    locations.each do |loc|
+      puts 'I love ' + loc + '!'
+    end
+
+  The name between the bars, the "goalposts", is yours to choose; make it
+  describe one element.
+
+  Typing quotes and commas for a list of words gets tedious. %w makes an
+  array of strings from words separated by spaces:
+
+    names = %w{ann richard william}
+    # the same as ['ann', 'richard', 'william']
+question: |
+  Using %w and each, print the line Hello, NAME! for each of ann, bob and
+  cleo, with the name in capitals. Then print the total number of letters
+  in the three names, added up inside an each.
+starter_code: |
+  total = 0
+expected_output: |
+  Hello, ANN!
+  Hello, BOB!
+  Hello, CLEO!
+  10
+explanation: |
+  One way to write it:
+
+    names = %w{ann bob cleo}
+    total = 0
+    names.each do |name|
+      puts "Hello, #{name.upcase}!"
+      total += name.length
+    end
+    puts total

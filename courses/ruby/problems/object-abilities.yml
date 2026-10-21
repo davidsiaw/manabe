@@ -1,0 +1,50 @@
+id: object-abilities
+title: What an Object Can Tell You
+type: code
+language: ruby
+body: |
+  A new object is not a blank slate. Every object is born knowing a few
+  dozen methods; d.methods returns them all as an array (of symbols).
+  Some of the most useful:
+
+  - object_id: a number that is unique to the object.
+  - class: the object's class.
+  - instance_of?(SomeClass): whether the object's class is exactly that
+    class.
+  - is_a?(SomeClass), also called kind_of?: the same, but also true for
+    the classes that class is built from, which comes later.
+  - respond_to?(:name): whether the object has a method of that name.
+    Give the name as a symbol, or a string.
+
+  respond_to? lets you check before you ask:
+
+    if d.respond_to?(:talk)
+      d.talk
+    else
+      puts "Sorry, d doesn't understand talk."
+    end
+
+  Usually it is better to ask what an object can do, with respond_to?,
+  than what it is, with instance_of?: what you care about is whether the
+  method is there.
+question: |
+  For each object in the starter's array, print its class, and then
+  can upcase or cannot upcase, depending on whether it responds to upcase,
+  as shown.
+starter_code: |
+  things = [42, 'forty-two', :forty_two, 4.2, nil]
+expected_output: |
+  Integer cannot upcase
+  String can upcase
+  Symbol can upcase
+  Float cannot upcase
+  NilClass cannot upcase
+explanation: |
+  One way to write it:
+
+    things.each do |thing|
+      ability = thing.respond_to?(:upcase) ? 'can' : 'cannot'
+      puts "#{thing.class} #{ability} upcase"
+    end
+
+  Symbols have an upcase too: :forty_two.upcase is :FORTY_TWO.

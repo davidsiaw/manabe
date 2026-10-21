@@ -1,0 +1,80 @@
+id: private-methods
+title: Public and Private Methods
+type: code
+language: ruby
+body: |
+  The only way to change an object from outside is to call its methods,
+  so controlling which methods can be called controls access to the
+  object. A good rule: never make public a method that could leave an
+  object in an invalid state. Ruby has three levels:
+
+  - public methods can be called by anyone. Methods are public unless you
+    say otherwise.
+  - private methods cannot be called with an explicit receiver, only on
+    self, with no dot. So only the object's own methods can call them.
+    initialize is always private.
+  - protected methods are in the next lesson.
+
+  Written alone on a line, private makes every method defined after it
+  private, and public switches back. Or give private the names of methods
+  already defined, as symbols:
+
+    class Account
+      def initialize(balance)
+        @balance = balance
+      end
+
+      def report
+        "Balance: #{formatted}"
+      end
+
+      private
+
+      def formatted
+        "$#{@balance}"
+      end
+    end
+
+    a = Account.new(10)
+    puts a.report       # Balance: $10
+    a.formatted         # NoMethodError: private method 'formatted' called
+
+  Ruby checks this as the program runs: the error comes only when a call
+  to a private method is actually made. public, private and protected
+  apply only to methods. Instance variables are always private, and the
+  only way to show one outside is a method.
+question: |
+  Write a class Password whose initialize takes a secret string, with a
+  public method check(guess) that returns Correct or Wrong, and a private
+  method secret that returns the stored string, used by check. Make the
+  starter print the expected output, then try adding puts pw.secret at
+  the end to see the error.
+starter_code: |
+  # class Password ...
+
+  pw = Password.new('ruby123')
+  puts pw.check('python')
+  puts pw.check('ruby123')
+expected_output: |
+  Wrong
+  Correct
+explanation: |
+  One way to write it:
+
+    class Password
+      def initialize(secret)
+        @secret = secret
+      end
+
+      def check(guess)
+        guess == secret ? 'Correct' : 'Wrong'
+      end
+
+      private
+
+      def secret
+        @secret
+      end
+    end
+
+  pw.secret stops the program with a NoMethodError, as secret is private.

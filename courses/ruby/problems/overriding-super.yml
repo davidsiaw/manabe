@@ -1,0 +1,91 @@
+id: overriding-super
+title: Overriding and super
+type: code
+language: ruby
+body: |
+  A subclass can override a method of its superclass by defining its own
+  method with the same name. Penguins are birds, but they do not fly:
+
+    class Bird
+      def fly
+        puts 'I am flying.'
+      end
+    end
+
+    class Penguin < Bird
+      def fly
+        puts "Sorry. I'd rather swim."
+      end
+    end
+
+  Inside the overriding method, super calls the superclass's method of the
+  same name. How it passes arguments depends on how you write it:
+
+  - super, alone, passes on the same arguments the current method got.
+  - super() passes no arguments at all.
+  - super(a, b) passes exactly those.
+
+    class Bicycle
+      attr_reader :gears, :seats
+
+      def initialize(gears = 1)
+        @seats = 1
+        @gears = gears
+      end
+    end
+
+    class Tandem < Bicycle
+      def initialize(gears)
+        super           # Bicycle's initialize, with gears
+        @seats = 2
+      end
+    end
+
+  Defining a method twice in the same class is allowed too: the second
+  definition simply replaces the first.
+question: |
+  Write a class Employee with a reader name, an initialize(name), and a
+  method pay that returns 1000. Write a subclass Manager whose initialize
+  takes a name and a bonus, passing the name on with super, and whose pay
+  returns the Employee pay plus the bonus, using super. Make the starter
+  print the expected output.
+starter_code: |
+  # class Employee ...
+  # class Manager ...
+
+  e = Employee.new('Ann')
+  m = Manager.new('Bob', 500)
+  puts "#{e.name} earns #{e.pay}"
+  puts "#{m.name} earns #{m.pay}"
+expected_output: |
+  Ann earns 1000
+  Bob earns 1500
+explanation: |
+  One way to write it:
+
+    class Employee
+      attr_reader :name
+
+      def initialize(name)
+        @name = name
+      end
+
+      def pay
+        1000
+      end
+    end
+
+    class Manager < Employee
+      def initialize(name, bonus)
+        super(name)
+        @bonus = bonus
+      end
+
+      def pay
+        super + @bonus
+      end
+    end
+
+  Plain super in Manager's initialize would pass both arguments on, and
+  Employee's initialize takes only one. In pay, plain super passes nothing,
+  as pay has no arguments.

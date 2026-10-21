@@ -1,0 +1,53 @@
+id: block-variables
+title: Block Variables
+type: multiple_choice
+body: |
+  A block sees the local variables around it, and can change them:
+
+    x = 10
+    5.times do |y|
+      x = y
+    end
+    puts x    # 4
+
+  A block's parameters are its own, though. A parameter with the same name
+  as an outside variable is a different variable, and hides the outside
+  one inside the block:
+
+    x = 10
+    5.times do |x|
+      puts x       # 0 to 4
+    end
+    puts x         # 10: untouched
+
+  To keep a block from changing outside variables by accident, list
+  block-local variables after a semicolon among its parameters. They are
+  new variables that exist only inside the block, even if a variable of
+  the same name exists outside:
+
+    x = 10
+    5.times do |y; x|
+      x = y
+    end
+    puts x         # 10
+question: |
+  What does this print?
+
+    total = 0
+    3.times do |i; total|
+      total = i * 100
+    end
+    puts total
+choices:
+  - id: a
+    text: "0"
+    correct: true
+  - id: b
+    text: "200"
+  - id: c
+    text: "300"
+  - id: d
+    text: An error, as total is defined twice
+explanation: |
+  total is block-local, so assigning it inside the block leaves the
+  outside total at 0. Without ; total, it would print 200.

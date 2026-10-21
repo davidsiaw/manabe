@@ -1,0 +1,66 @@
+id: yield
+title: Calling a Block with yield
+type: code
+language: ruby
+body: |
+  Any method can be called with a block. Inside the method, the keyword
+  yield runs the block, then carries on with the method:
+
+    def call_block
+      puts 'Start of method'
+      yield
+      yield
+      puts 'End of method'
+    end
+
+    call_block { puts 'In the block' }
+
+  prints Start of method, then In the block twice, then End of method.
+
+  Values given to yield are passed to the block's parameters:
+
+    def call_block
+      yield('hello', 99)
+    end
+
+    call_block { |str, num| puts str + ' ' + num.to_s }    # hello 99
+
+  And the block has a value, like a method: the value of its last
+  expression. That becomes the value of the yield:
+
+    def twice
+      yield + yield
+    end
+
+    puts twice { 21 }    # 42
+
+  If a method needs arguments as well as a block, the arguments come
+  first, in their parentheses, and the block after them:
+
+    verbose_greet('PuneRuby') { puts 'Hello' }
+question: |
+  Write a method each_even_up_to(limit) that yields every even number from
+  2 up to limit, in turn. Call it with 10 and a block that prints each
+  number squared.
+starter_code: |
+  def each_even_up_to(limit)
+    # your code here
+  end
+expected_output: |
+  4
+  16
+  36
+  64
+  100
+explanation: |
+  One way to write it:
+
+    def each_even_up_to(limit)
+      n = 2
+      while n <= limit
+        yield n
+        n += 2
+      end
+    end
+
+    each_even_up_to(10) { |n| puts n * n }

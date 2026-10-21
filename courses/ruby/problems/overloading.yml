@@ -1,0 +1,58 @@
+id: overloading
+title: Overloading Methods
+type: code
+language: ruby
+body: |
+  Some languages let you write two methods with the same name that take
+  different arguments. Ruby does not: a class has only one method of each
+  name. But a single method can look at what it was given and act
+  accordingly, which does the same job. A splat parameter collects
+  whatever arrived:
+
+    class Rectangle
+      # Rectangle.new([x, y], length, width), or
+      # Rectangle.new([x, y], [x2, y2])
+      def initialize(*args)
+        if args.size == 3
+          puts 'Corner, length and width'
+        elsif args.size == 2
+          puts 'Two corners'
+        else
+          puts 'This method takes either 2 or 3 arguments'
+        end
+      end
+    end
+
+  You can also check what kind of objects arrived, with is_a?. And when an
+  argument is itself an array, index twice to reach inside it: if
+  args[0] is [10, 23], then args[0][1] is 23.
+question: |
+  Write a method area(*args) that returns the area of a square when given
+  one number (its side), and of a rectangle when given two (its sides).
+  When given two arrays, [x1, y1] and [x2, y2], they are opposite corners:
+  return the rectangle's area from them (the width is x2 - x1, the height
+  y2 - y1). Print the three areas in the starter.
+starter_code: |
+  def area(*args)
+    # your code here
+  end
+
+  puts area(5)
+  puts area(3, 4)
+  puts area([1, 1], [4, 6])
+expected_output: |
+  25
+  12
+  15
+explanation: |
+  One way to write it:
+
+    def area(*args)
+      if args.size == 1
+        args[0] * args[0]
+      elsif args[0].is_a?(Array)
+        (args[1][0] - args[0][0]) * (args[1][1] - args[0][1])
+      else
+        args[0] * args[1]
+      end
+    end

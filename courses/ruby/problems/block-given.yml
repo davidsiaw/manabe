@@ -1,0 +1,48 @@
+id: block-given
+title: block_given?
+type: code
+language: ruby
+body: |
+  If a method calls yield but was called without a block, the program
+  stops with an error, no block given (LocalJumpError). A method that
+  works with or without a block can ask whether it got one, with
+  block_given?:
+
+    def try
+      if block_given?
+        yield
+      else
+        puts 'no block'
+      end
+    end
+
+    try                           # no block
+    try { puts 'hello' }          # hello
+    try do puts 'hello' end       # hello
+question: |
+  Write a method announce(text) that prints text in capitals if it was
+  called with no block, and otherwise prints whatever the block returns
+  when it is given text. Make the calls in the starter print the expected
+  output.
+starter_code: |
+  def announce(text)
+    # your code here
+  end
+
+  announce('hello')
+  announce('hello') { |t| t.reverse }
+  announce('hello') { |t| t * 2 }
+expected_output: |
+  HELLO
+  olleh
+  hellohello
+explanation: |
+  One way to write it:
+
+    def announce(text)
+      if block_given?
+        puts yield(text)
+      else
+        puts text.upcase
+      end
+    end

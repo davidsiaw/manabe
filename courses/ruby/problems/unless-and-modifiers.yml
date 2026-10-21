@@ -1,0 +1,47 @@
+id: unless-and-modifiers
+title: unless and Statement Modifiers
+type: code
+language: ruby
+body: |
+  unless is if turned around: its lines run when the condition is false or
+  nil. It can have an else, but unless with else is hard to read, so most
+  people use if then.
+
+    logged_in = false
+    unless logged_in
+      puts 'Please log in'
+    end
+
+  When an if or an unless guards a single statement, you can write the
+  condition after the statement instead. This is a statement modifier:
+
+    puts 'Enrolments are closed' if participants > 2500
+    puts 'Please log in' unless logged_in
+
+  while and until can be modifiers too:
+
+    n = 1
+    n *= 2 while n < 100
+    puts n                    # 128
+question: |
+  Using statement modifiers, print Fizz if the number in the starter is
+  divisible by 3, and Buzz if it is divisible by 5 (both, for 15). Then,
+  using an unless modifier, print Not divisible by 7 unless it is divisible
+  by 7. Finally, use a while modifier to double total until it is at least
+  1000, and print it.
+starter_code: |
+  number = 15
+  total = 3
+expected_output: |
+  Fizz
+  Buzz
+  Not divisible by 7
+  1536
+explanation: |
+  One way to write it:
+
+    puts 'Fizz' if number % 3 == 0
+    puts 'Buzz' if number % 5 == 0
+    puts 'Not divisible by 7' unless number % 7 == 0
+    total *= 2 while total < 1000
+    puts total

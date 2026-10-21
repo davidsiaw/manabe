@@ -1,0 +1,48 @@
+id: regex-captures
+title: Repeats and Captures
+type: multiple_choice
+body: |
+  A few more pieces let a pattern say how many times something may
+  appear:
+
+  - x+ is one or more x; x* is zero or more; x? is zero or one;
+  - x{3} is exactly three: \d{3} is three digits.
+
+  Parentheses group part of a pattern, and capture whatever it matched.
+  The MatchData from a match lets you ask for the pieces: m[0] is the
+  whole match, m[1] what the first group matched, m[2] the second, and so
+  on. captures returns all the groups as an array, and string the string
+  that was searched.
+
+    string = 'My phone number is (123) 555-1234.'
+    phone = /\((\d{3})\)\s+(\d{3})-(\d{4})/
+    m = phone.match(string)
+    puts m[0]           # (123) 555-1234
+    puts m[1]           # 123
+    p m.captures        # ["123", "555", "1234"]
+
+  The pattern reads: a literal (, a group of three digits, a literal ),
+  one or more whitespace characters, a group of three digits, a -, and a
+  group of four digits.
+
+  Always check that the match is not nil before asking it for pieces, as
+  calling [] on nil is an error:
+
+    unless m
+      puts 'There was no match...'
+      exit
+    end
+question: With m as above, what does puts m[3] print?
+choices:
+  - id: a
+    text: "1234"
+    correct: true
+  - id: b
+    text: "555"
+  - id: c
+    text: "-"
+  - id: d
+    text: Nothing, as there is no m[3]
+explanation: |
+  There are three groups. The third, (\d{4}), matched 1234. The - is
+  outside every group, so it is never captured on its own.

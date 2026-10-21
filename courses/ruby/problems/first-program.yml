@@ -1,0 +1,34 @@
+id: first-program
+title: Your First Ruby Program
+type: code
+language: ruby
+body: |
+  A Ruby program is a plain text file, by convention with a name ending in
+  .rb, such as hello.rb. On your own computer you would run it by typing
+  ruby hello.rb in a terminal. Here, the editor below is the file and the
+  Run button runs it.
+
+  This is a whole program:
+
+    # hello.rb
+    puts 'Hello'
+
+  - A line starting with # is a comment. Ruby ignores it; it is there for
+    people reading the code.
+  - puts prints what follows it and then starts a new line.
+  - 'Hello' is a string: a piece of text, written between quotes.
+
+  Ruby runs a program from the top line to the bottom one, so a second puts
+  prints a second line, under the first.
+question: |
+  Write a program that prints Hello on the first line and Ruby on the second.
+starter_code: |
+  # hello.rb
+expected_output: |
+  Hello
+  Ruby
+explanation: |
+  One puts per line:
+
+    puts 'Hello'
+    puts 'Ruby'

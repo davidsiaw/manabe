@@ -1,0 +1,73 @@
+id: attr-accessors
+title: attr_reader and Friends
+type: code
+language: ruby
+body: |
+  Methods that just return or set an instance variable are so common that
+  Ruby writes them for you. Inside a class:
+
+  - attr_reader :name makes the method name, which returns @name.
+  - attr_writer :name makes the method name=, which sets @name.
+  - attr_accessor :name makes both.
+
+  Each takes any number of names, as symbols:
+
+    class Song
+      attr_reader :title, :artist
+      attr_accessor :plays
+
+      def initialize(title, artist)
+        @title = title
+        @artist = artist
+        @plays = 0
+      end
+    end
+
+    song = Song.new('Brazil', 'Ivete Sangalo')
+    song.plays += 1        # song.plays = song.plays + 1
+    puts song.plays        # 1
+
+  Keeping instance variables inside and offering methods to read or
+  change them is encapsulation. Only offer a writer when outside code
+  really should change the value.
+
+  One trap: inside the class's own methods, use self.plays = 5 to call
+  the setter. Plain plays = 5 would make a new local variable called
+  plays, as an assignment to a bare name always does. self, as you have
+  seen, is the current object, which inside a method is the object the
+  method was called on.
+question: |
+  Write a class Book with a reader for title and an accessor for page, a
+  page that starts at 1. Add a method turn that moves to the next page by
+  calling the setter on self, and returns the new page. Make the starter
+  print the expected output.
+starter_code: |
+  # class Book ...
+
+  b = Book.new('Dune')
+  b.turn
+  b.turn
+  puts "#{b.title} is on page #{b.page}"
+  b.page = 100
+  puts "#{b.title} is on page #{b.turn}"
+expected_output: |
+  Dune is on page 3
+  Dune is on page 101
+explanation: |
+  One way to write it:
+
+    class Book
+      attr_reader :title
+      attr_accessor :page
+
+      def initialize(title)
+        @title = title
+        @page = 1
+      end
+
+      def turn
+        self.page = page + 1
+      end
+    end
+
+  An assignment has the value assigned, so turn returns the new page.

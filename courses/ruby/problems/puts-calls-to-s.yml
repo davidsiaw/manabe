@@ -1,0 +1,38 @@
+id: puts-calls-to-s
+title: Strings and Numbers Do Not Mix
+type: multiple_choice
+body: |
+  puts can print a number as easily as a string:
+
+    puts 42
+
+  It works because puts turns whatever you give it into a string first. It
+  does that by calling the object's to_s ("to string") method, which every
+  object has. You will meet to_s again soon.
+
+  + is stricter. A string can be added to a string and a number to a
+  number, but Ruby refuses to guess what a string plus a number should be:
+
+    puts 'Age: ' + 30
+
+  stops the program with an error, a TypeError, saying that an Integer
+  cannot be turned into a String automatically. In the same way, you can
+  repeat a string a number of times with *, but you cannot multiply a
+  string by another string.
+
+  When a program stops with an error, Ruby prints the line number and what
+  went wrong. Reading that message is the quickest way to find a mistake.
+question: Which of these lines does not stop with an error?
+choices:
+  - id: a
+    text: "puts 'Total: ' + 5"
+  - id: b
+    text: "puts 'ab' * 'cd'"
+  - id: c
+    text: "puts 'ab' * 2"
+    correct: true
+  - id: d
+    text: "puts 5 + '5'"
+explanation: |
+  'ab' * 2 repeats the string: abab. Each of the others mixes a string and
+  a number in a way Ruby will not guess at.

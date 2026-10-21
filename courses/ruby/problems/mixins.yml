@@ -1,0 +1,85 @@
+id: mixins
+title: Mixins
+type: code
+language: ruby
+body: |
+  The second job of a module is to share methods between classes. Instance
+  methods written in a module, with a plain def, can't be called on the
+  module. Instead, a class includes the module, and the module's instance
+  methods become methods of the class, as if written there. They are mixed
+  in:
+
+    module Describable
+      def describe
+        "#{self.class.name}: #{to_s}"
+      end
+    end
+
+    class Phonograph
+      include Describable
+
+      def initialize(name)
+        @name = name
+      end
+
+      def to_s
+        @name
+      end
+    end
+
+    puts Phonograph.new('West End Blues').describe
+    # Phonograph: West End Blues
+
+  A class's name method returns its name as a string.
+
+  A class can include any number of modules (include A, B) while it
+  inherits from only one class, so mixins are how Ruby shares behaviour
+  across unrelated classes. A module can include other modules, too.
+  include takes the module itself, a constant, not a string; if the
+  module is in another file, require the file first.
+
+  Class names tend to be nouns, and mixin names adjectives: Comparable and
+  Enumerable are two that come with Ruby. Kernel, where puts lives, is a
+  module that Object includes; ancestors lists it, as it lists every
+  included module.
+question: |
+  Write a module Greeter with a method greet that returns
+  Hello from NAME, where NAME is what the object's name method returns.
+  Include it in two classes, Robot and Cat, each with its own name
+  method, so that the starter prints the expected output.
+starter_code: |
+  # module Greeter ...
+  # class Robot ...
+  # class Cat ...
+
+  puts Robot.new.greet
+  puts Cat.new.greet
+  p Cat.ancestors.include?(Greeter)
+expected_output: |
+  Hello from R2-D2
+  Hello from Tom
+  true
+explanation: |
+  One way to write it:
+
+    module Greeter
+      def greet
+        "Hello from #{name}"
+      end
+    end
+
+    class Robot
+      include Greeter
+
+      def name
+        'R2-D2'
+      end
+    end
+
+    class Cat
+      include Greeter
+
+      def name
+        'Tom'
+      end
+    end

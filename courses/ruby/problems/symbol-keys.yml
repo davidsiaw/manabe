@@ -1,0 +1,47 @@
+id: symbol-keys
+title: Symbols as Hash Keys
+type: code
+language: ruby
+body: |
+  Hash keys are usually names, so they are usually symbols:
+
+    person = {:nickname => 'IndianGuru', :language => 'Marathi'}
+    puts person[:language]          # Marathi
+
+  Symbol keys are so common that they have a shorter form: write the name
+  with the colon after it, and no =>:
+
+    person = {nickname: 'IndianGuru', language: 'Marathi'}
+
+  The two lines make the same hash. The short form only works for keys
+  that are symbols; any other key, such as a number, still needs =>:
+
+    {1 => 'one'}     # works
+    {1: 'one'}       # an error
+
+  puts and p show a hash like this, in the short form where they can:
+
+    p person         # {nickname: "IndianGuru", language: "Marathi"}
+
+  Old Ruby versions showed every key with =>, as in {:nickname=>"IndianGuru"},
+  and you will see that in older tutorials.
+question: |
+  Make a hash book with the keys title, author and year, using the short
+  form, for Programming Ruby by Dave Thomas, 2004. Print the line
+  Programming Ruby by Dave Thomas (2004) from it, then change year to
+  2013, add a key pages with the value 888, and print the hash with p.
+starter_code: |
+  # book = ...
+expected_output: |
+  Programming Ruby by Dave Thomas (2004)
+  {title: "Programming Ruby", author: "Dave Thomas", year: 2013, pages: 888}
+explanation: |
+  One way to write it:
+
+    book = {title: 'Programming Ruby', author: 'Dave Thomas', year: 2004}
+    puts "#{book[:title]} by #{book[:author]} (#{book[:year]})"
+    book[:year] = 2013
+    book[:pages] = 888
+    p book
+
+  Changing a key's value keeps its place; a new key goes at the end.

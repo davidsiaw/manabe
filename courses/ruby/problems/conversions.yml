@@ -1,0 +1,39 @@
+id: conversions
+title: Converting Values
+type: code
+language: ruby
+body: |
+  Numbers typed into a program by a person, or read from a file, usually
+  arrive as strings. To do arithmetic with them, convert them first:
+
+    '5'.to_i      # the integer 5
+    '2.5'.to_f    # the float 2.5
+    42.to_s       # the string '42'
+
+  to_i means "to integer", to_f "to float" and to_s "to string".
+
+  Look at what the dot means here. In '200.0'.to_f, the dot sends the
+  message to_f to the string '200.0'; that is, it calls the method to_f on
+  it. The object on the left of the dot is the receiver, and the method
+  on the right is what it is asked to do. puts calls to_s on everything it
+  prints in exactly this way.
+
+    apples = '12'
+    puts apples.to_i + 1          # 13
+    puts 'I have ' + 13.to_s      # I have 13
+question: |
+  The starter has a count of apples as a string and a count of pears as an
+  integer. Print their total, 42, and then the line I have 42 pieces of
+  fruit, built with + and the conversions above.
+starter_code: |
+  apples = '12'
+  pears = 30
+expected_output: |
+  42
+  I have 42 pieces of fruit
+explanation: |
+  One way to write it:
+
+    total = apples.to_i + pears
+    puts total
+    puts 'I have ' + total.to_s + ' pieces of fruit'

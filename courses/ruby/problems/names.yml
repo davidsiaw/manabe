@@ -1,0 +1,40 @@
+id: names
+title: Ruby Names
+type: multiple_choice
+body: |
+  In Ruby, the first character of a name tells you, and Ruby, what kind of
+  name it is:
+
+  - local_variable: a lowercase letter or _. The variables used so far.
+  - @instance_variable: one @. Belongs to one object; the lessons on
+    classes use these.
+  - @@class_variable: two @s. Shared by all the objects of a class; rarely
+    used.
+  - $global_variable: a $. Visible everywhere in the program.
+  - Constant: an uppercase letter. Class names are constants too.
+
+  After the first character, a name is any mix of letters, digits and
+  underscores.
+
+  Method names follow the rules for local variables, and may end in one of
+  three extra characters: ? (for a method that answers a question), ! (for
+  a "dangerous" version of another method) or = (for a method that sets
+  something). The coming lessons show each of them.
+
+  Conventions: variables and methods are snake_case, constants that hold
+  plain values are ALL_CAPS, and class names are CamelCase, as in
+  MyClass.
+question: Which of these is an instance variable?
+choices:
+  - id: a
+    text: "$count"
+  - id: b
+    text: "@count"
+    correct: true
+  - id: c
+    text: "@@count"
+  - id: d
+    text: Count
+explanation: |
+  One @ is an instance variable. $count is global, @@count is a class
+  variable, and Count is a constant.

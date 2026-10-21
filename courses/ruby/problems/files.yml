@@ -1,0 +1,73 @@
+id: files
+title: Reading and Writing Files
+type: code
+language: ruby
+body: |
+  File.open opens a file. Its second argument is the mode: 'r' to read,
+  starting at the beginning (the default); 'w' to write, emptying the
+  file first, or creating it if it does not exist; and 'r+' to read and
+  write.
+
+  Given a block, File.open passes the open file to it, and closes the
+  file when the block ends. Always make sure a file you open gets closed,
+  above all one you write to, or what you wrote can be lost. The block
+  form does it for you.
+
+    File.open('notes.txt', 'w') do |f|
+      f.puts "First line\nSecond line"
+    end
+
+  A file has puts and print, which write to it rather than to the screen.
+  To read, gets returns the next line, with its new line at the end, or
+  nil at the end of the file. Since an assignment has the value assigned,
+  and nil counts as false, this loop reads every line:
+
+    File.open('notes.txt', 'r') do |f|
+      while line = f.gets
+        puts line
+      end
+    end
+
+  readlines reads all the lines at once into an array. Without a block,
+  File.open, and File.new, return the open file, and you must call close
+  yourself. A file also has a position, which reads start from; seek moves
+  it:
+
+    f = File.new('notes.txt')
+    f.seek(6, IO::SEEK_SET)    # 6 bytes from the start
+    puts f.gets                # line
+    f.close
+
+  IO::SEEK_SET is the constant SEEK_SET that lives inside IO, the class
+  File is built on. :: reaches inside a class for a constant. IO::SEEK_CUR
+  counts from the current position instead, and IO::SEEK_END from the end.
+
+  Here, files live in the browser's memory, and disappear when the program
+  ends.
+question: |
+  Write the three lines in the starter's array to a file called
+  shopping.txt, one per line. Then open the file again for reading, and
+  print each line with its number in front, as shown.
+starter_code: |
+  items = ['eggs', 'milk', 'bread']
+expected_output: |
+  1: eggs
+  2: milk
+  3: bread
+explanation: |
+  One way to write it:
+
+    File.open('shopping.txt', 'w') do |f|
+      items.each { |item| f.puts item }
+    end
+
+    File.open('shopping.txt', 'r') do |f|
+      number = 1
+      while line = f.gets
+        puts "#{number}: #{line}"
+        number += 1
+      end
+    end
+
+  line still ends in a new line, and puts does not add a second one when a
+  string already ends in one.
