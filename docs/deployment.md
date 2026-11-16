@@ -1,26 +1,22 @@
 # Deployment
 
-A push to the `production` branch (or running the workflow by hand) runs `.github/workflows/deploy.yml`, which:
+A push to the `production` branch (or running the workflow by hand) runs `.github/workflows/deploy.yml`, which builds `Dockerfile` and pushes it to Docker Hub as `davidsiaw/manabe:latest`.
 
-1. builds `Dockerfile` and pushes it to Docker Hub as `davidsiaw/manabe:latest`;
-2. updates the Portainer stack with `stack-definition.yml`, pulling the new image and pruning removed services.
+CI does not touch the server. Portainer sits behind Pomerium, which GitHub's runners cannot get through, so the server pulls the new image itself and redeploys the stack from `stack-definition.yml`.
 
 The stack contains Postgres 16, Redis, a one-off `migrate` (`db:prepare`: on the first deploy it creates the database, loads the schema and seeds the admin; after that it migrates), the API (Falcon), and Sidekiq. The API publishes no port. nginx-proxy routes `API_HOST` to it and acme-companion gets its certificate.
 
 ## GitHub: secrets (Settings > Secrets and variables > Actions)
 
-Only what CI needs to push the image and reach Portainer. The app's own secrets never go to GitHub.
+Only what CI needs to push the image. The app's own secrets never go to GitHub.
 
 | Secret | What |
 |---|---|
 | `DOCKER_PASSWORD` | Docker Hub access token for `davidsiaw` |
-| `PORTAINER_HOST` | e.g. `https://portainer.example.com` (must be reachable from GitHub's runners) |
-| `PORTAINER_USERNAME`, `PORTAINER_PASSWORD` | a Portainer user for CI, not the admin |
-| `PORTAINER_STACK` | stack name, e.g. `manabe` |
 
 ## Portainer: the stack's environment variables
 
-The `${VAR}`s in `stack-definition.yml` come from the stack's environment variables in Portainer. The action keeps them on every update, but it would create a new stack with none. So **create the stack by hand once**: Stacks > Add stack > Web editor, paste `stack-definition.yml`, add the variables below, and give it the name in `PORTAINER_STACK`. After that, CI only updates it. It will fail to deploy until the image has been pushed once; running the workflow fixes that.
+The `${VAR}`s in `stack-definition.yml` come from the stack's environment variables in Portainer. **Create the stack by hand once**: Stacks > Add stack, use `stack-definition.yml`, add the variables below, and name it (e.g. `manabe`). It will fail to deploy until the image has been pushed once; running the workflow fixes that.
 
 | Variable | What |
 |---|---|
@@ -36,7 +32,7 @@ The required ones are written `${VAR:?}`, so a missing one fails the deploy inst
 
 ## The server, once
 
-- Docker and Portainer (2.x, using docker compose v2, which `depends_on: condition: service_completed_successfully` needs), with its API reachable at `PORTAINER_HOST`.
+- Docker and Portainer (2.x, using docker compose v2, which `depends_on: condition: service_completed_successfully` needs), set up to pull `davidsiaw/manabe:latest` and redeploy the stack when it changes.
 - [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [acme-companion](https://github.com/nginx-proxy/acme-companion) on ports 80/443. Skip this if the server already runs them for other stacks.
 - The external network and volume the stack expects, with nginx-proxy attached to the network:
 
@@ -54,6 +50,6 @@ Build them with `API_BASE_URL=https://<API_HOST>/api/v1` (frontend docs/deployme
 
 ## Day to day
 
-- Deploy: push to `production`, or run the workflow from the Actions tab.
+- Deploy: push to `production`, or run the workflow from the Actions tab, then let the server pull the image (or "Update the stack" with re-pull in Portainer).
 - Logs, `rails console`, and so on: from Portainer's container view, or `docker exec -it <stack>-api-1 bin/rails c` on the server.
 - Back up `manabase-db`: `docker exec <stack>-db-1 pg_dump -U manabase manabase_production > backup.sql`.
