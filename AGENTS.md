@@ -4,6 +4,7 @@ Read [docs/README.md](docs/README.md) before changing anything, and [docs/system
 
 The things most likely to bite:
 
+- Every tool call must finish within 60 seconds. Start the app in the background (`(setsid nohup heighliner up -av </dev/null > /tmp/up.log 2>&1 &)`), then poll the log with `sleep`/`tail` in calls under 60s. Do the same with anything slow (the full spec suite, a first build): run it in the background into a log, or split it, for example one spec file at a time. `heighliner logs` never returns: `timeout 15 heighliner logs`. See docs/development.md.
 - Run the app with heighliner (`heighliner up -av`), not docker compose. `heighliner down` deletes the development database. See docs/development.md.
 - After a migration, migrate the test database too and restart the server with `heighliner up`.
 - ULID references: `ulid :x_id, primary_key: false` when required; `attribute :x_id, ULID::Rails::Type.new` when optional. See docs/data-model.md.
