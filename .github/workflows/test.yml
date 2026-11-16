@@ -15,6 +15,7 @@ jobs:
       - name: show logs
         if: failure()
         run: |-
+          docker compose logs rails_startup
           docker compose logs rails
           docker compose logs db
       - name: start recording

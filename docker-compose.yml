@@ -73,6 +73,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      rails_startup:
+        condition: service_completed_successfully
     stdin_open: true
     tty: true
     healthcheck:
