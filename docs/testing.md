@@ -23,7 +23,7 @@ API specs point the catalog at the fixtures with `allow(CourseCatalog).to receiv
 ## Helpers
 
 - `bearer(token)` returns the `Authorization` header. A session for a learner: `LearnerSession.start(learner).last` is the token.
-- `fake_passkey_client` is a `WebAuthn::FakeClient` for the configured origin. It runs real ceremonies: `client.create(challenge: options['challenge'], user_verified: true)` makes a credential, `client.get(challenge:, user_handle: raw_user_handle(learner))` signs a login. A second client is a second authenticator, with passkeys the first does not have.
+- `fake_passkey_client` is a `WebAuthn::FakeClient` for the configured origin that signs for the configured RP ID (the gem's own client signs for the origin's host, which fails when `WEBAUTHN_RP_ID` is a parent domain, as in Heighliner.config). It runs real ceremonies: `client.create(challenge: options['challenge'], user_verified: true)` makes a credential, `client.get(challenge:, user_handle: raw_user_handle(learner))` signs a login. A second client is a second authenticator, with passkeys the first does not have.
 - `ActiveSupport::Testing::TimeHelpers` (`travel`) is included where needed, for challenge expiry.
 
 ## Gotchas

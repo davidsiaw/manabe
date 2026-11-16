@@ -5,8 +5,16 @@ require 'webauthn/fake_client'
 # Drives the passkey ceremonies with the webauthn gem's fake authenticator,
 # from the origin the app is configured to accept.
 module PasskeyHelper
+  # The gem's FakeClient signs for the origin's host. Like a browser, sign for
+  # the configured RP ID instead, which may be a parent domain of the origin
+  # (WEBAUTHN_RP_ID in Heighliner.config).
+  class ConfiguredFakeClient < WebAuthn::FakeClient
+    def create(rp_id: WebAuthn.configuration.rp_id, **) = super
+    def get(rp_id: WebAuthn.configuration.rp_id, **) = super
+  end
+
   def fake_passkey_client
-    WebAuthn::FakeClient.new(WebAuthn.configuration.allowed_origins.first)
+    ConfiguredFakeClient.new(WebAuthn.configuration.allowed_origins.first)
   end
 
   def bearer(token)
