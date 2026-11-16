@@ -62,7 +62,7 @@ gem 'rack-cors', require: 'rack/cors'
 
 # Passkeys: verifies WebAuthn registrations and logins (CBOR, COSE keys,
 # signatures, attestation), which is not worth writing by hand.
-gem 'webauthn', '~> 3.4'
+gem 'webauthn', '~> 3.5'
 
 group :development, :test do
   gem 'async-rspec'
