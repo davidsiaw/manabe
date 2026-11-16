@@ -30,6 +30,7 @@ ADD --chown=srv:srv db /srv/db
 ADD --chown=srv:srv config /srv/config
 ADD --chown=srv:srv spec /srv/spec
 ADD --chown=srv:srv app /srv/app
+ADD --chown=srv:srv courses /srv/courses
 
 ADD --chown=srv:srv docker/unit/start.sh docker/unit/waitpg.sh docker/unit/waitredis.sh docker/unit/Procfile /srv/
 
